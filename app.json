@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "rn-rainbow",
-    "slug": "rn-rainbow",
+    "name": "rn-photo",
+    "slug": "rn-photo",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -15,13 +15,17 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSPhotoLibraryUsageDDescription": "The app accesses the photo library to upload ad profile photo and use it on the post."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#F97316"
+      },
+      "permissions": ["READ_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES", "READ_MEDIA_IMAGES"]
     },
     "web": {
       "favicon": "./assets/favicon.png"
