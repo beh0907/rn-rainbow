@@ -1,7 +1,7 @@
 import { Pressable, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
-import { PRIMARY, WHITE } from '../colors';
+import { PRIMARY, WHITE } from '../Colors';
 import {MainRoutes} from "../navigations/Routes";
 
 const TabBarAddButton = () => {

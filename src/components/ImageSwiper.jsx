@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import {Image, Platform, StyleSheet, View} from "react-native";
 import {BlurView} from "expo-blur";
 import Swiper from "react-native-swiper";
-import {BLACK, GRAY, PRIMARY, WHITE} from "../colors";
+import {BLACK, GRAY, PRIMARY, WHITE} from "../Colors";
 
 const ImageSwiper = ({photos}) => {
     return (

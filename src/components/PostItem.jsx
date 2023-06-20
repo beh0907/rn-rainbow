@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, useWindowDimensions, View} from "react-native";
-import {PRIMARY, WHITE} from "../colors";
+import {PRIMARY, WHITE} from "../Colors";
 import FastImage from "./FastImage";
 import ImageSwiper from "./ImageSwiper";
 import {MaterialCommunityIcons} from "@expo/vector-icons";

@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {FlatList, StyleSheet, View} from "react-native";
-import {GRAY} from "../colors";
+import {GRAY} from "../Colors";
 import PostItem from "./PostItem";
 import usePosts from "../hooks/UsePosts";
 

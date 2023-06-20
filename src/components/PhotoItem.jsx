@@ -2,7 +2,7 @@ import React, {memo} from 'react';
 import {Image, Platform, Pressable, StyleSheet, useWindowDimensions} from "react-native";
 import {BlurView} from "expo-blur";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {PRIMARY} from "../colors";
+import {PRIMARY} from "../Colors";
 import PropTypes from "prop-types";
 
 const PhotoItem = memo(({item, isSelected, togglePhoto}) => {

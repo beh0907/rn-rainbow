@@ -3,7 +3,7 @@ import {Alert, Image, Keyboard, ScrollView, StyleSheet, Text, View} from "react-
 import {useNavigation} from "@react-navigation/native";
 import TextButton from "../components/TextButton";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {WHITE} from "../colors";
+import {WHITE} from "../Colors";
 import {StatusBar} from "expo-status-bar";
 import Input, {InputTypes, ReturnKeyTypes} from "../components/Input";
 import Button from "../components/Button";

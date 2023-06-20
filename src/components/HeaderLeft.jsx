@@ -2,7 +2,7 @@ import React from 'react';
 import {Pressable, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {BLACK} from "../colors";
+import {BLACK} from "../Colors";
 
 const HeaderLeft = () => {
     const navigation = useNavigation()

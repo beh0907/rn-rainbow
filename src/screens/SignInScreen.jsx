@@ -9,7 +9,7 @@ import SafeInputView from "../components/SafeInputView";
 import TextButton from "../components/TextButton";
 import HR from "../components/HR";
 import {StatusBar} from "expo-status-bar";
-import {WHITE} from "../colors";
+import {WHITE} from "../Colors";
 import {authFormReducer, initAuthForm, AuthFormTypes} from "../reducer/AuthFormReducer";
 import {useUserState} from "../contexts/UserContext";
 import {getAuthMessages, signIn} from "../api/Auth";

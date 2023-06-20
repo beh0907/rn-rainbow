@@ -1,7 +1,7 @@
 import React from 'react';
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
 import {MainRoutes} from "./Routes";
-import {WHITE} from "../colors";
+import {WHITE} from "../Colors";
 import HeaderLeft from "../components/HeaderLeft";
 
 const Stack = createNativeStackNavigator()

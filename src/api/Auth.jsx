@@ -1,41 +1,41 @@
 import axios from "axios";
+import {BASE_URL_API} from "../Config";
 
-const BASE_URL = 'http://inhyeop.iptime.org:82/rainbow'
 
 export const signIn = async ({id, password}) => {
-    const response = await axios.get(`${BASE_URL}/user/login?id=${id}&password=${password}`);
+    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`);
     return response.data
 }
 
 export const duplicateId = async (id) => {
-    const response = await axios.get(`${BASE_URL}/user/login?id=${id}`);
+    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}`);
     return response.data
 }
 
 export const duplicateMail = async (mail) => {
-    const response = await axios.get(`${BASE_URL}/user/login?mail=${mail}`);
+    const response = await axios.get(`${BASE_URL_API}/user/login?mail=${mail}`);
     return response.data
 }
 
 export const duplicateNickname = async (nickName) => {
-    const response = await axios.get(`${BASE_URL}/user/login?nickName=${nickName}`);
+    const response = await axios.get(`${BASE_URL_API}/user/login?nickName=${nickName}`);
     return response.data
 }
 
 export const signUp = async (user) => {
-    const response = await axios.post(`${BASE_URL}/user/register`, {
-        params: user
+    const response = await axios.post(`${BASE_URL_API}/user/register`, {
+        data: user
     });
 }
 
 export const modify = async (user) => {
-    const response = await axios.put(`${BASE_URL}/user/modify`, {
-        params: user
+    const response = await axios.put(`${BASE_URL_API}/user/modify`, {
+        data: user
     });
 }
 
 export const remove = async ({id}) => {
-    const response = await axios.delete(`${BASE_URL}/user/remove?id=${id}`);
+    const response = await axios.delete(`${BASE_URL_API}/user/remove?id=${id}`);
 }
 
 export const getAuthMessages = (error) => {

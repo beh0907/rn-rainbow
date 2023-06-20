@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ActivityIndicator, Pressable, StyleSheet, Text, View} from "react-native";
-import {GRAY, PRIMARY, WHITE} from "../colors";
+import {GRAY, PRIMARY, WHITE} from "../Colors";
 
 const TextButton = ({styles, title, onPress, hitslop}) => {
     return (

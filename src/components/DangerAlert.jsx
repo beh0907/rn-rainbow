@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {Modal, Pressable, StyleSheet, Text, View} from "react-native";
-import {BLACK, DANGER, WHITE} from "../colors";
+import {BLACK, DANGER, WHITE} from "../Colors";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import Button, {ButtonTypes} from "./Button";
 

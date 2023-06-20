@@ -1,7 +1,7 @@
 import { Pressable } from 'react-native';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { GRAY, PRIMARY } from '../colors';
+import { GRAY, PRIMARY } from '../Colors';
 
 const HeaderRight = ({ disabled, onPress }) => {
     return (
