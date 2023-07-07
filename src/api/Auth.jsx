@@ -1,22 +1,18 @@
 import axios from "axios";
-import {BASE_URL_API} from "../Config";
-
+import {BASE_URL_API} from "@env"
 
 export const signIn = async ({id, password}) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`);
     return response.data
 }
-
 export const duplicateId = async (id) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}`);
     return response.data
 }
-
 export const duplicateMail = async (mail) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?mail=${mail}`);
     return response.data
 }
-
 export const duplicateNickname = async (nickName) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?nickName=${nickName}`);
     return response.data

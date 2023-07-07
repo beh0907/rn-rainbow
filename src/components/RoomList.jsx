@@ -2,16 +2,16 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import {FlatList, StyleSheet, View} from "react-native";
 import {GRAY} from "../Colors";
-import PostItem from "./PostItem";
-import usePosts from "../hooks/UsePosts";
+import RoomItem from "./RoomItem";
+import usePosts from "../hooks/UseRooms";
 
-const PostList = () => {
+const RoomList = () => {
     const {posts, fetchNextPage, refetch, refetching} = usePosts()
 
     return (
         <FlatList
             data={posts}
-            renderItem={({item}) => <PostItem post={item}/>}
+            renderItem={({item}) => <RoomItem post={item}/>}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
             onEndReached={fetchNextPage}
             refreshing={refetching}
@@ -28,4 +28,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default PostList;
+export default RoomList;

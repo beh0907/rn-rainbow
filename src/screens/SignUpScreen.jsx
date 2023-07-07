@@ -42,7 +42,7 @@ const SignUpScreen = () => {
             dispatch({type: AuthFormTypes.TOGGLE_LOADING})
 
             try {
-                // const user = await signUp(form)
+                const user = await signUp(form)
                 setUser(user) // 회원가입 성공 시 자동 로그인
             } catch (e) {
                 // const errorMessage = getAuthErrorMessages(e.code)

@@ -5,6 +5,8 @@ import AuthStack from "./AuthStack";
 import {Asset} from "expo-asset";
 import {useUserState} from "../contexts/UserContext";
 import * as SecureStore from "../utils/SecureStore";
+import {signIn} from "../api/Auth";
+import MainStack from "./MainStack";
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -29,35 +31,17 @@ const Navigation = () => {
                 const id = await SecureStore.getValueFor('id')
                 const password = await SecureStore.getValueFor('password')
 
-                console.log(id)
-                console.log(password)
-
                 if (id !== null && password !== null) {
-                    //로그인 시도
-                    axios.get('/user?ID=12345')
-                        .then(function (response) {
-                            console.log(response);
-                            setIsReady(true)
-                        })
-                        .catch(function (error) {
-                            console.log(error);
-                            setIsReady(true)
-                        });
+                    const user = await signIn({id, password})
+                    if (user) setUser(user)
+
+                    setIsReady(true)
                 } else {
                     setIsReady(true)
                 }
-
-
-                //로그인 시도
-                // const unsubscribe = onAuthStateChanged(user => {
-                //     if (user) setUser(user)
-                //
-                //     setIsReady(true)
-                //     unsubscribe()
-                // })
             } catch (e) {
-                console.log(e)
                 setIsReady(true)
+                console.log(e)
             }
         })()
     }, [setUser])
@@ -69,8 +53,8 @@ const Navigation = () => {
     if (!isReady) return null
     return (
         <NavigationContainer onReady={onReady}>
-            <AuthStack/>
-            {/*{user.uid ? <MainStack/> : <AuthStack/>}*/}
+            {/*<AuthStack/>*/}
+            {user.id ? <MainStack/> : <AuthStack/>}
         </NavigationContainer>
     );
 };

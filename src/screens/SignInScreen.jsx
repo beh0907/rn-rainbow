@@ -33,11 +33,13 @@ const SignInScreen = () => {
             try {
                 const user = await signIn(form)
 
+                await SecureStore.save("id", user.id)
+                await SecureStore.save("password", form.password)
+
                 setUser(user)
                 console.log(user)
+                console.log(form.password)
 
-                await SecureStore.save("id", user.id)
-                await SecureStore.save("password", user.password)
             } catch (e) {
                 Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
                     text:'확인',

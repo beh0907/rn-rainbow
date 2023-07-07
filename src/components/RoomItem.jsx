@@ -6,7 +6,7 @@ import FastImage from "./FastImage";
 import ImageSwiper from "./ImageSwiper";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 
-const PostItem = memo(({post}) => {
+const RoomItem = memo(({post}) => {
     const width = useWindowDimensions().width
 
     return (
@@ -30,9 +30,9 @@ const PostItem = memo(({post}) => {
     );
 });
 
-PostItem.displayName = 'PostItem'
+RoomItem.displayName = 'RoomItem'
 
-PostItem.propTypes = {
+RoomItem.propTypes = {
     post: PropTypes.object.isRequired
 };
 
@@ -72,4 +72,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default PostItem;
+export default RoomItem;

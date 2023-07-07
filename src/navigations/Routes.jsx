@@ -4,11 +4,11 @@ export const AuthRoutes = {
 }
 
 export const MainRoutes = {
-    CONTENT_TAB: 'ContentTab',
-    SELECT_PHOTOS: 'SelectPhotos',
+    LIST_ROOM: '추모관 목록',
     UPDATE_PHOTOS: 'UpdatePhotos',
     IMAGE_PICKER: 'ImagePicker',
     WRITE_TEXT: 'WriteText',
+    ROOM_TAB: 'RoomTab',
 }
 
 export const ContentRoutes = {
