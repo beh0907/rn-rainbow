@@ -77,9 +77,9 @@ const defaultStyles = StyleSheet.create({
         width: '100%',
     },
     button: {
-        paddingVertical: 20,
+        paddingVertical: 16,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     },
     title: {
         color: WHITE,

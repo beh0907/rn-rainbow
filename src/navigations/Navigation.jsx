@@ -4,7 +4,7 @@ import * as SplashScreen from "expo-splash-screen";
 import AuthStack from "./AuthStack";
 import {Asset} from "expo-asset";
 import {useUserState} from "../contexts/UserContext";
-import * as SecureStore from "../utils/SecureStore";
+import * as SecureStore from "../utils/PreferenceStore";
 import {signIn} from "../api/Auth";
 import MainStack from "./MainStack";
 

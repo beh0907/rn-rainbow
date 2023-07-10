@@ -1,13 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {ActivityIndicator, Pressable, StyleSheet, Text, View} from "react-native";
-import {GRAY, PRIMARY, WHITE} from "../Colors";
+import {Pressable, StyleSheet, Text} from "react-native";
+import {PRIMARY} from "../Colors";
 
 const TextButton = ({styles, title, onPress, hitslop}) => {
     return (
         <Pressable onPress={onPress}
                    hitSlop={hitslop ? hitslop : 10}
-                   style={styles?.button}>
+                   style={[styles?.button]}>
 
             <Text style={[defaultStyles.title, styles?.title]}>{title}</Text>
         </Pressable>
@@ -24,8 +24,8 @@ TextButton.propTypes = {
 const defaultStyles = StyleSheet.create({
     title: {
         color: PRIMARY.DEFAULT,
-        fontSize: 16,
-        fontWeight: '700',
+        fontSize: 14,
+        fontWeight: '700'
     },
 });
 

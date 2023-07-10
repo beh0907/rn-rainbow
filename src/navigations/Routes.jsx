@@ -1,6 +1,6 @@
 export const AuthRoutes = {
-    SIGN_IN: "SignIn",
-    SIGN_UP: "SignUp",
+    SIGN_IN: "로그인",
+    SIGN_UP: "회원가입",
 }
 
 export const MainRoutes = {
