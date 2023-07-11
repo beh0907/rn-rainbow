@@ -13,6 +13,8 @@ import {authFormReducer, AuthFormTypes, initAuthForm} from "../reducer/AuthFormR
 import {useUserState} from "../contexts/UserContext";
 import {TextInput} from "react-native-paper";
 import {AuthRoutes} from "../navigations/Routes";
+import {signUp} from "../api/Auth";
+import * as SecureStore from "../utils/PreferenceStore";
 
 const SignUpScreen = () => {
     const navigation = useNavigation()
@@ -20,6 +22,8 @@ const SignUpScreen = () => {
 
     const passwordRef = useRef()
     const passwordConfirmRef = useRef()
+    const nickNameRef = useRef()
+    const mailRef = useRef()
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState()
@@ -32,7 +36,9 @@ const SignUpScreen = () => {
         const disabled =
             !newForm.id ||
             !newForm.password ||
-            newForm.password !== newForm.passwordConfirm;
+            newForm.password !== newForm.passwordConfirm ||
+            !newForm.nickName ||
+            !newForm.mail;
 
         dispatch({
             type: AuthFormTypes.UPDATE_FORM,
@@ -47,8 +53,15 @@ const SignUpScreen = () => {
             dispatch({type: AuthFormTypes.TOGGLE_LOADING})
 
             try {
+                //회원가입 시도 실패 시 null
                 const user = await signUp(form)
-                setUser(user) // 회원가입 성공 시 자동 로그인
+
+                //회원가입 정보를 로컬저장소에 저장한다
+                await SecureStore.save("id", user.id)
+                await SecureStore.save("password", form.password)
+
+                // 회원가입 성공 시 자동 로그인
+                setUser(user)
             } catch (e) {
                 // const errorMessage = getAuthErrorMessages(e.code)
                 Alert.alert('회원가입 실패', errorMessage, [{
@@ -110,7 +123,7 @@ const SignUpScreen = () => {
                     />
 
                     <TextInput
-                        ref={passwordRef}
+                        ref={passwordConfirmRef}
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
@@ -122,7 +135,7 @@ const SignUpScreen = () => {
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({passwordConfirm: text.trim()})}
                         secureTextEntry={isHidePasswordConfirm}
-                        onSubmitEditing={onSubmit}
+                        onSubmitEditing={() => nickNameRef.current.focus()}
                         right={
                             <TextInput.Icon
                                 forceTextInputFocus={false}
@@ -133,6 +146,36 @@ const SignUpScreen = () => {
                                 }}
                             />
                         }
+                    />
+
+                    <TextInput
+                        ref={nickNameRef}
+                        mode="outlined"
+                        outlineStyle={{borderWidth: 1}}
+                        outlineColor='#0000001F'
+                        activeOutlineColor={PRIMARY.DEFAULT}
+                        selectionColor={PRIMARY.DEFAULT}
+                        label="닉네임"
+                        value={form.nickName}
+                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        returnKeyType={ReturnKeyTypes.NEXT}
+                        onChangeText={(text) => updateForm({nickName: text.trim()})}
+                        onSubmitEditing={() => mailRef.current.focus()}
+                    />
+
+                    <TextInput
+                        ref={mailRef}
+                        mode="outlined"
+                        outlineStyle={{borderWidth: 1}}
+                        outlineColor='#0000001F'
+                        activeOutlineColor={PRIMARY.DEFAULT}
+                        selectionColor={PRIMARY.DEFAULT}
+                        label="이메일"
+                        value={form.mail}
+                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        returnKeyType={ReturnKeyTypes.DONE}
+                        onChangeText={(text) => updateForm({mail: text.trim()})}
+                        onSubmitEditing={onSubmit}
                     />
 
                     <Button title="회원가입"

@@ -26,9 +26,7 @@ export const registerVideo = async (memory, file) => {
 }
 
 export const modify = async (memory) => {
-    const response = await axios.post(`${BASE_URL_API}/memory/modify`, {
-        data: memory
-    });
+    const response = await axios.post(`${BASE_URL_API}/memory/modify`, memory);
     return response.data
 }
 

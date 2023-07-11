@@ -19,15 +19,14 @@ export const duplicateNickname = async (nickName) => {
 }
 
 export const signUp = async (user) => {
-    const response = await axios.post(`${BASE_URL_API}/user/register`, {
-        data: user
-    });
+    const response = await axios.post(`${BASE_URL_API}/user/register`, user);
+
+    //리턴 정보가 "0"이면 실패
+    return response.data === "0" ? null : user
 }
 
 export const modify = async (user) => {
-    const response = await axios.put(`${BASE_URL_API}/user/modify`, {
-        data: user
-    });
+    const response = await axios.put(`${BASE_URL_API}/user/modify`, user);
 }
 
 export const remove = async ({id}) => {

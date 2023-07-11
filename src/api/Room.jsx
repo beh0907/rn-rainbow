@@ -17,9 +17,7 @@ export const readMyList = async (id) => {
 }
 
 export const readBookmarkList = async (listRoomNum) => {
-    const response = await axios.post(`${BASE_URL_API}/room/readBookmarkList`, {
-        data: listRoomNum
-    });
+    const response = await axios.post(`${BASE_URL_API}/room/readBookmarkList`, listRoomNum);
     return response.data
 }
 

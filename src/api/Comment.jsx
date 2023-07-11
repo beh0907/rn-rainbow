@@ -8,9 +8,7 @@ export const readList = async (num) => {
 }
 
 export const register = async (comment) => {
-    const response = await axios.post(`${BASE_URL_API}/comment/register`, {
-        data: comment
-    });
+    const response = await axios.post(`${BASE_URL_API}/comment/register`, comment);
 }
 
 export const remove = async (seq) => {

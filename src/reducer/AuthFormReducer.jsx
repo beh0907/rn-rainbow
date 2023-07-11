@@ -2,6 +2,9 @@ export const initAuthForm = {
     id: '',
     password: '',
     passwordConfirm: '',
+    nickName: '',
+    mail: '',
+    provider: 'NATIVE',
     disabled: true,
     isLoading: false,
 };
@@ -15,9 +18,9 @@ export const AuthFormTypes = {
 export const authFormReducer = (state, action) => {
     switch (action.type) {
         case AuthFormTypes.UPDATE_FORM:
-            return { ...state, ...action.payload };
+            return {...state, ...action.payload};
         case AuthFormTypes.TOGGLE_LOADING:
-            return { ...state, isLoading: !state.isLoading };
+            return {...state, isLoading: !state.isLoading};
         case AuthFormTypes.RESET:
             return initAuthForm;
         default:
