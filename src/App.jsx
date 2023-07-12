@@ -1,17 +1,23 @@
 import {StatusBar} from 'expo-status-bar';
 import Navigation from "./navigations/Navigation";
-import {LogBox} from "react-native";
 import {UserProvider} from "./contexts/UserContext";
+import * as React from "react";
+import {PaperProvider} from "react-native-paper";
+import {MessageProvider} from "./contexts/MessageContext";
+import SnackBar from "./components/SnackBar";
 
 export default function App() {
-    LogBox.ignoreLogs([
-        'AsyncStorage has been extracted from react-native core'
-    ])
-
     return (
-            <UserProvider>
-                <StatusBar style="dark"/>
-                <Navigation/>
-            </UserProvider>
+        <PaperProvider>
+            <MessageProvider>
+                <UserProvider>
+                    {/*하단 스낵바 알림 메시지*/}
+                    <SnackBar/>
+
+                    <StatusBar style="dark"/>
+                    <Navigation/>
+                </UserProvider>
+            </MessageProvider>
+        </PaperProvider>
     );
 }

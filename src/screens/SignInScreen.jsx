@@ -36,13 +36,14 @@ const SignInScreen = () => {
             try {
                 const user = await signIn(form)
 
-                await SecureStore.save("id", user.id)
-                await SecureStore.save("password", form.password)
+                //자동 로그인이 체크되어 있다면
+                if (isAutoLogin) {
+                    await SecureStore.save("id", user.id)
+                    await SecureStore.save("password", form.password)
+                }
 
                 setUser(user)
                 console.log(user)
-                console.log(form.password)
-
             } catch (e) {
                 Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
                     text: '확인',

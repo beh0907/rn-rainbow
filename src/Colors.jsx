@@ -2,15 +2,15 @@ export const WHITE = "#ffffff"
 export const BLACK = "#000000"
 
 export const PRIMARY = {
-    // LIGHT: '#c9d8eb',
-    // DEFAULT: '#81a9d8',
-    // DARK:'#4170a0'
+    LIGHT: '#D0BCFF',
+    DEFAULT: '#7F67BE',
+    DARK:'#381E72'
 
 
 
-    LIGHT: '#74d5ff',
-    DEFAULT: '#1CB9EC',
-    DARK:'#0075a3'
+    // LIGHT: '#74d5ff',
+    // DEFAULT: '#1CB9EC',
+    // DARK:'#0075a3'
 }
 
 export const GRAY = {

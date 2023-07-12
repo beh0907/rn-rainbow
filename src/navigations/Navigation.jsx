@@ -31,14 +31,12 @@ const Navigation = () => {
                 const id = await SecureStore.getValueFor('id')
                 const password = await SecureStore.getValueFor('password')
 
-                if (id !== null && password !== null) {
-                    const user = await signIn({id, password})
-                    if (user) setUser(user)
+                // if (id !== null && password !== null) {
+                //     const user = await signIn({id, password})
+                //     if (user) setUser(user)
+                // }
 
-                    setIsReady(true)
-                } else {
-                    setIsReady(true)
-                }
+                setIsReady(true)
             } catch (e) {
                 setIsReady(true)
                 console.log(e)
@@ -53,7 +51,6 @@ const Navigation = () => {
     if (!isReady) return null
     return (
         <NavigationContainer onReady={onReady}>
-            {/*<AuthStack/>*/}
             {user.id ? <MainStack/> : <AuthStack/>}
         </NavigationContainer>
     );

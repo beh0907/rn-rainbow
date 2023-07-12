@@ -1,20 +1,18 @@
-import React, {useReducer, useRef, useState} from 'react';
+import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {Alert, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import TextButton from "../components/TextButton";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {PRIMARY, WHITE} from "../Colors";
 import {StatusBar} from "expo-status-bar";
-import Input, {InputTypes, ReturnKeyTypes} from "../components/Input";
+import {ReturnKeyTypes} from "../components/Input";
 import Button from "../components/Button";
-import HR from "../components/HR";
 import SafeInputView from "../components/SafeInputView";
 import {authFormReducer, AuthFormTypes, initAuthForm} from "../reducer/AuthFormReducer";
 import {useUserState} from "../contexts/UserContext";
 import {TextInput} from "react-native-paper";
-import {AuthRoutes} from "../navigations/Routes";
 import {signUp} from "../api/Auth";
-import * as SecureStore from "../utils/PreferenceStore";
+import {useMessageState} from "../contexts/MessageContext";
 
 const SignUpScreen = () => {
     const navigation = useNavigation()
@@ -26,7 +24,8 @@ const SignUpScreen = () => {
     const mailRef = useRef()
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
-    const [, setUser] = useUserState()
+    const [, setUser] = useUserState() // 글로벌 유저 상태정보
+    const [message, setMessage] = useMessageState() // 글로벌 알림 메시지 상태정보
 
     const [isHidePassword, setHidePassword] = useState(true)
     const [isHidePasswordConfirm, setHidePasswordConfirm] = useState(true)
@@ -56,21 +55,31 @@ const SignUpScreen = () => {
                 //회원가입 시도 실패 시 null
                 const user = await signUp(form)
 
-                //회원가입 정보를 로컬저장소에 저장한다
-                await SecureStore.save("id", user.id)
-                await SecureStore.save("password", form.password)
+                //스낵바 출력 셋팅
+                setMessage({
+                    ...message,
+                    snackMessage: (user.id === null ? "회원가입에 실패하였습니다." : "회원가입을 성공하였습니다."), snackVisible: true
+                })
 
-                // 회원가입 성공 시 자동 로그인
-                setUser(user)
+                // 회원가입 성공 시 로그인 화면으로 이동
+                if (user.id !== null)
+                    navigation.goBack()
             } catch (e) {
                 // const errorMessage = getAuthErrorMessages(e.code)
-                Alert.alert('회원가입 실패', errorMessage, [{
+                Alert.alert('회원가입 실패', e.code, [{
                     text: '확인',
                     onPress: () => dispatch({type: AuthFormTypes.TOGGLE_LOADING})
                 }])
             }
         }
     }
+
+    useEffect(() => {
+        setMessage({
+            snackMessage: "스낵바 글로벌 컨텍스트 테스트",
+            snackVisible: true
+        })
+    }, [])
 
     return (
         <SafeInputView>
@@ -90,7 +99,7 @@ const SignUpScreen = () => {
                         selectionColor={PRIMARY.DEFAULT}
                         label="아이디"
                         value={form.id}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', fontSize: 14, backgroundColor: WHITE}}
                         onSubmitEditing={() => passwordRef.current.focus()}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({id: text.trim()})}
@@ -105,7 +114,7 @@ const SignUpScreen = () => {
                         selectionColor={PRIMARY.DEFAULT}
                         label="비밀번호"
                         value={form.password}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({password: text.trim()})}
                         secureTextEntry={isHidePassword}
@@ -127,11 +136,11 @@ const SignUpScreen = () => {
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
+                        // activeOutlineColor={PRIMARY.DEFAULT}
+                        // selectionColor={PRIMARY.DEFAULT}
                         label="비밀번호 확인"
                         value={form.passwordConfirm}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({passwordConfirm: text.trim()})}
                         secureTextEntry={isHidePasswordConfirm}
@@ -148,6 +157,7 @@ const SignUpScreen = () => {
                         }
                     />
 
+
                     <TextInput
                         ref={nickNameRef}
                         mode="outlined"
@@ -157,7 +167,7 @@ const SignUpScreen = () => {
                         selectionColor={PRIMARY.DEFAULT}
                         label="닉네임"
                         value={form.nickName}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({nickName: text.trim()})}
                         onSubmitEditing={() => mailRef.current.focus()}
@@ -172,7 +182,7 @@ const SignUpScreen = () => {
                         selectionColor={PRIMARY.DEFAULT}
                         label="이메일"
                         value={form.mail}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.DONE}
                         onChangeText={(text) => updateForm({mail: text.trim()})}
                         onSubmitEditing={onSubmit}
@@ -183,10 +193,8 @@ const SignUpScreen = () => {
                             disabled={form.disabled}
                             isLoading={form.isLoading}
                             styles={{
-                                // container: {
-                                //     marginTop: 20,
-                                // },
                                 button: {
+                                    marginTop: 20,
                                     borderRadius: 4
                                 }
                             }}/>

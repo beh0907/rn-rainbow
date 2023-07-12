@@ -11,7 +11,7 @@ const MainStack = () => {
     return (
         <Stack.Navigator screenOptions={{
             contentStyle: {backgroundColor: WHITE},
-            title: '',
+            // title: '',
             headerLeft: HeaderLeft,
         }}>
             <Stack.Screen name={MainRoutes.LIST_ROOM} component={ListScreen}/>

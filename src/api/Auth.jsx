@@ -2,7 +2,11 @@ import axios from "axios";
 import {BASE_URL_API} from "@env"
 
 export const signIn = async ({id, password}) => {
-    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`);
+    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`, {
+        headers: {
+            fcmToken: ""
+        }
+    });
     return response.data
 }
 export const duplicateId = async (id) => {
