@@ -6,8 +6,9 @@ export const read = async (roomNum) => {
     return response.data
 }
 
-export const readList = async (page, type, keyword) => {
+export const readList = async ({page, type, keyword}) => {
     const response = await axios.get(`${BASE_URL_API}/room/readList?page=${page}&type=${type}&keyword=${keyword}`);
+    console.log("데이터",response.data)
     return response.data
 }
 

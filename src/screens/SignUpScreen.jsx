@@ -95,8 +95,6 @@ const SignUpScreen = () => {
                         mode={"outlined"}
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="아이디"
                         value={form.id}
                         style={{width: '100%', fontSize: 14, backgroundColor: WHITE}}
@@ -110,8 +108,6 @@ const SignUpScreen = () => {
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="비밀번호"
                         value={form.password}
                         style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
@@ -163,8 +159,6 @@ const SignUpScreen = () => {
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="닉네임"
                         value={form.nickName}
                         style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
@@ -178,8 +172,6 @@ const SignUpScreen = () => {
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="이메일"
                         value={form.mail}
                         style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}

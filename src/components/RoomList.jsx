@@ -1,17 +1,16 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import {FlatList, StyleSheet, View} from "react-native";
-import {GRAY} from "../Colors";
 import RoomItem from "./RoomItem";
-import usePosts from "../hooks/UseRooms";
+import UseRooms from "../hooks/UseRooms";
 
 const RoomList = () => {
-    const {posts, fetchNextPage, refetch, refetching} = usePosts()
+    const {posts, fetchNextPage, refetch, refetching} = UseRooms()
 
     return (
         <FlatList
+            style={styles.container}
             data={posts}
-            renderItem={({item}) => <RoomItem post={item}/>}
+            renderItem={({item}) => <RoomItem key={item.roomNum} room={item}/>}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
             onEndReached={fetchNextPage}
             refreshing={refetching}
@@ -21,10 +20,12 @@ const RoomList = () => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        height: '100%',
+        marginTop: 10
+    },
     separator: {
-        marginVertical: 20,
-        borderBottomWidth: 0.5,
-        borderBottomColor: GRAY.LIGHT
+        marginVertical: 10,
     }
 })
 

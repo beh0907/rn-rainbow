@@ -1,15 +1,21 @@
-import React, {useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import SafeInputView from "../components/SafeInputView";
 import {useNavigation} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {MD3LightTheme, SegmentedButtons} from "react-native-paper";
+import {SegmentedButtons} from "react-native-paper";
 import {PRIMARY, WHITE} from "../Colors";
+import RoomItem from "../components/RoomItem";
+import {readList} from "../api/Room";
+import {useUserState} from "../contexts/UserContext";
+import RoomList from "../components/RoomList";
 
 const ListScreen = props => {
     const navigation = useNavigation()
     const {top, bottom} = useSafeAreaInsets()
+
+    const [user,] = useUserState()
 
     const [listRoom, setListRoom] = useState([])
     const [listMyRoom, setListMyRoom] = useState([])
@@ -53,6 +59,9 @@ const ListScreen = props => {
                         },
                     ]}
                 />
+
+                <RoomList/>
+
             </View>
         </SafeInputView>
     );

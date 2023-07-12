@@ -85,8 +85,6 @@ const SignInScreen = () => {
                         mode={"outlined"}
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="아이디"
                         value={form.id}
                         style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
@@ -100,8 +98,6 @@ const SignInScreen = () => {
                         mode="outlined"
                         outlineStyle={{borderWidth: 1}}
                         outlineColor='#0000001F'
-                        activeOutlineColor={PRIMARY.DEFAULT}
-                        selectionColor={PRIMARY.DEFAULT}
                         label="비밀번호"
                         value={form.password}
                         style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
@@ -151,7 +147,6 @@ const SignInScreen = () => {
                             unfillColor="#FFFFFF"
                             textStyle={{textDecorationLine: 'none', fontSize: 12, color: PRIMARY.DEFAULT}}
                             text="자동 로그인"
-                            iconStyle={{borderColor: PRIMARY.DEFAULT}}
                             onPress={(isChecked) => {
                                 setAutoLogin(isChecked)
                             }}
