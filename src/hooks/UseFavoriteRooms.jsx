@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {readList} from "../api/Room";
+import {readBookmarkList, readList} from "../api/Room";
 
-const UseRooms = () => {
+const UseFavoriteRooms = () => {
     // const [searchState, setSearchState] = useState({
     //     page: 1,
     //     type: '',
@@ -18,7 +18,7 @@ const UseRooms = () => {
         if (!isLoadingRef.current) {
             isLoadingRef.current = true;
 
-            const list = await readList({page});
+            const list = await readBookmarkList([]);
 
             if (list.length > 0) {
                 setRooms(prev => lastRef.current ? [...prev, ...list] : list)
@@ -44,4 +44,4 @@ const UseRooms = () => {
     return {rooms, fetchNextPage, refetch, refetching}
 };
 
-export default UseRooms;
+export default UseFavoriteRooms;

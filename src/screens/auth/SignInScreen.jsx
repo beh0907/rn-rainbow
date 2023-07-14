@@ -1,18 +1,18 @@
 import React, {useCallback, useReducer, useRef, useState} from 'react';
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import {Alert, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
-import {AuthRoutes} from "../navigations/Routes";
-import {ReturnKeyTypes} from "../components/Input";
-import Button from "../components/Button";
+import {AuthRoutes} from "../../navigations/Routes";
+import {ReturnKeyTypes} from "../../components/Input";
+import Button from "../../components/button/Button";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import SafeInputView from "../components/SafeInputView";
-import TextButton from "../components/TextButton";
+import SafeInputView from "../../components/view/SafeInputView";
+import TextButton from "../../components/button/TextButton";
 import {StatusBar} from "expo-status-bar";
-import {PRIMARY, WHITE} from "../Colors";
-import {authFormReducer, AuthFormTypes, initAuthForm} from "../reducer/AuthFormReducer";
-import {useUserState} from "../contexts/UserContext";
-import {getAuthMessages, signIn} from "../api/Auth";
-import * as SecureStore from "../utils/PreferenceStore";
+import {PRIMARY, WHITE} from "../../Colors";
+import {authFormReducer, AuthFormTypes, initAuthForm} from "../../reducer/AuthFormReducer";
+import {useUserState} from "../../contexts/UserContext";
+import {getAuthMessages, signIn} from "../../api/Auth";
+import * as SecureStore from "../../utils/PreferenceStore";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {IconButton, TextInput} from "react-native-paper";
 
@@ -40,6 +40,9 @@ const SignInScreen = () => {
                 if (isAutoLogin) {
                     await SecureStore.save("id", user.id)
                     await SecureStore.save("password", form.password)
+                } else {
+                    await SecureStore.save("id", null)
+                    await SecureStore.save("password", null)
                 }
 
                 setUser(user)

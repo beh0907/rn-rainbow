@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {ActivityIndicator, Pressable, StyleSheet, Text, View} from "react-native";
-import {DANGER, GRAY, PRIMARY, WHITE} from "../Colors";
+import {DANGER, GRAY, PRIMARY, WHITE} from "../../Colors";
 
 export const ButtonTypes = {
     PRIMARY: 'PRIMARY',

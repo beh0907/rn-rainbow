@@ -1,15 +1,13 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
-import SafeInputView from "../components/SafeInputView";
+import SafeInputView from "../../components/view/SafeInputView";
 import {useNavigation} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {SegmentedButtons} from "react-native-paper";
-import {PRIMARY, WHITE} from "../Colors";
-import RoomItem from "../components/RoomItem";
-import {readList} from "../api/Room";
-import {useUserState} from "../contexts/UserContext";
-import RoomList from "../components/RoomList";
+import {PRIMARY, WHITE} from "../../Colors";
+import {useUserState} from "../../contexts/UserContext";
+import RoomList from "../../components/list/RoomList";
 
 const ListScreen = props => {
     const navigation = useNavigation()
@@ -60,7 +58,7 @@ const ListScreen = props => {
                     ]}
                 />
 
-                <RoomList/>
+                <RoomList value={roomButtonValue}/>
 
             </View>
         </SafeInputView>

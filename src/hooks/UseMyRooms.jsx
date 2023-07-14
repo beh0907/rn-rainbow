@@ -1,13 +1,15 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {readList} from "../api/Room";
+import {readMyList} from "../api/Room";
+import {useUserState} from "../contexts/UserContext";
 
-const UseRooms = () => {
+const UseMyRooms = () => {
     // const [searchState, setSearchState] = useState({
     //     page: 1,
     //     type: '',
     //     keyword: ''
     // })
 
+    const [user,] = useUserState()
     const [rooms, setRooms] = useState([])
     const [refetching, setRefetching] = useState(false)
 
@@ -18,7 +20,7 @@ const UseRooms = () => {
         if (!isLoadingRef.current) {
             isLoadingRef.current = true;
 
-            const list = await readList({page});
+            const list = await readMyList(user.id);
 
             if (list.length > 0) {
                 setRooms(prev => lastRef.current ? [...prev, ...list] : list)
@@ -44,4 +46,4 @@ const UseRooms = () => {
     return {rooms, fetchNextPage, refetch, refetching}
 };
 
-export default UseRooms;
+export default UseMyRooms;

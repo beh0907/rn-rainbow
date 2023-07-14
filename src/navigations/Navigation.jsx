@@ -5,8 +5,8 @@ import AuthStack from "./AuthStack";
 import {Asset} from "expo-asset";
 import {useUserState} from "../contexts/UserContext";
 import * as SecureStore from "../utils/PreferenceStore";
-import {signIn} from "../api/Auth";
 import MainStack from "./MainStack";
+import {signIn} from "../api/Auth";
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -31,10 +31,10 @@ const Navigation = () => {
                 const id = await SecureStore.getValueFor('id')
                 const password = await SecureStore.getValueFor('password')
 
-                // if (id !== null && password !== null) {
-                //     const user = await signIn({id, password})
-                //     if (user) setUser(user)
-                // }
+                if (id !== null && password !== null) {
+                    const user = await signIn({id, password})
+                    if (user) setUser(user)
+                }
 
                 setIsReady(true)
             } catch (e) {
@@ -51,10 +51,9 @@ const Navigation = () => {
     if (!isReady) return null
     return (
         <NavigationContainer onReady={onReady}>
-            <MainStack/>
-            {/*{user.id ? <MainStack/> : <AuthStack/>}*/}
+            {user.id ? <MainStack/> : <AuthStack/>}
         </NavigationContainer>
     );
-};
+}
 
-export default Navigation;
+export default Navigation

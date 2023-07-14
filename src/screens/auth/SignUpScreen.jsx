@@ -1,18 +1,18 @@
 import React, {useEffect, useReducer, useRef, useState} from 'react';
 import {Alert, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
-import TextButton from "../components/TextButton";
+import TextButton from "../../components/button/TextButton";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {PRIMARY, WHITE} from "../Colors";
+import {PRIMARY, WHITE} from "../../Colors";
 import {StatusBar} from "expo-status-bar";
-import {ReturnKeyTypes} from "../components/Input";
-import Button from "../components/Button";
-import SafeInputView from "../components/SafeInputView";
-import {authFormReducer, AuthFormTypes, initAuthForm} from "../reducer/AuthFormReducer";
-import {useUserState} from "../contexts/UserContext";
+import {ReturnKeyTypes} from "../../components/Input";
+import Button from "../../components/button/Button";
+import SafeInputView from "../../components/view/SafeInputView";
+import {authFormReducer, AuthFormTypes, initAuthForm} from "../../reducer/AuthFormReducer";
+import {useUserState} from "../../contexts/UserContext";
 import {TextInput} from "react-native-paper";
-import {signUp} from "../api/Auth";
-import {useMessageState} from "../contexts/MessageContext";
+import {signUp} from "../../api/Auth";
+import {useMessageState} from "../../contexts/MessageContext";
 
 const SignUpScreen = () => {
     const navigation = useNavigation()

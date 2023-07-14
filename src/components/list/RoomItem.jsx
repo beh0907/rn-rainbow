@@ -4,7 +4,6 @@ import {Card, Paragraph, Title} from "react-native-paper";
 import {BASE_URL_FILE} from "@env"
 
 const RoomItem = memo(({room}) => {
-    console.log("경로", `${BASE_URL_FILE}/${room.id}/${room.roomNum}/profile/s_/${room.image}`)
     return (
         <Card>
             <Card.Cover source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
