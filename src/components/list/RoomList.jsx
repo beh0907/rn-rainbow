@@ -36,7 +36,7 @@ const RoomList = ({value}) => {
 const styles = StyleSheet.create({
     container: {
         height: '100%',
-        marginTop: 10
+        marginTop: 10,
     },
     separator: {
         marginVertical: 10,

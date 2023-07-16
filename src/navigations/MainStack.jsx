@@ -4,7 +4,7 @@ import {MainRoutes} from "./Routes";
 import {WHITE} from "../Colors";
 import HeaderLeft from "../components/view/HeaderLeft";
 import ListScreen from "../screens/main/ListScreen";
-import ContentTab from "./ContentTab";
+import MainTab from "./MainTab";
 
 const Stack = createNativeStackNavigator()
 
@@ -16,7 +16,7 @@ const MainStack = () => {
             headerLeft: HeaderLeft,
         }}>
             {/*<Stack.Screen name={MainRoutes.LIST_ROOM} component={ListScreen}/>*/}
-            <Stack.Screen name={MainRoutes.CONTENT_TAB} component={ContentTab} options={{headerShown: false}}/>
+            <Stack.Screen name={MainRoutes.CONTENT_TAB} component={MainTab} options={{headerShown: false}}/>
         </Stack.Navigator>
     );
 };

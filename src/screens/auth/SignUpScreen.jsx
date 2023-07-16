@@ -84,7 +84,7 @@ const SignUpScreen = () => {
     return (
         <SafeInputView>
             <StatusBar style={"light"}/>
-            <View style={[styles.container, {paddingTop: top}]}>
+            <View style={[styles.container, {marginTop: top}]}>
 
                 <ScrollView style={[styles.form, {paddingBottom: bottom ? bottom + 10 : 40}]}
                             contentContainerStyle={{alignItems: 'center'}}

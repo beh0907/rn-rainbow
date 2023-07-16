@@ -37,6 +37,7 @@ const SignInScreen = () => {
                 const user = await signIn(form)
 
                 //자동 로그인이 체크되어 있다면
+                //로그인 정보를 저장한다
                 if (isAutoLogin) {
                     await SecureStore.save("id", user.id)
                     await SecureStore.save("password", form.password)
@@ -76,7 +77,7 @@ const SignInScreen = () => {
     return (
         <SafeInputView>
             <StatusBar style={"light"}/>
-            <View style={[styles.container, {paddingTop: top}]}>
+            <View style={[styles.container, {marginTop: top}]}>
 
                 {/*로그인 정보 입력 폼*/}
                 <ScrollView style={[styles.form, {paddingBottom: bottom ? bottom + 10 : 40}]}

@@ -8,7 +8,7 @@ const SnackBar = () => {
     const [message, setMessage] = useMessageState()
     const {snackMessage, snackVisible} = message;
 
-    const onDismissSnackBar = () => setMessage({...message, snackVisible: false});
+    const onDismissSnackBar = () => setMessage(prev => ({...prev, snackVisible: false}));
 
     return (
         <View style={styles.popupArea}>
@@ -18,7 +18,7 @@ const SnackBar = () => {
                     visible={snackVisible}
                     onDismiss={onDismissSnackBar}
                     action={{
-                        label: '확인',
+                        // label: '확인',
                         onPress: () => {
                             // Do something
                         },
