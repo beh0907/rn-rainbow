@@ -10,12 +10,18 @@ import {signIn} from "../api/Auth";
 
 const ImageAssets = [
     require('../../assets/icon.png'),
-    require('../../assets/cover.png')
+    require('../../assets/cover.png'),
+    require('../../assets/background/bg_intro_1.png'),
+    require('../../assets/background/bg_intro_2.png'),
+    require('../../assets/background/bg_intro_3.png'),
+    require('../../assets/background/bg_intro_4.png'),
 ]
 
 const Navigation = () => {
     const [user, setUser] = useUserState()
     const [isReady, setIsReady] = useState(false)
+
+    const [checkIntro, setCheckIntro] = useState('')
 
     useEffect(() => {
         (async () => {
@@ -26,6 +32,11 @@ const Navigation = () => {
                 await Promise.all(
                     ImageAssets.map(image => Asset.fromModule(image).downloadAsync())
                 )
+
+                const check = await SecureStore.getValueFor('isCheckIntro')
+
+                //인트로 체크 여부를 가져온다
+                setCheckIntro(check)
 
                 //SecureStore에 저장된 로그인 정보를 가져온다
                 const id = await SecureStore.getValueFor('id')
@@ -51,7 +62,7 @@ const Navigation = () => {
     if (!isReady) return null
     return (
         <NavigationContainer onReady={onReady}>
-            {user.id ? <MainStack/> : <AuthStack/>}
+            {user.id ? <MainStack/> : <AuthStack checkIntro={checkIntro}/>}
         </NavigationContainer>
     );
 }

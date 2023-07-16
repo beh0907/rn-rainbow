@@ -1,6 +1,6 @@
-import React, {useCallback, useReducer, useRef, useState} from 'react';
+import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
-import {Alert, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Image, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
 import {AuthRoutes} from "../../navigations/Routes";
 import {ReturnKeyTypes} from "../../components/Input";
 import Button from "../../components/button/Button";
@@ -14,7 +14,7 @@ import {useUserState} from "../../contexts/UserContext";
 import {getAuthMessages, signIn} from "../../api/Auth";
 import * as SecureStore from "../../utils/PreferenceStore";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import {IconButton, TextInput} from "react-native-paper";
+import {TextInput} from "react-native-paper";
 
 const SignInScreen = () => {
     const navigation = useNavigation()
@@ -69,6 +69,7 @@ const SignInScreen = () => {
     //다른 화면에서 로그인 화면으로 포커스가 되돌아올 때
     //기존 state 값들을 초기화
     useFocusEffect(
+
         useCallback(() => {
             return () => dispatch({type: AuthFormTypes.RESET})
         }, [])
@@ -78,6 +79,11 @@ const SignInScreen = () => {
         <SafeInputView>
             <StatusBar style={"light"}/>
             <View style={[styles.container, {marginTop: top}]}>
+
+                {/*<View>*/}
+                {/*    <Image source={require('../../../assets/icon.png')}/>*/}
+                {/*    <Text variant="headlineLarge">레인보우브릿지</Text>*/}
+                {/*</View>*/}
 
                 {/*로그인 정보 입력 폼*/}
                 <ScrollView style={[styles.form, {paddingBottom: bottom ? bottom + 10 : 40}]}
