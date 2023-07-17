@@ -15,6 +15,7 @@ import {getAuthMessages, signIn} from "../../api/Auth";
 import * as SecureStore from "../../utils/PreferenceStore";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {TextInput} from "react-native-paper";
+import {STORE_USER_KEYS} from "../../utils/PreferenceStore";
 
 const SignInScreen = () => {
     const navigation = useNavigation()
@@ -39,11 +40,11 @@ const SignInScreen = () => {
                 //자동 로그인이 체크되어 있다면
                 //로그인 정보를 저장한다
                 if (isAutoLogin) {
-                    await SecureStore.save("id", user.id)
-                    await SecureStore.save("password", form.password)
+                    await SecureStore.save(STORE_USER_KEYS.ID, user.id)
+                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, form.password)
                 } else {
-                    await SecureStore.save("id", null)
-                    await SecureStore.save("password", null)
+                    await SecureStore.save(STORE_USER_KEYS.ID, null)
+                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, null)
                 }
 
                 setUser(user)

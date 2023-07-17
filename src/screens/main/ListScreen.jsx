@@ -9,13 +9,15 @@ import {PRIMARY, WHITE} from "../../Colors";
 import {useUserState} from "../../contexts/UserContext";
 import RoomList from "../../components/list/RoomList";
 import {useMessageState} from "../../contexts/MessageContext";
+import MyRoomList from "../../components/list/MyRoomList";
+import FavoriteRoomList from "../../components/list/FavoriteRoomList";
 
 const ListScreen = props => {
     const navigation = useNavigation()
     const {top, bottom} = useSafeAreaInsets()
 
     const [user,] = useUserState()
-    const [message, setMessage] = useMessageState()
+    const [, setMessage] = useMessageState()
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
     const [roomButtonValue, setRoomButtonValue] = useState('AllRoom'); // 버튼 선택 값
@@ -34,11 +36,11 @@ const ListScreen = props => {
         // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
         if (exitApp === undefined || !exitApp) {
             //스낵바 출력 셋팅
-            setMessage({
-                ...message,
+            setMessage(prev => ({
+                ...prev,
                 snackMessage: "한번 더 뒤로가기를 누르시면 앱이 종료됩니다.",
                 snackVisible: true
-            })
+            }))
 
             exitApp = true;
 
@@ -91,7 +93,12 @@ const ListScreen = props => {
                     ]}
                 />
 
-                <RoomList value={roomButtonValue}/>
+                {
+                    roomButtonValue === "MyRoom" ? <MyRoomList/>
+                        : roomButtonValue === "FavoriteRoom" ? <FavoriteRoomList/>
+                            : <RoomList/>
+                }
+
 
             </View>
         </SafeInputView>
@@ -104,7 +111,7 @@ ListScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 16,
+        paddingHorizontal: 16,
     }
 })
 

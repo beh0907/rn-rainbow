@@ -5,15 +5,14 @@ import useRooms from "../../hooks/UseRooms";
 import useMyRooms from "../../hooks/UseMyRooms";
 import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
 import {useUserState} from "../../contexts/UserContext";
-import {PRIMARY} from "../../Colors";
 
-const RoomList = () => {
+const FavoriteRoomList = () => {
     const {
         rooms,
         fetchNextPage,
         refetch,
         refetching
-    } = useRooms()
+    } = useFavoriteRooms()
 
     return (
         <FlatList
@@ -31,11 +30,12 @@ const RoomList = () => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
+        height: '100%',
+        marginTop: 10,
     },
     separator: {
-        paddingVertical: 10,
+        marginVertical: 10,
     }
 })
 
-export default RoomList;
+export default FavoriteRoomList;

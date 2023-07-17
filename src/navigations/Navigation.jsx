@@ -7,6 +7,7 @@ import {useUserState} from "../contexts/UserContext";
 import * as SecureStore from "../utils/PreferenceStore";
 import MainStack from "./MainStack";
 import {signIn} from "../api/Auth";
+import {STORE_SETTING_KEYS, STORE_USER_KEYS} from "../utils/PreferenceStore";
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -33,14 +34,15 @@ const Navigation = () => {
                     ImageAssets.map(image => Asset.fromModule(image).downloadAsync())
                 )
 
-                const check = await SecureStore.getValueFor('isCheckIntro')
+                const check = await SecureStore.getValueFor(STORE_SETTING_KEYS.CheckIntro)
 
                 //인트로 체크 여부를 가져온다
                 setCheckIntro(check)
 
                 //SecureStore에 저장된 로그인 정보를 가져온다
-                const id = await SecureStore.getValueFor('id')
-                const password = await SecureStore.getValueFor('password')
+                const id = await SecureStore.getValueFor(STORE_USER_KEYS.ID)
+                const password = await SecureStore.getValueFor(STORE_USER_KEYS.PASSWORD)
+                const provider = await SecureStore.getValueFor(STORE_USER_KEYS.PROVIDER)
 
                 if (id !== null && password !== null) {
                     const user = await signIn({id, password})

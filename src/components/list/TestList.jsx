@@ -1,19 +1,21 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
 import RoomItem from "./RoomItem";
 import useRooms from "../../hooks/UseRooms";
 import useMyRooms from "../../hooks/UseMyRooms";
 import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
-import {useUserState} from "../../contexts/UserContext";
-import {PRIMARY} from "../../Colors";
 
-const RoomList = () => {
+const TestList = ({value}) => {
     const {
         rooms,
         fetchNextPage,
         refetch,
         refetching
     } = useRooms()
+
+    useEffect(() => {
+
+    }, [value])
 
     return (
         <FlatList
@@ -31,11 +33,12 @@ const RoomList = () => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
+        height: '100%',
+        marginTop: 10,
     },
     separator: {
-        paddingVertical: 10,
+        marginVertical: 10,
     }
 })
 
-export default RoomList;
+export default TestList;

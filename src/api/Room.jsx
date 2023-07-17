@@ -8,17 +8,20 @@ export const read = async (roomNum) => {
 
 export const readList = async ({page, type, keyword}) => {
     const response = await axios.get(`${BASE_URL_API}/room/readList?page=${page}&type=${type}&keyword=${keyword}`);
+
     console.log("데이터",response.data)
     return response.data
 }
 
 export const readMyList = async (id) => {
     const response = await axios.get(`${BASE_URL_API}/room/readMyList?id=${id}`);
+    console.log("데이터",response.data)
     return response.data
 }
 
 export const readBookmarkList = async (listRoomNum) => {
     const response = await axios.post(`${BASE_URL_API}/room/readBookmarkList`, listRoomNum);
+    console.log("데이터",response.data)
     return response.data
 }
 

@@ -4,7 +4,7 @@ import {UserProvider} from "./contexts/UserContext";
 import * as React from "react";
 import {DefaultTheme, PaperProvider} from "react-native-paper";
 import {MessageProvider} from "./contexts/MessageContext";
-import SnackBar from "./components/SnackBar";
+import SnackBar from "./components/message/SnackBar";
 import {Colors} from "react-native/Libraries/NewAppScreen";
 import {PRIMARY} from "./Colors";
 

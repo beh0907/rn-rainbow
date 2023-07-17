@@ -3,25 +3,26 @@ import AppIntroSlider from "react-native-app-intro-slider";
 import * as SecureStore from "../../utils/PreferenceStore";
 import {AuthRoutes} from "../../navigations/Routes";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
+import {STORE_SETTING_KEYS} from "../../utils/PreferenceStore";
 
 const IntroScreen = ({navigation}) => {
     const {height, width} = useWindowDimensions()
     const {top, bottom} = useSafeAreaInsets()
 
     const onDone = async () => {
-        await SecureStore.save("isCheckIntro", "1")
+        await SecureStore.save(STORE_SETTING_KEYS.CheckIntro, "1")
         navigation.replace(AuthRoutes.SIGN_IN)
     };
 
     const onSkip = async () => {
-        await SecureStore.save("isCheckIntro", "1")
+        await SecureStore.save(STORE_SETTING_KEYS.CheckIntro, "1")
         navigation.replace(AuthRoutes.SIGN_IN)
     };
 
     const RenderItem = ({item}) => {
         return (
-            <View style={[styles.hw100, {marginTop: top}]}>
-                <Image style={[styles.hw100]} source={item.image} resizeMode={"stretch"}/>
+            <View style={[styles.hw100, {backgroundColor: item.background}]}>
+                <Image style={styles.hw100} source={item.image} resizeMode={"cover"}/>
             </View>
         );
     };
@@ -53,24 +54,28 @@ const slides = [
         text: 'Best Recharge offers',
         title: 'Mobile Recharge',
         image: require('../../../assets/background/bg_intro_1.png'),
+        background: '#a7a8c4'
     },
     {
         key: 'Intro2',
         title: 'Flight Booking',
         text: 'Upto 25% off on Domestic Flights',
         image: require('../../../assets/background/bg_intro_2.png'),
+        background: '#a7a8c4'
     },
     {
         key: 'Intro3',
         title: 'Great Offers',
         text: 'Enjoy Great offers on our all services',
         image: require('../../../assets/background/bg_intro_3.png'),
+        background: '#a7a8c4'
     },
     {
         key: 'Intro4',
         title: 'Best Deals',
         text: ' Best Deals on all our services',
         image: require('../../../assets/background/bg_intro_4.png'),
+        background: '#a7a8c4'
     }
 ];
 

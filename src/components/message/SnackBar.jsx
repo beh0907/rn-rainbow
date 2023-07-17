@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Portal, Snackbar} from 'react-native-paper';
-import {useUserState} from "../contexts/UserContext";
-import {useMessageState} from "../contexts/MessageContext";
+import {useUserState} from "../../contexts/UserContext";
+import {useMessageState} from "../../contexts/MessageContext";
 
 const SnackBar = () => {
     const [message, setMessage] = useMessageState()

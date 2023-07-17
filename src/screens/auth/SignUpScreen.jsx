@@ -25,7 +25,7 @@ const SignUpScreen = () => {
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState() // 글로벌 유저 상태정보
-    const [message, setMessage] = useMessageState() // 글로벌 알림 메시지 상태정보
+    const [, setMessage] = useMessageState() // 글로벌 알림 메시지 상태정보
 
     const [isHidePassword, setHidePassword] = useState(true)
     const [isHidePasswordConfirm, setHidePasswordConfirm] = useState(true)
@@ -56,10 +56,11 @@ const SignUpScreen = () => {
                 const user = await signUp(form)
 
                 //스낵바 출력 셋팅
-                setMessage({
-                    ...message,
-                    snackMessage: (user.id === null ? "회원가입에 실패하였습니다." : "회원가입을 성공하였습니다."), snackVisible: true
-                })
+                setMessage(prev => ({
+                    ...prev,
+                    snackMessage: (user.id === null ? "회원가입에 실패하였습니다." : "회원가입을 성공하였습니다."),
+                    snackVisible: true
+                }))
 
                 // 회원가입 성공 시 로그인 화면으로 이동
                 if (user.id !== null)
@@ -73,13 +74,6 @@ const SignUpScreen = () => {
             }
         }
     }
-
-    useEffect(() => {
-        setMessage({
-            snackMessage: "스낵바 글로벌 컨텍스트 테스트",
-            snackVisible: true
-        })
-    }, [])
 
     return (
         <SafeInputView>

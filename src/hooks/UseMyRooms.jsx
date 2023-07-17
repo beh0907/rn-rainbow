@@ -2,14 +2,13 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {readMyList} from "../api/Room";
 import {useUserState} from "../contexts/UserContext";
 
-const UseMyRooms = () => {
+const UseMyRooms = (user) => {
     // const [searchState, setSearchState] = useState({
     //     page: 1,
     //     type: '',
     //     keyword: ''
     // })
 
-    const [user,] = useUserState()
     const [rooms, setRooms] = useState([])
     const [refetching, setRefetching] = useState(false)
 

@@ -2,24 +2,23 @@ import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Paragraph, Title} from "react-native-paper";
 import {BASE_URL_FILE} from "@env"
-import {StyleSheet} from "react-native";
 
-const RoomItem = memo(({room}) => {
+const TestItem = memo(({test}) => {
     return (
         <Card>
             <Card.Cover source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
             <Card.Content>
-                <Title>{room.name}의 방</Title>
+                <Title>{test.name}의 방</Title>
                 <Paragraph>Card content</Paragraph>
             </Card.Content>
         </Card>
     );
 });
 
-RoomItem.displayName = 'RoomItem'
+TestItem.displayName = 'RoomItem'
 
-RoomItem.propTypes = {
+TestItem.propTypes = {
     room: PropTypes.object.isRequired
 };
 
-export default RoomItem;
+export default TestItem;
