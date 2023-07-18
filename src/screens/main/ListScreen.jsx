@@ -1,16 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {BackHandler, StyleSheet, View} from "react-native";
+import {BackHandler, SafeAreaView, ScrollView, StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
-import SafeInputView from "../../components/view/SafeInputView";
 import {useNavigation} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {SegmentedButtons} from "react-native-paper";
-import {PRIMARY, WHITE} from "../../Colors";
+import {Text} from "react-native-paper";
 import {useUserState} from "../../contexts/UserContext";
 import RoomList from "../../components/list/RoomList";
 import {useMessageState} from "../../contexts/MessageContext";
 import MyRoomList from "../../components/list/MyRoomList";
 import FavoriteRoomList from "../../components/list/FavoriteRoomList";
+import SafeInputView from "../../components/view/SafeInputView";
 
 const ListScreen = props => {
     const navigation = useNavigation()
@@ -20,7 +19,6 @@ const ListScreen = props => {
     const [, setMessage] = useMessageState()
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
-    const [roomButtonValue, setRoomButtonValue] = useState('AllRoom'); // 버튼 선택 값
     const onChangeSearch = query => setSearchQuery(query);
 
     let exitApp;
@@ -59,8 +57,8 @@ const ListScreen = props => {
     }
 
     return (
-        <SafeInputView>
-            <StatusBar style={"light"}/>
+        <ScrollView>
+            <StatusBar style={"dark"}/>
             <View style={[styles.container, {marginTop: top}]}>
                 {/*<Searchbar*/}
                 {/*    placeholder="추모관을 검색해주세요."*/}
@@ -68,40 +66,29 @@ const ListScreen = props => {
                 {/*    value={searchQuery}*/}
                 {/*/>*/}
 
-                <SegmentedButtons
-                    value={roomButtonValue}
-                    onValueChange={setRoomButtonValue}
-                    buttons={[
-                        {
-                            style: {backgroundColor: roomButtonValue === 'AllRoom' ? PRIMARY.LIGHT : WHITE},
-                            checkedColor: WHITE,
-                            value: 'AllRoom',
-                            label: '전체 추모관',
-                        },
-                        {
-                            style: {backgroundColor: roomButtonValue === 'MyRoom' ? PRIMARY.LIGHT : WHITE},
-                            checkedColor: WHITE,
-                            value: 'MyRoom',
-                            label: '나의 추모관',
-                        },
-                        {
-                            style: {backgroundColor: roomButtonValue === 'FavoriteRoom' ? PRIMARY.LIGHT : WHITE},
-                            checkedColor: WHITE,
-                            value: 'FavoriteRoom',
-                            label: '즐겨찾기'
-                        },
-                    ]}
-                />
+                <View style={styles.containerList}>
+                    <Text variant="headlineMedium">추모관</Text>
+                </View>
 
-                {
-                    roomButtonValue === "MyRoom" ? <MyRoomList/>
-                        : roomButtonValue === "FavoriteRoom" ? <FavoriteRoomList/>
-                            : <RoomList/>
-                }
+                <View style={styles.containerList}>
+                    <View style={{flexDirection:"row", justifyContent:"space-between"}}>
+                        <Text variant="titleMedium">전체 추모관</Text>
+                        <Text variant="titleSmall">상세 보기 ></Text>
+                    </View>
+                    <RoomList isHorizontal={true}/>
+                </View>
 
+                <View style={styles.containerList}>
+                    <Text variant="titleMedium">나의 추모관</Text>
+                    <MyRoomList isHorizontal={true}/>
+                </View>
 
+                <View style={styles.containerList}>
+                    <Text variant="titleMedium">즐겨찾기 추모관</Text>
+                    <FavoriteRoomList isHorizontal={true}/>
+                </View>
             </View>
-        </SafeInputView>
+        </ScrollView>
     );
 };
 
@@ -112,6 +99,9 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 16,
+    },
+    containerList: {
+        marginTop: 32
     }
 })
 

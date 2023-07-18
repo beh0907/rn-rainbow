@@ -1,12 +1,10 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
 import RoomItem from "./RoomItem";
-import useRooms from "../../hooks/UseRooms";
 import useMyRooms from "../../hooks/UseMyRooms";
-import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
 import {useUserState} from "../../contexts/UserContext";
 
-const MyRoomList = () => {
+const MyRoomList = ({isHorizontal}) => {
     const [user,] = useUserState()
     const {
         rooms,
@@ -17,6 +15,8 @@ const MyRoomList = () => {
 
     return (
         <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal={isHorizontal}
             style={styles.container}
             data={rooms}
             renderItem={({item}) => <RoomItem room={item}/>}
@@ -31,11 +31,10 @@ const MyRoomList = () => {
 
 const styles = StyleSheet.create({
     container: {
-        height: '100%',
         marginTop: 10,
     },
     separator: {
-        marginVertical: 10,
+        marginHorizontal: 10,
     }
 })
 

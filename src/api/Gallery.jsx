@@ -1,17 +1,30 @@
 import axios from "axios";
-import { BASE_URL_API } from "@env"
+import {BASE_URL_API} from "@env"
 
 export const readList = async (num) => {
     const response = await axios.get(`${BASE_URL_API}/gallery/readList?num=${num}`);
     return response.data
 }
 
-export const register = async (galleries, uploadFiles) => {
+export const register = async (galleries, filesUri) => {
+    const filename = filesUri.split('/').pop()
+    const match = /\.(\w+)$/.exec(filename ?? '')
+    const type = match ? `image/${match[1]}` : 'image'
     const formData = new FormData()
-    formData.append('galleries', galleries);
-    formData.append('file', uploadFiles)
 
-    const response = await axios.post(`${BASE_URL_API}/room/register`, formData);
+    galleries.name = filename
+
+    formData.append('galleries', galleries);
+    formData.append('file', {uri: filesUri, name: filename, type})
+
+    console.log(formData)
+
+    const response = await axios.post(`${BASE_URL_API}/room/register`, formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
     return response.data
 }
 

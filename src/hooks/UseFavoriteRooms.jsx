@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {readBookmarkList, readList} from "../api/Room";
+import {readBookmarkList} from "../api/Room";
 
 const UseFavoriteRooms = () => {
     // const [searchState, setSearchState] = useState({
@@ -8,7 +8,7 @@ const UseFavoriteRooms = () => {
     //     keyword: ''
     // })
 
-    const [rooms, setRooms] = useState([])
+    const [rooms, setRooms] = useState([{}, {}, {}, {}, {}])
     const [refetching, setRefetching] = useState(false)
 
     const isLoadingRef = useRef(false)

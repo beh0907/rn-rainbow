@@ -6,7 +6,7 @@ import useMyRooms from "../../hooks/UseMyRooms";
 import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
 import {useUserState} from "../../contexts/UserContext";
 
-const FavoriteRoomList = () => {
+const FavoriteRoomList = ({isHorizontal}) => {
     const {
         rooms,
         fetchNextPage,
@@ -16,6 +16,8 @@ const FavoriteRoomList = () => {
 
     return (
         <FlatList
+            showsHorizontalScrollIndicator={false}
+            horizontal={isHorizontal}
             style={styles.container}
             data={rooms}
             renderItem={({item}) => <RoomItem room={item}/>}
@@ -34,7 +36,7 @@ const styles = StyleSheet.create({
         marginTop: 10,
     },
     separator: {
-        marginVertical: 10,
+        marginHorizontal: 10,
     }
 })
 

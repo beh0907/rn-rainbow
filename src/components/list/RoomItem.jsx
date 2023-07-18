@@ -2,12 +2,15 @@ import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Paragraph, Title} from "react-native-paper";
 import {BASE_URL_FILE} from "@env"
-import {StyleSheet} from "react-native";
+import {useWindowDimensions} from "react-native";
 
 const RoomItem = memo(({room}) => {
+    const {width, heidht} = useWindowDimensions()
+
     return (
-        <Card>
-            <Card.Cover source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
+        <Card style={{width: width / 2}}>
+            <Card.Cover style={{height: 200}}
+                        source={{uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}`}}/>
             <Card.Content>
                 <Title>{room.name}의 방</Title>
                 <Paragraph>Card content</Paragraph>

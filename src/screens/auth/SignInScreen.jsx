@@ -78,7 +78,7 @@ const SignInScreen = () => {
 
     return (
         <SafeInputView>
-            <StatusBar style={"light"}/>
+            <StatusBar style={"dark"}/>
             <View style={[styles.container, {marginTop: top}]}>
 
                 {/*<View>*/}
@@ -127,28 +127,6 @@ const SignInScreen = () => {
                             />
                         }
                     />
-
-                    {/*<Input*/}
-                    {/*    styles={{*/}
-                    {/*        container: {marginBottom: 20},*/}
-                    {/*    }}*/}
-                    {/*    value={form.id}*/}
-                    {/*    onChangeText={(text) => updateForm({id: text.trim()})}*/}
-                    {/*    inputType={InputTypes.ID}*/}
-                    {/*    returnKeyType={ReturnKeyTypes.NEXT}*/}
-                    {/*    onSubmitEditing={() => passwordRef.current.focus()}*/}
-                    {/*/>*/}
-                    {/*<Input*/}
-                    {/*    ref={passwordRef}*/}
-                    {/*    styles={{*/}
-                    {/*        container: {marginBottom: 20},*/}
-                    {/*    }}*/}
-                    {/*    value={form.password}*/}
-                    {/*    onChangeText={(text) => updateForm({password: text.trim()})}*/}
-                    {/*    inputType={InputTypes.PASSWORD}*/}
-                    {/*    returnKeyType={ReturnKeyTypes.DONE}*/}
-                    {/*    onSubmitEditing={onSubmit}*/}
-                    {/*/>*/}
 
                     {/*자동 로그인 체크박스*/}
                     <View style={{width: '100%', alignItems: 'flex-start', left: 8}}>
