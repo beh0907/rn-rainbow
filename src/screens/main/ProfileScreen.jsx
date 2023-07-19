@@ -4,7 +4,7 @@
 import {useState} from 'react';
 import {Button, Image, StyleSheet, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import {register} from "../../api/Gallery";
+import {registerGallery} from "../../api/Gallery";
 
 const ProfileScreen = props => {
     // const {top, bottom} = useSafeAreaInsets();
@@ -37,7 +37,7 @@ const ProfileScreen = props => {
                 roomNum: 4,
                 id: 'beh0907',
             }
-            await register(gallery, imageUri)
+            await registerGallery(gallery, imageUri)
         }
     };
 

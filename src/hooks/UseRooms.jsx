@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {readList} from "../api/Room";
+import {readRoomList} from "../api/Room";
 
 const UseRooms = () => {
     // const [searchState, setSearchState] = useState({
@@ -18,7 +18,7 @@ const UseRooms = () => {
         if (!isLoadingRef.current) {
             isLoadingRef.current = true;
 
-            const list = await readList({page});
+            const list = await readRoomList({page});
 
             if (list.length > 0) {
                 setRooms(prev => lastRef.current ? [...prev, ...list] : list)

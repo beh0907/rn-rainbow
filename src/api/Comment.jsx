@@ -1,16 +1,15 @@
 import axios from "axios";
 import { BASE_URL_API } from "@env"
 
-
-export const readList = async (num) => {
+export const readCommentList = async (num) => {
     const response = await axios.get(`${BASE_URL_API}/comment/readList?num=${num}`);
     return response.data
 }
 
-export const register = async (comment) => {
+export const registerComment = async (comment) => {
     const response = await axios.post(`${BASE_URL_API}/comment/register`, comment);
 }
 
-export const remove = async (seq) => {
+export const removeComment = async (seq) => {
     const response = await axios.delete(`${BASE_URL_API}/comment/remove?seq=${seq}`);
 }

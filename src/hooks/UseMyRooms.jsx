@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useRef, useState} from 'react';
-import {readMyList} from "../api/Room";
+import {readMyRoomList} from "../api/Room";
 import {useUserState} from "../contexts/UserContext";
 
 const UseMyRooms = (user) => {
@@ -19,7 +19,7 @@ const UseMyRooms = (user) => {
         if (!isLoadingRef.current) {
             isLoadingRef.current = true;
 
-            const list = await readMyList(user.id);
+            const list = await readMyRoomList(user.id);
 
             if (list.length > 0) {
                 setRooms(prev => lastRef.current ? [...prev, ...list] : list)

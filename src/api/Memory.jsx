@@ -2,7 +2,7 @@ import axios from "axios";
 import { BASE_URL_API } from "@env"
 
 
-export const readList = async (num, type) => {
+export const readMemoryList = async (num, type) => {
     const response = await axios.get(`${BASE_URL_API}/memory/readList?num=${num}&type=${type}`);
     return response.data
 }
@@ -25,13 +25,13 @@ export const registerVideo = async (memory, file) => {
     return response.data
 }
 
-export const modify = async (memory) => {
+export const modifyMemory = async (memory) => {
     const response = await axios.post(`${BASE_URL_API}/memory/modify`, memory);
     return response.data
 }
 
 
-export const remove = async (memory) => {
+export const removeMemory = async (memory) => {
     const response = await axios.delete(`${BASE_URL_API}/memory/remove`, {
         data: memory
     });

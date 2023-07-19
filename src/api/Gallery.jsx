@@ -1,12 +1,12 @@
 import axios from "axios";
 import {BASE_URL_API} from "@env"
 
-export const readList = async (num) => {
+export const readGalleryList = async (num) => {
     const response = await axios.get(`${BASE_URL_API}/gallery/readList?num=${num}`);
     return response.data
 }
 
-export const register = async (galleries, filesUri) => {
+export const registerGallery = async (galleries, filesUri) => {
     const filename = filesUri.split('/').pop()
     const match = /\.(\w+)$/.exec(filename ?? '')
     const type = match ? `image/${match[1]}` : 'image'
@@ -39,7 +39,7 @@ export const register = async (galleries, filesUri) => {
 //     return response.data
 // }
 
-export const remove = async (galleries) => {
+export const removeGallery = async (galleries) => {
     const response = await axios.delete(`${BASE_URL_API}/gallery/remove`, {
         data: galleries
     });

@@ -6,7 +6,7 @@ import TabBarAddButton from "../components/button/TabBarAddButton";
 import BoardScreen from "../screens/main/BoardScreen";
 import ProfileScreen from "../screens/main/ProfileScreen";
 import TestScreen from "../screens/main/TestScreen";
-import ListScreen from "../screens/main/ListScreen";
+import HomeScreen from "../screens/main/HomeScreen";
 import {GRAY, PRIMARY} from "../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 
@@ -26,9 +26,9 @@ const MainTab = () => {
                 headerShown: false,
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,
-                // tabBarShowLabel: false
+                tabBarShowLabel: false
             }}>
-                <Tab.Screen name={ContentRoutes.LIST} component={ListScreen}
+                <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'home'}),
                                 tabBarLabel: '추모관'

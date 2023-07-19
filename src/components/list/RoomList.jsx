@@ -22,7 +22,7 @@ const RoomList = ({isHorizontal}) => {
             style={styles.container}
             data={rooms}
             renderItem={({item}) => <RoomItem room={item}/>}
-            keyExtractor={(item) => item.roomNum}
+            keyExtractor={(item, index) => index}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
             onEndReached={fetchNextPage}
             refreshing={refetching}
