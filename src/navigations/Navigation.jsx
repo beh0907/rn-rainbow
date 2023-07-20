@@ -57,15 +57,14 @@ const Navigation = () => {
                 )
 
                 //인트로 체크 여부를 가져와 설정한다
-                const check = await SecureStore.getValueFor(STORE_SETTING_KEYS.CheckIntro)
-                setCheckIntro(check)
+                setCheckIntro(await SecureStore.getValueFor(STORE_SETTING_KEYS.CheckIntro))
 
                 //SecureStore에 저장된 로그인 정보를 가져온다
                 const id = await SecureStore.getValueFor(STORE_USER_KEYS.ID)
-                const password = await SecureStore.getValueFor(STORE_USER_KEYS.PASSWORD)
-                const provider = await SecureStore.getValueFor(STORE_USER_KEYS.PROVIDER)
+                const password = await SecureStore.getValueFor(STORE_USER_KEYS.Password)
+                const provider = await SecureStore.getValueFor(STORE_USER_KEYS.Provider)
 
-                if (id !== null && password !== null) {
+                if (id !== "" && password !== "") {
                     const user = await signIn({id, password})
                     if (user) setUser(user)
                 }
@@ -73,7 +72,6 @@ const Navigation = () => {
                 setIsReady(true)
             } catch (e) {
                 setIsReady(true)
-                console.log(e)
             }
         })()
     }, [setUser, setIsReady, setCheckIntro, requestPermission])

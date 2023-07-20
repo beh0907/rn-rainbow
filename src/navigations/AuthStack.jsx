@@ -14,8 +14,7 @@ const AuthStack = ({checkIntro}) => {
         <Stack.Navigator
             screenOptions={{contentStyle: {backgroundColor: WHITE}, headerShown: false}}>
 
-            {/*{checkIntro !== "1" && <Stack.Screen name={AuthRoutes.INTRO} component={IntroScreen}/>}*/}
-            <Stack.Screen name={AuthRoutes.INTRO} component={IntroScreen}/>
+            {checkIntro !== "1" && <Stack.Screen name={AuthRoutes.INTRO} component={IntroScreen}/>}
             <Stack.Screen name={AuthRoutes.SIGN_IN} component={SignInScreen}/>
             <Stack.Screen name={AuthRoutes.SIGN_UP} component={SignUpScreen}/>
 

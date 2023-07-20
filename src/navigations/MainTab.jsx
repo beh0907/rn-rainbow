@@ -26,7 +26,7 @@ const MainTab = () => {
                 headerShown: false,
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,
-                tabBarShowLabel: false
+                // tabBarShowLabel: false
             }}>
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{

@@ -8,6 +8,7 @@ export const MainRoutes = {
     CONTENT_TAB: '메인 메뉴',
     ROOM_LIST: '추모관 목록',
     ROOM: '추모관 메뉴',
+    IMAGE_PICKER: "이미지 선택"
 }
 
 export const ContentRoutes = {

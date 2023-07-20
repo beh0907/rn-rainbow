@@ -38,7 +38,6 @@ const BoardScreen = props => {
             javaScriptEnabled={true}
             onShouldStartLoadWithRequest={() => true}
             onNavigationStateChange={(navState) => {
-                console.log(navState)
                 setCanGoBack(navState.canGoBack)
             }}
         />

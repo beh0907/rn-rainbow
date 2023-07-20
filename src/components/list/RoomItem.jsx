@@ -5,6 +5,7 @@ import {BASE_URL_FILE} from "@env"
 import {Pressable, StyleSheet, useWindowDimensions} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {MainRoutes} from "../../navigations/Routes";
+import AvatarText from "react-native-paper/src/components/Avatar/AvatarText";
 
 const RoomItem = memo(({room}) => {
     const {width, height} = useWindowDimensions()
@@ -19,6 +20,10 @@ const RoomItem = memo(({room}) => {
     return (
         <Pressable onPress={() => pressItem(room)}>
             <Card key={room.id} style={[styles.container, {width: width / 2}]}>
+                {/*<Card.Title*/}
+                {/*    title="Card Title"*/}
+                {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
+                {/*/>*/}
                 <Card.Cover style={styles.image}
                             source={{uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}`}}/>
                 <Card.Content style={styles.overlay}>

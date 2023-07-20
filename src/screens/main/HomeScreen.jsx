@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {BackHandler, Pressable, ScrollView, StyleSheet, View} from "react-native";
 import {StatusBar} from "expo-status-bar";
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
@@ -9,7 +9,7 @@ import RoomList from "../../components/list/RoomList";
 import {useMessageState} from "../../contexts/MessageContext";
 import MyRoomList from "../../components/list/MyRoomList";
 import FavoriteRoomList from "../../components/list/FavoriteRoomList";
-import {BLACK, GRAY, PRIMARY, WHITE} from "../../Colors";
+import {BLACK, GRAY, PRIMARY} from "../../Colors";
 import AvatarText from "react-native-paper/src/components/Avatar/AvatarText";
 
 const HomeScreen = props => {
@@ -23,12 +23,6 @@ const HomeScreen = props => {
     const onChangeSearch = query => setSearchQuery(query);
 
     let exitApp;
-    useEffect(() => {
-        BackHandler.addEventListener('hardwareBackPress', handleBackButton);
-        return () => {
-            BackHandler.removeEventListener('hardwareBackPress', handleBackButton); //뒤로가기 함수를 해제하는 이벤트 등록
-        };
-    }, [BackHandler])
 
     // 이벤트 동작
     const handleBackButton = () => {
@@ -57,6 +51,15 @@ const HomeScreen = props => {
         return true;
     }
 
+    useFocusEffect(
+        useCallback(() => {
+            BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+            return () => {
+                BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+            };
+        }, [])
+    );
+
     return (
         <ScrollView>
             <StatusBar style={"dark"}/>
@@ -69,8 +72,8 @@ const HomeScreen = props => {
 
                 <View style={styles.containerUser}>
                     <AvatarText style={{marginBottom: 16}} label={user.nickName.charAt(0)} Text size={64}/>
-                    <Text variant={"titleLarge"} style={{fontWeight:"bold"}}>{user.nickName}</Text>
-                    <Text variant={"titleSmall"} style={{color:GRAY.DARK}}>{user.mail}</Text>
+                    <Text variant={"titleLarge"} style={{fontWeight: "bold"}}>{user.nickName}</Text>
+                    <Text variant={"titleSmall"} style={{color: GRAY.DARK}}>{user.mail}</Text>
                 </View>
 
                 {/*<View style={styles.containerList}>*/}

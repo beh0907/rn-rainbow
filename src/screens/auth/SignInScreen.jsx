@@ -41,10 +41,10 @@ const SignInScreen = () => {
                 //로그인 정보를 저장한다
                 if (isAutoLogin) {
                     await SecureStore.save(STORE_USER_KEYS.ID, user.id)
-                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, form.password)
+                    await SecureStore.save(STORE_USER_KEYS.Password, form.password)
                 } else {
-                    await SecureStore.save(STORE_USER_KEYS.ID, null)
-                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, null)
+                    await SecureStore.save(STORE_USER_KEYS.ID, "")
+                    await SecureStore.save(STORE_USER_KEYS.Password, "")
                 }
 
                 setUser(user)

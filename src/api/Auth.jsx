@@ -1,5 +1,6 @@
 import axios from "axios";
 import {BASE_URL_API} from "@env"
+import * as SecureStore from "../utils/PreferenceStore";
 
 export const signIn = async ({id, password}) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`, {
@@ -7,6 +8,9 @@ export const signIn = async ({id, password}) => {
             fcmToken: ""
         }
     });
+    response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.AccessToken, response.headers.accesstoken)
+    response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.RefreshToken, response.headers.refreshtoken)
+
     return response.data
 }
 export const duplicateId = async (id) => {
