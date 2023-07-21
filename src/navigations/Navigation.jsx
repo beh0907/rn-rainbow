@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useLayoutEffect, useState} from 'react';
 import {NavigationContainer} from "@react-navigation/native";
 import * as SplashScreen from "expo-splash-screen";
 import AuthStack from "./AuthStack";
@@ -32,7 +32,7 @@ const Navigation = () => {
     //미디어 권한
     const [status, requestPermission] = MediaLibrary.usePermissions()
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             try {
                 //스플래시 화면을 표시한다

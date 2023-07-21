@@ -9,7 +9,6 @@ import {readMemoryList} from "../../api/Memory";
 import {readGalleryList} from "../../api/Gallery";
 
 const GalleryScreen = ({route}) => {
-    const {top, bottom} = useSafeAreaInsets();
     const {roomNum} = route.params;
 
     const [galleries,setGalleries] = useState([])
@@ -17,11 +16,12 @@ const GalleryScreen = ({route}) => {
     useEffect(() => {
         (async () => {
             setGalleries(await readGalleryList(roomNum))
+            console.log("갤러리", galleries)
         })();
     }, [])
 
     return (
-        <View style={[styles.container, {marginTop: top}]}>
+        <View style={[styles.container]}>
             <Text>메모리</Text>
         </View>
     );

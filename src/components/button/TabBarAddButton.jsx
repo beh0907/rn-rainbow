@@ -11,7 +11,7 @@ const TabBarAddButton = () => {
         <View style={styles.container}>
             <Pressable
                 style={styles.button}
-                // onPress={() => navigation.navigate(MainRoutes.SELECT_PHOTOS)}
+                onPress={() => navigation.navigate(MainRoutes.ROOM_REGISTER)}
             >
                 <MaterialCommunityIcons name="plus" size={25} color={WHITE} />
             </Pressable>

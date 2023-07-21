@@ -6,9 +6,11 @@ export const AuthRoutes = {
 
 export const MainRoutes = {
     CONTENT_TAB: '메인 메뉴',
+    ROOM_TAB: '추모관',
     ROOM_LIST: '추모관 목록',
     ROOM: '추모관 메뉴',
-    IMAGE_PICKER: "이미지 선택"
+    IMAGE_PICKER: "이미지 선택",
+    ROOM_REGISTER: "추모관 개설"
 }
 
 export const ContentRoutes = {
@@ -16,4 +18,11 @@ export const ContentRoutes = {
     PROFILE: "프로필",
     BOARD: "게시판",
     TEST: "자가진단"
+}
+
+export const RoomRoutes = {
+    HOME: "메인화면",
+    COMMENT: "추모의 말",
+    MEMORY: "추억의 말",
+    GALLERY: "갤러리"
 }

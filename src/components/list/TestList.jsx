@@ -13,10 +13,6 @@ const TestList = ({value}) => {
         refetching
     } = useRooms()
 
-    useEffect(() => {
-
-    }, [value])
-
     return (
         <FlatList
             style={styles.container}

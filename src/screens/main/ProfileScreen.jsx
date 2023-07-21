@@ -1,10 +1,10 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Alert, Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import {registerGallery} from "../../api/Gallery";
 import {useUserState} from "../../contexts/UserContext";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {useNavigation} from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 import {GRAY, WHITE} from "../../Colors";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import FastImage from "../../components/FastImage";
@@ -15,6 +15,7 @@ import {ReturnKeyTypes} from "../../components/Input";
 import Button from "../../components/button/Button";
 import {addHyphen} from "../../utils/checkInputForm";
 import {MainRoutes} from "../../navigations/Routes";
+import {modify} from "../../api/Auth";
 
 const ProfileScreen = props => {
     const [user, setUser] = useUserState()
@@ -23,10 +24,7 @@ const ProfileScreen = props => {
 
     const [image, setImage] = useState(null);
     const [profile, setProfile] = useState({
-        name: user.name,
-        nickName: user.nickName,
-        mail: user.mail,
-        phone: user.phone
+        ...user
     })
 
     const nickNameRef = useRef()
@@ -57,6 +55,22 @@ const ProfileScreen = props => {
         }
     };
 
+
+    const [photo, setPhoto] = useState('');
+    const {params} = useRoute();
+
+    useEffect(() => {
+        if (params) {
+            const {selectedPhotos} = params;
+
+            console.log(selectedPhotos)
+
+            if (selectedPhotos?.length) {
+                setPhoto(selectedPhotos[0]);
+            }
+        }
+    }, [params]);
+
     const onSignOut = () => {
         Alert.alert(
             "로그아웃",
@@ -76,6 +90,14 @@ const ProfileScreen = props => {
         )
     }
 
+    const onModify = async () => {
+        try {
+            await modify({...user, ...profile})
+        } catch (e) {
+
+        }
+    }
+
     return (
         <SafeInputView>
             <View style={[styles.container, {paddingTop: top}]}>
@@ -89,7 +111,9 @@ const ProfileScreen = props => {
                 <View style={styles.profile}>
                     <View style={[styles.photo, user.photoURL || {backgroundColor: GRAY.DEFAULT}]}>
                         <FastImage source={{uri: user.photoURL}} style={styles.photo}/>
-                        <Pressable style={styles.editButton} onPress={() => {navigation.navigate(MainRoutes.IMAGE_PICKER)}}>
+                        <Pressable style={styles.editButton} onPress={() => {
+                            navigation.navigate(MainRoutes.IMAGE_PICKER)
+                        }}>
                             <MaterialCommunityIcons name='pencil' size={20} color={WHITE}/>
                         </Pressable>
                     </View>
@@ -145,6 +169,7 @@ const ProfileScreen = props => {
                             onSubmitEditing={() => phoneRef.current.focus()}
                         />
 
+
                         {/*전화번호 설정*/}
                         <TextInput
                             ref={phoneRef}
@@ -164,8 +189,7 @@ const ProfileScreen = props => {
 
                         {/*저장하기 버튼*/}
                         <Button title="저장하기"
-                                onPress={() => {
-                                }}
+                                onPress={onModify}
                                 styles={{
                                     container: {
                                         marginTop: 20

@@ -1,13 +1,13 @@
 import React from 'react';
-import {ContentRoutes} from "./Routes";
+import {ContentRoutes} from "../../navigations/Routes";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
-import TabBarAddButton from "../components/button/TabBarAddButton";
-import BoardScreen from "../screens/main/BoardScreen";
-import ProfileScreen from "../screens/main/ProfileScreen";
-import TestScreen from "../screens/main/TestScreen";
-import HomeScreen from "../screens/main/HomeScreen";
-import {GRAY, PRIMARY} from "../Colors";
+import TabBarAddButton from "../../components/button/TabBarAddButton";
+import BoardScreen from "../main/BoardScreen";
+import ProfileScreen from "../main/ProfileScreen";
+import TestScreen from "../main/TestScreen";
+import HomeScreen from "../main/HomeScreen";
+import {GRAY, PRIMARY} from "../../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 
 const Tab = createBottomTabNavigator()

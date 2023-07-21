@@ -9,7 +9,6 @@ import {readMemoryList} from "../../api/Memory";
 import {readGalleryList} from "../../api/Gallery";
 
 const RoomScreen = ({route}) => {
-    const {top, bottom} = useSafeAreaInsets();
     const {roomNum} = route.params;
 
     const [memories,setMemories] = useState([])
@@ -17,11 +16,12 @@ const RoomScreen = ({route}) => {
     useEffect(() => {
         (async () => {
             setMemories(await readMemoryList(roomNum, 2)) // 1은 이미지 2는 비디오 메모리
+            console.log("메모리", memories)
         })();
     }, [])
 
     return (
-        <View style={[styles.container, {marginTop: top}]}>
+        <View style={[styles.container]}>
             <Text>메모리</Text>
         </View>
     );
