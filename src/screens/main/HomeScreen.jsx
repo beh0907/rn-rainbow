@@ -92,10 +92,10 @@ const HomeScreen = props => {
                     <RoomList isHorizontal={true}/>
                 </View>
 
-                <View style={styles.containerList}>
-                    <Text variant="titleMedium" style={{color: BLACK}}>나의 추모관</Text>
-                    <MyRoomList isHorizontal={true}/>
-                </View>
+                {/*<View style={styles.containerList}>*/}
+                {/*    <Text variant="titleMedium" style={{color: BLACK}}>나의 추모관</Text>*/}
+                {/*    <MyRoomList isHorizontal={true}/>*/}
+                {/*</View>*/}
 
                 <View style={styles.containerList}>
                     <Text variant="titleMedium" style={{color: BLACK}}>즐겨찾기 추모관</Text>

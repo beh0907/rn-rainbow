@@ -4,11 +4,12 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import TabBarAddButton from "../../components/button/TabBarAddButton";
 import BoardScreen from "../main/BoardScreen";
-import ProfileScreen from "../main/ProfileScreen";
+import ProfileUpdateScreen from "../main/ProfileUpdateScreen";
 import TestScreen from "../main/TestScreen";
 import HomeScreen from "../main/HomeScreen";
 import {GRAY, PRIMARY} from "../../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
+import MyPageScreen from "../main/MyPageScreen";
 
 const Tab = createBottomTabNavigator()
 
@@ -47,10 +48,10 @@ const MainTab = () => {
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'clipboard-list'}),
                                 tabBarLabel: '자가진단'
                             }}/>
-                <Tab.Screen name={ContentRoutes.PROFILE} component={ProfileScreen}
+                <Tab.Screen name={ContentRoutes.MY_PAGE} component={MyPageScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'account'}),
-                                tabBarLabel: '프로필'
+                                tabBarLabel: '마이 페이지'
                             }}/>
             </Tab.Navigator>
         </SafeAreaProvider>

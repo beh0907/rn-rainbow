@@ -2,12 +2,6 @@ import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {readBookmarkRoomList} from "../api/Room";
 
 const UseFavoriteRooms = () => {
-    // const [searchState, setSearchState] = useState({
-    //     page: 1,
-    //     type: '',
-    //     keyword: ''
-    // })
-
     const [rooms, setRooms] = useState([])
     const [refetching, setRefetching] = useState(false)
 

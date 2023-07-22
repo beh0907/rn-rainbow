@@ -20,7 +20,7 @@ const RoomItem = memo(({room}) => {
 
     return (
         <Pressable onPress={() => pressItem(room)}>
-            <Card key={room.id} style={[styles.container, {width: width / 2}]}>
+            <Card key={room.id} style={[styles.container, {width: width / 2, borderRadius: 36}]}>
                 {/*<Card.Title*/}
                 {/*    title="Card Title"*/}
                 {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}

@@ -17,7 +17,7 @@ import {addHyphen} from "../../utils/checkInputForm";
 import {MainRoutes} from "../../navigations/Routes";
 import {modify} from "../../api/Auth";
 
-const ProfileScreen = props => {
+const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState()
     const {top, bottom} = useSafeAreaInsets()
     const navigation = useNavigation()
@@ -71,25 +71,6 @@ const ProfileScreen = props => {
         }
     }, [params]);
 
-    const onSignOut = () => {
-        Alert.alert(
-            "로그아웃",
-            "정말로 로그아웃 하시겠습니까?",
-            [{
-                text: "로그아웃",
-                style: "destructive",
-                onPress: value => {
-                    SecureStore.signOutSecureStore()
-                    setUser({})
-                }
-            },
-                {
-                    text: "취소",
-                    style: "cancel"
-                }]
-        )
-    }
-
     const onModify = async () => {
         try {
             await modify({...user, ...profile})
@@ -101,12 +82,6 @@ const ProfileScreen = props => {
     return (
         <SafeInputView>
             <View style={[styles.container, {paddingTop: top}]}>
-
-                <View style={styles.settingButton}>
-                    <Pressable onPress={onSignOut} hitSlop={10}>
-                        <MaterialCommunityIcons name={'logout-variant'} size={24} color={GRAY.DARK}/>
-                    </Pressable>
-                </View>
 
                 <View style={styles.profile}>
                     <View style={[styles.photo, user.photoURL || {backgroundColor: GRAY.DEFAULT}]}>
@@ -259,4 +234,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default ProfileScreen;
+export default ProfileUpdateScreen;

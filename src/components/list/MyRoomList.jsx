@@ -1,17 +1,18 @@
-import React from 'react';
-import {FlatList, StyleSheet, View} from "react-native";
+import React, {useEffect, useState} from 'react';
+import {FlatList, StyleSheet, useWindowDimensions, View} from "react-native";
 import RoomItem from "./RoomItem";
-import useMyRooms from "../../hooks/UseMyRooms";
 import {useUserState} from "../../contexts/UserContext";
+import {readMyRoomList} from "../../api/Room";
 
 const MyRoomList = ({isHorizontal}) => {
     const [user,] = useUserState()
-    const {
-        rooms,
-        fetchNextPage,
-        refetch,
-        refetching
-    } = useMyRooms(user)
+    const [rooms, setRooms] = useState([])
+
+    useEffect(() => {
+        (async () => {
+            setRooms(await readMyRoomList(user.id))
+        })();
+    }, [])
 
     return (
         <FlatList
@@ -22,9 +23,7 @@ const MyRoomList = ({isHorizontal}) => {
             renderItem={({item}) => <RoomItem room={item}/>}
             keyExtractor={(item, index) => index}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-            onEndReached={fetchNextPage}
-            refreshing={refetching}
-            onRefresh={refetch}
+            contentContainerStyle={{alignItems:"center"}}
         />
     )
 };

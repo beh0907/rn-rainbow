@@ -2,10 +2,6 @@ import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
 import RoomItem from "./RoomItem";
 import useRooms from "../../hooks/UseRooms";
-import useMyRooms from "../../hooks/UseMyRooms";
-import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
-import {useUserState} from "../../contexts/UserContext";
-import {PRIMARY} from "../../Colors";
 
 const RoomList = ({isHorizontal}) => {
     const {
