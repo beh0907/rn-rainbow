@@ -1,5 +1,5 @@
 import React from 'react';
-import {ContentRoutes} from "../../navigations/Routes";
+import {ContentRoutes, MainRoutes} from "../../navigations/Routes";
 import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import TabBarAddButton from "../../components/button/TabBarAddButton";
@@ -10,6 +10,7 @@ import HomeScreen from "../main/HomeScreen";
 import {GRAY, PRIMARY} from "../../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import MyPageScreen from "../main/MyPageScreen";
+import RoomRegisterScreen from "../main/RoomRegisterScreen";
 
 const Tab = createBottomTabNavigator()
 
@@ -17,8 +18,6 @@ const getTabBarIcon = ({focused, color, size, name}) => {
     const iconName = focused ? name : `${name}-outline`
     return <MaterialCommunityIcons name={iconName} size={size} color={color}/>
 }
-
-const AddButtonScreen = () => null
 
 const MainTab = () => {
     return (
@@ -28,6 +27,8 @@ const MainTab = () => {
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,
                 // tabBarShowLabel: false
+                lazy: false,
+                // lazyPreloadDistance: 4
             }}>
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{
@@ -40,7 +41,7 @@ const MainTab = () => {
                                 tabBarLabel: '게시글'
                             }}/>
 
-                <Tab.Screen name={'AddButton'} component={AddButtonScreen}
+                <Tab.Screen name={ContentRoutes.ROOM_REGISTER} component={RoomRegisterScreen}
                             options={{tabBarButton: () => <TabBarAddButton/>}}/>
 
                 <Tab.Screen name={ContentRoutes.TEST} component={TestScreen}

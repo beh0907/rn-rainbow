@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, View} from "react-native";
-import {GRAY, WHITE} from "../Colors";
+import {GRAY, WHITE} from "../../Colors";
 
 const HR = ({styles, text}) => {
     return (

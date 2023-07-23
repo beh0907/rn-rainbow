@@ -10,12 +10,12 @@ const IntroScreen = ({navigation}) => {
     const {top, bottom} = useSafeAreaInsets()
 
     const onDone = async () => {
-        await SecureStore.save(STORE_SETTING_KEYS.CheckIntro, "1")
+        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, "1")
         navigation.replace(AuthRoutes.SIGN_IN)
     };
 
     const onSkip = async () => {
-        await SecureStore.save(STORE_SETTING_KEYS.CheckIntro, "1")
+        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, "1")
         navigation.replace(AuthRoutes.SIGN_IN)
     };
 

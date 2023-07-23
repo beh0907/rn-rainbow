@@ -2,14 +2,15 @@ import * as SecureStore from "expo-secure-store";
 
 export const STORE_USER_KEYS = {
     ID: "id",
-    Password: "password",
-    Provider: "provider",
-    AccessToken: "accessToken",
-    RefreshToken: "refreshToken"
+    PASSWORD: "password",
+    PROVIDER: "provider",
+    ACCESS_TOKEN: "accessToken",
+    REFRESH_TOKEN: "refreshToken"
 }
 
 export const STORE_SETTING_KEYS = {
-    CheckIntro: "checkIntro",
+    CHECK_INTRO: "checkIntro",
+    FAVORITE_ROOMS: "favoriteRooms"
 }
 
 //안드로이드 shared Preference
@@ -19,6 +20,11 @@ export const save = async (key, value) => {
 
 export const getValueFor = async (key) => {
     return await SecureStore.getItemAsync(key);
+}
+
+export const getListFor = async (key) => {
+    const temp = await SecureStore.getItemAsync(key)
+    return temp ? JSON.parse(temp) : [4, 8];
 }
 
 export const signOutSecureStore = async () => {

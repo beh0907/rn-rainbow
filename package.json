@@ -33,6 +33,7 @@
     "prop-types": "^15.8.1",
     "react": "18.2.0",
     "react-native": "0.71.8",
+    "react-native-anchor-carousel": "^4.0.1",
     "react-native-app-intro-slider": "^4.0.4",
     "react-native-bouncy-checkbox": "^3.0.7",
     "react-native-dotenv": "^3.4.9",

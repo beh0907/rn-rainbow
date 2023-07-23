@@ -1,23 +1,22 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
-import RoomItem from "./RoomItem";
-import useFavoriteRooms from "../../hooks/UseFavoriteRooms";
+import VerticalRoomItem from "./VerticalRoomItem";
+import useRooms from "../../hooks/UseRooms";
 
-const FavoriteRoomList = ({isHorizontal}) => {
+const AllRoomList = () => {
     const {
         rooms,
         fetchNextPage,
         refetch,
         refetching
-    } = useFavoriteRooms()
+    } = useRooms()
 
     return (
         <FlatList
-            showsHorizontalScrollIndicator={false}
-            horizontal={isHorizontal}
+            showsVerticalScrollIndicator={false}
             style={styles.container}
             data={rooms}
-            renderItem={({item}) => <RoomItem room={item}/>}
+            renderItem={({item}) => <VerticalRoomItem room={item}/>}
             keyExtractor={(item, index) => index}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
             onEndReached={fetchNextPage}
@@ -29,11 +28,8 @@ const FavoriteRoomList = ({isHorizontal}) => {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
-    },
-    separator: {
-        marginHorizontal: 10,
+        paddingTop: 10,
     }
 })
 
-export default FavoriteRoomList;
+export default AllRoomList;

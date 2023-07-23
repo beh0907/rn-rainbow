@@ -2,7 +2,7 @@ import React, {forwardRef, useState} from 'react';
 import PropTypes from 'prop-types';
 import {StyleSheet, Text, TextInput, View} from "react-native";
 import {MaterialCommunityIcons} from '@expo/vector-icons'
-import {BLACK, GRAY, PRIMARY} from "../Colors";
+import {BLACK, GRAY, PRIMARY} from "../../Colors";
 
 export const KeyboardTypes = {
     DEFAULT: 'default',

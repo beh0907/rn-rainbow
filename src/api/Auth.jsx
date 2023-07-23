@@ -8,8 +8,8 @@ export const signIn = async ({id, password}) => {
             fcmToken: ""
         }
     });
-    response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.AccessToken, response.headers.accesstoken)
-    response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.RefreshToken, response.headers.refreshtoken)
+    response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken)
+    response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken)
 
     return response.data
 }

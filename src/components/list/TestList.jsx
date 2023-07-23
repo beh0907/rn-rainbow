@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
-import RoomItem from "./RoomItem";
+import VerticalRoomItem from "./VerticalRoomItem";
 import useRooms from "../../hooks/UseRooms";
 
 const TestList = ({value}) => {
@@ -15,7 +15,7 @@ const TestList = ({value}) => {
         <FlatList
             style={styles.container}
             data={rooms}
-            renderItem={({item}) => <RoomItem room={item}/>}
+            renderItem={({item}) => <VerticalRoomItem room={item}/>}
             keyExtractor={(item) => item.roomNum}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
             onEndReached={fetchNextPage}

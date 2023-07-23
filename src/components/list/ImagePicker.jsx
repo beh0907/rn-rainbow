@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from '
 import {Alert, FlatList, StyleSheet, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import * as MediaLibrary from 'expo-media-library'
-import PhotoItem from "../components/PhotoItem";
+import PhotoItem from "./PhotoItem";
 import PropTypes from "prop-types";
 
 const initialListInfo = {

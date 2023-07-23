@@ -5,10 +5,8 @@ import {BASE_URL_FILE} from "@env"
 import {Image, Pressable, StyleSheet, useWindowDimensions, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {MainRoutes} from "../../navigations/Routes";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {PRIMARY} from "../../Colors";
 
-const RoomItem = memo(({room}) => {
+const VerticalRoomItem = memo(({room}) => {
     const {width, height} = useWindowDimensions()
     const navigation = useNavigation();
 
@@ -20,7 +18,7 @@ const RoomItem = memo(({room}) => {
 
     return (
         <Pressable onPress={() => pressItem(room)}>
-            <Card key={room.id} style={[styles.container, {width: width / 2, borderRadius: 36}]}>
+            <Card key={room.id} style={[styles.container]}>
                 {/*<Card.Title*/}
                 {/*    title="Card Title"*/}
                 {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
@@ -46,22 +44,23 @@ const RoomItem = memo(({room}) => {
     );
 });
 
-RoomItem.displayName = 'RoomItem'
+VerticalRoomItem.displayName = 'VerticalRoomItem'
 
-RoomItem.propTypes = {
+VerticalRoomItem.propTypes = {
     room: PropTypes.object.isRequired
 };
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
-        borderRadius: 8,
+        borderRadius: 16,
         overflow: 'hidden',
         elevation: 2,
+        marginBottom: 20
     },
     image: {
         width: '100%',
-        height: 200,
+        // height: 200,
     },
     overlayTitle: {
         position: 'absolute',
@@ -94,4 +93,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default RoomItem;
+export default VerticalRoomItem;

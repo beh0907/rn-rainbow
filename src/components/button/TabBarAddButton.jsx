@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, View } from 'react-native';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { PRIMARY, WHITE } from '../../Colors';
-import {MainRoutes} from "../../navigations/Routes";
+import {ContentRoutes} from "../../navigations/Routes";
 
 const TabBarAddButton = () => {
     const navigation = useNavigation();
@@ -11,7 +11,7 @@ const TabBarAddButton = () => {
         <View style={styles.container}>
             <Pressable
                 style={styles.button}
-                onPress={() => navigation.navigate(MainRoutes.ROOM_REGISTER)}
+                onPress={() => navigation.navigate(ContentRoutes.ROOM_REGISTER)}
             >
                 <MaterialCommunityIcons name="plus" size={25} color={WHITE} />
             </Pressable>

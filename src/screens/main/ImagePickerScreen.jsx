@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useLayoutEffect, useRef, useState} from 'react';
 import {useNavigation, useNavigationState, useRoute} from "@react-navigation/native";
 import HeaderRight from "../../components/view/HeaderRight";
-import ImagePicker from "../../components/ImagePicker";
+import ImagePicker from "../../components/list/ImagePicker";
 
 const ImagePickerScreen = () => {
     // goback으로 돌아갈 때 값을 저장하기 위한 네비게이션
@@ -40,14 +40,19 @@ const ImagePickerScreen = () => {
     const togglePhoto = (photo) => {
         const isSelected = isSelectedPhoto(photo);
         setSelectedPhotos((prev) => {
-            if (isSelected) {
+            //이미 선택한 사진이라면 선택 해제 시킨다
+            if (isSelected)
                 return prev.filter((item) => item.id !== photo.id);
-            }
 
-            if (maxCount > prev?.length) {
+            // 단일 선택일 경우 새로 선택한 사진을 선택하시게 한다
+            if (maxCount === 1)
+                return [photo]
+
+            // 제한 갯수보다 적게 선택했다면 추가한다
+            if (maxCount > prev?.length)
                 return [...prev, photo];
-            }
 
+            // 다중 선택 한계값을 초과했다면 더 추가하지 않는다
             return prev;
         });
     };

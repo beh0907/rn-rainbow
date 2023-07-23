@@ -5,7 +5,7 @@ import TextButton from "../../components/button/TextButton";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {PRIMARY, WHITE} from "../../Colors";
 import {StatusBar} from "expo-status-bar";
-import {ReturnKeyTypes} from "../../components/Input";
+import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
 import SafeInputView from "../../components/view/SafeInputView";
 import {authFormReducer, AuthFormTypes, initAuthForm} from "../../reducer/AuthFormReducer";

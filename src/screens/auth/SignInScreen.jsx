@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
 import {Alert, Image, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
 import {AuthRoutes} from "../../navigations/Routes";
-import {ReturnKeyTypes} from "../../components/Input";
+import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import SafeInputView from "../../components/view/SafeInputView";
@@ -41,10 +41,10 @@ const SignInScreen = () => {
                 //로그인 정보를 저장한다
                 if (isAutoLogin) {
                     await SecureStore.save(STORE_USER_KEYS.ID, user.id)
-                    await SecureStore.save(STORE_USER_KEYS.Password, form.password)
+                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, form.password)
                 } else {
                     await SecureStore.save(STORE_USER_KEYS.ID, "")
-                    await SecureStore.save(STORE_USER_KEYS.Password, "")
+                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, "")
                 }
 
                 setUser(user)

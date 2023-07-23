@@ -3,7 +3,7 @@ import {Image, Platform, Pressable, StyleSheet, useWindowDimensions} from "react
 import {BlurView} from "expo-blur";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import PropTypes from "prop-types";
-import {PRIMARY} from "../Colors";
+import {PRIMARY} from "../../Colors";
 
 const PhotoItem = memo(({item, isSelected, togglePhoto}) => {
     const width = useWindowDimensions().width / 3
