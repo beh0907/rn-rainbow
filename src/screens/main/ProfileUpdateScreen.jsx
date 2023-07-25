@@ -31,29 +31,29 @@ const ProfileUpdateScreen = props => {
     const mailRef = useRef()
     const phoneRef = useRef()
 
-    const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        let result = await ImagePicker.launchImageLibraryAsync({
-            // allowsMultipleSelection:true,
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            // allowsEditing: true,
-            aspect: [4, 3],
-            quality: 1,
-        });
-
-        console.log("결과", result);
-
-        if (!result.canceled) {
-            const imageUri = result.uri
-            setImage(imageUri);
-
-            const gallery = {
-                roomNum: 4,
-                id: 'beh0907',
-            }
-            await registerGallery(gallery, imageUri)
-        }
-    };
+    // const pickImage = async () => {
+    //     // No permissions request is necessary for launching the image library
+    //     let result = await ImagePicker.launchImageLibraryAsync({
+    //         // allowsMultipleSelection:true,
+    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
+    //         // allowsEditing: true,
+    //         aspect: [4, 3],
+    //         quality: 1,
+    //     });
+    //
+    //     console.log("결과", result);
+    //
+    //     if (!result.canceled) {
+    //         const imageUri = result.uri
+    //         setImage(imageUri);
+    //
+    //         const gallery = {
+    //             roomNum: 4,
+    //             id: 'beh0907',
+    //         }
+    //         await registerGallery(gallery, imageUri)
+    //     }
+    // };
 
 
     const [photo, setPhoto] = useState('');
@@ -63,7 +63,7 @@ const ProfileUpdateScreen = props => {
         if (params) {
             const {selectedPhotos} = params;
 
-            console.log(selectedPhotos)
+            console.log(selectedPhotos[0])
 
             if (selectedPhotos?.length) {
                 setPhoto(selectedPhotos[0]);
@@ -73,7 +73,7 @@ const ProfileUpdateScreen = props => {
 
     const onModify = async () => {
         try {
-            await modify({...user, ...profile})
+            await modify({...user, ...profile}, photo)
         } catch (e) {
 
         }
@@ -85,7 +85,7 @@ const ProfileUpdateScreen = props => {
 
                 <View style={styles.profile}>
                     <View style={[styles.photo, user.photoURL || {backgroundColor: GRAY.DEFAULT}]}>
-                        <FastImage source={{uri: user.photoURL}} style={styles.photo}/>
+                        <FastImage source={{uri: user.photoURL || photo.uri}} style={styles.photo}/>
                         <Pressable style={styles.editButton} onPress={() => {
                             navigation.navigate(MainRoutes.IMAGE_PICKER)
                         }}>

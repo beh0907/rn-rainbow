@@ -1,7 +1,7 @@
 import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Text, Title} from "react-native-paper";
-import {BASE_URL_FILE} from "@env"
+import {BASE_URL_FILE, BASE_URL_FILE_AWS} from "@env"
 import {Image, Pressable, StyleSheet, useWindowDimensions, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {MainRoutes} from "../../navigations/Routes";
@@ -9,6 +9,8 @@ import {MainRoutes} from "../../navigations/Routes";
 const VerticalRoomItem = memo(({room}) => {
     const {width, height} = useWindowDimensions()
     const navigation = useNavigation();
+
+    // console.log("URL : ", `${BASE_URL_FILE_AWS}${room.id}/${room.roomNum}/profile/${room.image}`)
 
     const pressItem = ({roomNum}) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
@@ -18,13 +20,14 @@ const VerticalRoomItem = memo(({room}) => {
 
     return (
         <Pressable onPress={() => pressItem(room)}>
-            <Card key={room.id} style={[styles.container]}>
+            <Card key={room.id} style={[styles.container]} elevation={1}>
                 {/*<Card.Title*/}
                 {/*    title="Card Title"*/}
                 {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
                 {/*/>*/}
                 <Card.Cover style={styles.image}
                             source={{uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}`}}/>
+                            {/*source={{uri: `${BASE_URL_FILE_AWS}${room.id}/${room.roomNum}/profile/${room.image}`}}/>*/}
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
                     <View style={{flexDirection: "row", alignItems: "center"}}>
@@ -67,7 +70,9 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        // backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        /* 아래에서 위로 방향 그라디언트 */
+        backgroundColor: 'linear-gradient(to top, rgba(0,0,0,0.2), rgba(0,0,0,0))',
     },
     overlayViews: {
         position: 'absolute',

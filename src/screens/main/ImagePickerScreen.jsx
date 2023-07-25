@@ -16,8 +16,6 @@ const ImagePickerScreen = () => {
         //이전 화면의 값을 얻기 위해 -2 / -1은 현재
         const prevScreenName = stateRoutes[stateRoutes.length - 2].name;
 
-        console.log({selectedPhotos})
-
         navigation.navigate(prevScreenName, {selectedPhotos});
     }, [navigation, selectedPhotos, stateRoutes]);
 
@@ -25,7 +23,7 @@ const ImagePickerScreen = () => {
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => (
-                <HeaderRight disabled={selectedPhotos.length < 1} onPress={onSelect}/>
+                <HeaderRight disabled={selectedPhotos.length < 1} onPress={onSelect} name={"check"}/>
             ),
         });
     }, [navigation, onSelect, selectedPhotos.length]);

@@ -12,8 +12,6 @@ import AvatarText from "react-native-paper/src/components/Avatar/AvatarText";
 const HomeScreen = props => {
     const {top, bottom} = useSafeAreaInsets()
 
-    console.log("탑 - ", top, "  바텀 - ", bottom)
-
     const [user,] = useUserState()
     const [, setMessage] = useMessageState()
 
@@ -22,7 +20,7 @@ const HomeScreen = props => {
 
     let exitApp;
 
-    // 이벤트 동작
+    /**백 버튼 이벤트 동작*/
     const handleBackButton = () => {
         // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
         if (exitApp === undefined || !exitApp) {
@@ -80,7 +78,7 @@ const HomeScreen = props => {
 
 
                     <Pressable hitSlop={15}>
-                        <Text variant="titleSmall" style={{color: PRIMARY.DEFAULT}}>상세 보기</Text>
+                        <Text variant="titleSmall" style={{color: PRIMARY.DEFAULT}}>더 보기</Text>
                     </Pressable>
                 </View>
                 <AllRoomList/>

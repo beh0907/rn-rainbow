@@ -1,6 +1,6 @@
-import React from 'react';
+import React, {memo} from 'react';
 
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 
 function genCircleStyle(size) {
     if (!size) {
@@ -9,7 +9,7 @@ function genCircleStyle(size) {
     return {width: size, height: size, borderRadius: size / 2};
 }
 
-function Dot({isActive, color, activeDotSize, inActiveDotSize, dotSeparator}) {
+const Dot = memo(({isActive, color, activeDotSize, inActiveDotSize, dotSeparator}) => {
     const processedActiveDotStyle = [
         styles.activeDot,
         {
@@ -36,7 +36,7 @@ function Dot({isActive, color, activeDotSize, inActiveDotSize, dotSeparator}) {
             ]}
         />
     );
-}
+})
 
 const SimplePaginationDot = (props) => {
     const {
@@ -48,7 +48,8 @@ const SimplePaginationDot = (props) => {
         inActiveDotSize = 10,
         dotSeparator = 10,
     } = props;
-    function renderItem(item, index) {
+
+    const renderItem = (item, index) => {
         return (
             <Dot
                 key={index}

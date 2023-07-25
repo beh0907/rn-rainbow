@@ -37,8 +37,8 @@ const SignInScreen = () => {
             try {
                 const user = await signIn(form)
 
-                //자동 로그인이 체크되어 있다면
-                //로그인 정보를 저장한다
+                /**자동 로그인이 체크되어 있다면
+                로그인 정보를 저장한다*/
                 if (isAutoLogin) {
                     await SecureStore.save(STORE_USER_KEYS.ID, user.id)
                     await SecureStore.save(STORE_USER_KEYS.PASSWORD, form.password)

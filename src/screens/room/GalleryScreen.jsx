@@ -7,15 +7,16 @@ import {readRoom} from "../../api/Room";
 import {readCommentList} from "../../api/Comment";
 import {readMemoryList} from "../../api/Memory";
 import {readGalleryList} from "../../api/Gallery";
+import {useRoute} from "@react-navigation/native";
 
-const GalleryScreen = ({route}) => {
-    const {roomNum} = route.params;
+const GalleryScreen = () => {
+    const {param} = useRoute()
 
     const [galleries,setGalleries] = useState([])
 
     useEffect(() => {
         (async () => {
-            setGalleries(await readGalleryList(roomNum))
+            setGalleries(await readGalleryList(param.roomNum))
             console.log("갤러리", galleries)
         })();
     }, [])

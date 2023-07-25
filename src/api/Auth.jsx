@@ -33,8 +33,20 @@ export const signUp = async (user) => {
     return response.data === "0" ? null : user
 }
 
-export const modify = async (user) => {
-    const response = await axios.put(`${BASE_URL_API}/user/modify`, user);
+export const modify = async (user, photo) => {
+
+    const formData = new FormData()
+    formData.append('user', user);
+    formData.append('file', photo)
+
+    console.log("유저", user)
+    console.log("포토", photo)
+    console.log("폼 데이타",formData)
+
+    const response = await axios.post(`${BASE_URL_API}/user/modifyTest`, formData);
+    // const response = await axios.put(`${BASE_URL_API}/user/modify`, user);
+
+    return response.data
 }
 
 export const remove = async ({id}) => {

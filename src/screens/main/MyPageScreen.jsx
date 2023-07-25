@@ -194,7 +194,7 @@ const MyPageScreen = () => {
             {/*    ItemSeparatorComponent={() => <View style={styles.separator}></View>}*/}
             {/*/>*/}
 
-            <ImageCarousel/>
+            <ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms}/>
 
         </View>
     )

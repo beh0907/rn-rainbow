@@ -1,84 +1,33 @@
 import React, {useRef, useState} from 'react';
-import {Dimensions, ImageBackground, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {
+    StyleSheet,
+    useWindowDimensions,
+    View,
+} from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
 import SimplePaginationDot from "./SimplePaginationDot";
+import {BASE_URL_FILE} from "@env"
+import CarouselItem from "./CarouselItem";
 
-const {width: windowWidth} = Dimensions.get('window');
-
-const data = [
-    {
-        uri: 'https://i.imgur.com/GImvG4q.jpg',
-        title: 'Lorem ipsum dolor sit amet',
-        content:
-            'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-    {
-        uri: 'https://i.imgur.com/Pz2WYAc.jpg',
-        title: 'Lorem ipsum ',
-        content: 'Neque porro quisquam est qui dolorem ipsum ',
-    },
-    {
-        uri: 'https://i.imgur.com/IGRuEAa.jpg',
-        title: 'Lorem ipsum dolor',
-        content:
-            'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet, consectetur, adipisci velit...',
-    },
-    {
-        uri: 'https://i.imgur.com/fRGHItn.jpg',
-        title: 'Lorem ipsum dolor',
-        content: 'Neque porro quisquam est qui dolorem ipsum quia dolor sit amet',
-    },
-    {
-        uri: 'https://i.imgur.com/WmenvXr.jpg',
-        title: 'Lorem ipsum ',
-        content: 'Neque porro quisquam est qui dolorem ipsum quia dolor ',
-    },
-];
-
-const INITIAL_INDEX = 0;
-const ImageCarousel = props => {
+const ImageCarousel = ({rooms}) => {
     const carouselRef = useRef(null);
-    const [currentIndex, setCurrentIndex] = useState(INITIAL_INDEX);
+    const {width} = useWindowDimensions()
+    const [currentIndex, setCurrentIndex] = useState(0);
 
-    function handleCarouselScrollEnd(item, index) {
-        setCurrentIndex(index);
-    }
-
-    function renderItem({item, index}) {
-        const {uri, title, content} = item;
-        return (
-            <TouchableOpacity
-                activeOpacity={1}
-                style={styles.item}
-                onPress={() => {
-                    carouselRef.current.scrollToIndex(index);
-                }}>
-                <ImageBackground source={{uri: uri}} style={styles.imageBackground}>
-                    <View style={styles.rightTextContainer}>
-                        <Text style={styles.rightText}>Lorem</Text>
-                    </View>
-                </ImageBackground>
-                <View style={styles.lowerContainer}>
-                    <Text style={styles.titleText}>{title}</Text>
-                    <Text style={styles.contentText}>{content}</Text>
-                </View>
-            </TouchableOpacity>
-        );
-    }
 
     return (
         <View style={styles.container}>
             <Carousel
                 style={styles.carousel}
-                data={data}
-                renderItem={renderItem}
-                itemWidth={0.7 * windowWidth}
+                data={rooms}
+                renderItem={({item, index}) => <CarouselItem item={item} index={index} ref={carouselRef}/>}
+                itemWidth={0.7 * width}
                 inActiveOpacity={0.3}
-                containerWidth={windowWidth}
-                onScrollEnd={handleCarouselScrollEnd}
+                containerWidth={width}
+                onScrollEnd={(item, index) => setCurrentIndex(index)}
                 ref={carouselRef}
             />
-            <SimplePaginationDot currentIndex={currentIndex} length={data.length}/>
+            <SimplePaginationDot currentIndex={currentIndex} length={rooms.length}/>
         </View>
     );
 }

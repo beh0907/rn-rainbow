@@ -30,13 +30,21 @@ const BoardScreen = props => {
         }, [canGoBack]),
     );
 
+    const onShouldStartLoadWithRequest = event => {
+        if (event.url.endsWith('#')) {
+            setCanGoBack(false);
+            return false; // Block the URL with '#' from loading
+        }
+        return true; // Allow other URLs to load
+    }
+
     return (
         <WebView
             ref={webViewRef}
             source={{uri: `${BASE_URL_BOARD}?user_id=${user.id}`}}
             style={{marginTop: top}}
             javaScriptEnabled={true}
-            onShouldStartLoadWithRequest={() => true}
+            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
             onNavigationStateChange={(navState) => {
                 setCanGoBack(navState.canGoBack)
             }}
