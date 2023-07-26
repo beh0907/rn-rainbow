@@ -1,12 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from "react-native";
 import {Text} from "react-native-paper";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import * as FileSystem from "expo-file-system";
-import {readRoom} from "../../api/Room";
-import {readCommentList} from "../../api/Comment";
 import {readMemoryList} from "../../api/Memory";
-import {readGalleryList} from "../../api/Gallery";
 
 const RoomScreen = ({route}) => {
     const {roomNum} = route.params;

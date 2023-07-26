@@ -25,7 +25,7 @@
         "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#F97316"
       },
-      "permissions": ["READ_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES", "READ_MEDIA_IMAGES"]
+      "permissions": ["READ_EXTERNAL_STORAGE", "READ_MEDIA_IMAGES", "READ_MEDIA_IMAGES", "CAMERA"]
     },
     "web": {
       "favicon": "./assets/favicon.png"

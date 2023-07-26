@@ -8,7 +8,6 @@ export const MainRoutes = {
     CONTENT_TAB: '메인 메뉴',
     ROOM_TAB: '추모관',
     ROOM: '추모관 메뉴',
-    IMAGE_PICKER: "이미지 선택",
     PROFILE_UPDATE: "프로필 갱신",
 }
 

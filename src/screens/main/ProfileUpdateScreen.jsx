@@ -11,9 +11,9 @@ import SafeInputView from "../../components/view/SafeInputView";
 import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
 import {addHyphen} from "../../utils/checkInputForm";
-import {MainRoutes} from "../../navigations/Routes";
 import {modify} from "../../api/Auth";
 import {useMessageState} from "../../contexts/MessageContext";
+import * as ImagePicker from 'expo-image-picker';
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState()
@@ -30,49 +30,27 @@ const ProfileUpdateScreen = props => {
     const mailRef = useRef()
     const phoneRef = useRef()
 
-    // const pickImage = async () => {
-    //     // No permissions request is necessary for launching the image library
-    //     let result = await ImagePicker.launchImageLibraryAsync({
-    //         // allowsMultipleSelection:true,
-    //         mediaTypes: ImagePicker.MediaTypeOptions.Images,
-    //         // allowsEditing: true,
-    //         aspect: [4, 3],
-    //         quality: 1,
-    //     });
-    //
-    //     console.log("결과", result);
-    //
-    //     if (!result.canceled) {
-    //         const imageUri = result.uri
-    //         setImage(imageUri);
-    //
-    //         const gallery = {
-    //             roomNum: 4,
-    //             id: 'beh0907',
-    //         }
-    //         await registerGallery(gallery, imageUri)
-    //     }
-    // };
+    const pickImage = async () => {
+        // No permissions request is necessary for launching the image library
+        let result = await ImagePicker.launchImageLibraryAsync({
+            // allowsMultipleSelection:true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            // allowsEditing: true,
+            aspect: [4, 3],
+            quality: 1,
+        });
+        console.log("결과", result);
 
-    const [photo, setPhoto] = useState('');
-    const {params} = useRoute();
-
-    useEffect(() => {
-        if (params) {
-            const {selectedPhotos} = params;
-
-            console.log(selectedPhotos[0])
-
-            if (selectedPhotos?.length) {
-                setPhoto(selectedPhotos[0]);
-            }
+        if (!result.canceled) {
+            setImage(result.assets[0].uri);
+            console.log(result.assets[0].uri)
         }
-    }, [params]);
+    };
 
     const onModify = async () => {
         try {
             const paramUser = {...user, ...profile}
-            const result = await modify({...user, ...profile}, photo)
+            const result = await modify({...user, ...profile}, image)
 
             //1이 들어오면 성공 0이면 실패
             if (result === "1") {
@@ -83,8 +61,6 @@ const ProfileUpdateScreen = props => {
                     snackVisible: true
                 }))
             }
-
-
         } catch (e) {
 
         }
@@ -96,10 +72,8 @@ const ProfileUpdateScreen = props => {
 
                 <View style={styles.profile}>
                     <View style={[styles.photo, user.photoURL || {backgroundColor: GRAY.DEFAULT}]}>
-                        <FastImage source={{uri: user.photoURL || photo.uri}} style={styles.photo}/>
-                        <Pressable style={styles.editButton} onPress={() => {
-                            navigation.navigate(MainRoutes.IMAGE_PICKER)
-                        }}>
+                        <FastImage source={{uri: user.photoURL || image}} style={styles.photo}/>
+                        <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='pencil' size={20} color={WHITE}/>
                         </Pressable>
                     </View>

@@ -4,7 +4,6 @@ import {MainRoutes, RoomRoutes} from "./Routes";
 import {WHITE} from "../Colors";
 import HeaderLeft from "../components/view/HeaderLeft";
 import MainTab from "../screens/tab/MainTab";
-import ImagePickerScreen from "../screens/main/ImagePickerScreen";
 import RoomTab from "../screens/tab/RoomTab";
 import ProfileUpdateScreen from "../screens/main/ProfileUpdateScreen";
 import GallerySwiperScreen from "../screens/room/GallerySwiperScreen";
@@ -24,7 +23,6 @@ const MainStack = () => {
             {/*              options={{headerShown: false}}/>*/}
             <Stack.Screen name={MainRoutes.PROFILE_UPDATE} component={ProfileUpdateScreen}
                           options={{headerShown: false}}/>
-            <Stack.Screen name={MainRoutes.IMAGE_PICKER} component={ImagePickerScreen}/>
             <Stack.Screen name={RoomRoutes.GALLERY_SWIPER} component={GallerySwiperScreen}/>
         </Stack.Navigator>
     );
