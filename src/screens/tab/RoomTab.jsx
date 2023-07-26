@@ -6,13 +6,14 @@ import GalleryScreen from "../room/GalleryScreen";
 import MemoryScreen from "../room/MemoryScreen";
 import {PRIMARY} from "../../Colors";
 import React, {useLayoutEffect} from "react";
-import {useNavigation} from "@react-navigation/native";
+import {useNavigation, useRoute} from "@react-navigation/native";
 
 const Tab = createMaterialTopTabNavigator();
 
-const RoomTab = ({route}) => {
+const RoomTab = () => {
     const navigation = useNavigation();
-    const {roomNum} = route.params;
+    const {params} = useRoute();
+    const {roomNum} = params
 
     //우측 상단 버튼
     useLayoutEffect(() => {
@@ -28,9 +29,9 @@ const RoomTab = ({route}) => {
             tabBarIndicatorStyle: {backgroundColor: PRIMARY.DEFAULT}
         }}>
             <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} initialParams={{roomNum}}/>
+            <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} initialParams={{roomNum}}/>
             <Tab.Screen name={RoomRoutes.GALLERY} component={GalleryScreen} initialParams={{roomNum}}/>
             <Tab.Screen name={RoomRoutes.MEMORY} component={MemoryScreen} initialParams={{roomNum}}/>
-            <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} initialParams={{roomNum}}/>
         </Tab.Navigator>
     );
 }

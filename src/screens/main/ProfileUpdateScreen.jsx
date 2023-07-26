@@ -1,7 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, Pressable, ScrollView, StyleSheet, View} from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
-import {registerGallery} from "../../api/Gallery";
+import {Pressable, ScrollView, StyleSheet, View} from 'react-native';
 import {useUserState} from "../../contexts/UserContext";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {useNavigation, useRoute} from "@react-navigation/native";
@@ -9,16 +7,17 @@ import {GRAY, WHITE} from "../../Colors";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import FastImage from "../../components/view/FastImage";
 import {Text, TextInput} from "react-native-paper";
-import * as SecureStore from "../../utils/PreferenceStore";
 import SafeInputView from "../../components/view/SafeInputView";
 import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
 import {addHyphen} from "../../utils/checkInputForm";
 import {MainRoutes} from "../../navigations/Routes";
 import {modify} from "../../api/Auth";
+import {useMessageState} from "../../contexts/MessageContext";
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState()
+    const [, setMessage] = useMessageState()
     const {top, bottom} = useSafeAreaInsets()
     const navigation = useNavigation()
 
@@ -55,7 +54,6 @@ const ProfileUpdateScreen = props => {
     //     }
     // };
 
-
     const [photo, setPhoto] = useState('');
     const {params} = useRoute();
 
@@ -73,7 +71,20 @@ const ProfileUpdateScreen = props => {
 
     const onModify = async () => {
         try {
-            await modify({...user, ...profile}, photo)
+            const paramUser = {...user, ...profile}
+            const result = await modify({...user, ...profile}, photo)
+
+            //1이 들어오면 성공 0이면 실패
+            if (result === "1") {
+                setUser(paramUser)
+                setMessage(prev => ({
+                    ...prev,
+                    snackMessage: "유저 정보가 수정되었습니다.",
+                    snackVisible: true
+                }))
+            }
+
+
         } catch (e) {
 
         }

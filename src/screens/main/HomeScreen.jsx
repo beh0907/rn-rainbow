@@ -1,8 +1,8 @@
 import React, {useCallback, useState} from 'react';
-import {BackHandler, Pressable, StyleSheet, View} from "react-native";
+import {BackHandler, StyleSheet, View} from "react-native";
 import {useFocusEffect} from "@react-navigation/native";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {Searchbar, Text} from "react-native-paper";
+import {Searchbar, Text, ToggleButton} from "react-native-paper";
 import {useUserState} from "../../contexts/UserContext";
 import AllRoomList from "../../components/list/AllRoomList";
 import {useMessageState} from "../../contexts/MessageContext";
@@ -16,6 +16,8 @@ const HomeScreen = props => {
     const [, setMessage] = useMessageState()
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
+    const [toggleVal, setToggleVal] = useState('card')
+
     const onChangeSearch = query => setSearchQuery(query);
 
     let exitApp;
@@ -67,21 +69,26 @@ const HomeScreen = props => {
             </View>
 
 
-                <Searchbar
-                    placeholder="추모관을 검색해주세요."
-                    onChangeText={onChangeSearch}
-                    value={searchQuery}
-                />
+            <Searchbar
+                placeholder="추모관을 검색해주세요."
+                onChangeText={onChangeSearch}
+                value={searchQuery}
+            />
 
-                <View style={{flexDirection: "row", justifyContent: "space-between", marginTop:20}}>
-                    <Text variant="titleLarge" style={{color: BLACK}}>전체 추모관</Text>
+            <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: 20}}>
+                <Text variant="titleLarge" style={{color: BLACK, alignItems:"center"}}>전체 추모관</Text>
 
 
-                    <Pressable hitSlop={15}>
-                        <Text variant="titleSmall" style={{color: PRIMARY.DEFAULT}}>더 보기</Text>
-                    </Pressable>
-                </View>
-                <AllRoomList/>
+                <ToggleButton.Group
+                    style={{justifyContent:"flex-end"}}
+                    onValueChange={value => setToggleVal(value)}
+                    value={toggleVal}>
+                    <ToggleButton icon="view-stream" value="card" iconColor={PRIMARY.DEFAULT}/>
+                    <ToggleButton icon="view-list" value="list" iconColor={PRIMARY.DEFAULT}/>
+                    <ToggleButton icon="view-dashboard" value="grid" iconColor={PRIMARY.DEFAULT}/>
+                </ToggleButton.Group>
+            </View>
+            <AllRoomList/>
         </View>
     );
 };

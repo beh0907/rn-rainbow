@@ -6,7 +6,6 @@ import {readCommentList} from "../../api/Comment";
 
 const CommentScreen = ({route}) => {
     const {roomNum} = route.params;
-
     const [comments, setComments] = useState({})
 
     useEffect(() => {

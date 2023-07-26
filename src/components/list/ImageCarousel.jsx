@@ -14,13 +14,12 @@ const ImageCarousel = ({rooms}) => {
     const {width} = useWindowDimensions()
     const [currentIndex, setCurrentIndex] = useState(0);
 
-
     return (
         <View style={styles.container}>
             <Carousel
                 style={styles.carousel}
                 data={rooms}
-                renderItem={({item, index}) => <CarouselItem item={item} index={index} ref={carouselRef}/>}
+                renderItem={({item, index}) => <CarouselItem item={item} index={index} currentIndex={currentIndex} ref={carouselRef}/>}
                 itemWidth={0.7 * width}
                 inActiveOpacity={0.3}
                 containerWidth={width}

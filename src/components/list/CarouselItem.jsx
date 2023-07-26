@@ -1,15 +1,28 @@
 import React, {forwardRef, memo} from 'react';
 import {ImageBackground, StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {BASE_URL_FILE} from "@env"
+import {MainRoutes} from "../../navigations/Routes";
+import {useNavigation} from "@react-navigation/native";
 
-const CarouselItem = memo(forwardRef(({item, index}, ref) => {
+const CarouselItem = memo(forwardRef(({item, index, currentIndex}, ref) => {
+    const navigation = useNavigation();
+
+    const pressItem = ({roomNum}) => {
+        //현재 선택중인 아이템을 터치했을 때
+        if (index === currentIndex) {
+            navigation.navigate(MainRoutes.ROOM_TAB, {
+                roomNum
+            })
+        } else { //아니라면 해당 위치로 스크롤 이동
+            ref.current.scrollToIndex(index)
+        }
+    }
+
     return (
         <TouchableOpacity
             activeOpacity={1}
             style={styles.item}
-            onPress={() => {
-                ref.current.scrollToIndex(index);
-            }}>
+            onPress={() => pressItem(item)}>
             <ImageBackground source={{uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}`}}
                              style={styles.imageBackground}>
                 <View style={styles.rightTextContainer}>

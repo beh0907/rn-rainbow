@@ -1,13 +1,13 @@
 import React from 'react';
 import {createNativeStackNavigator} from "@react-navigation/native-stack";
-import {MainRoutes} from "./Routes";
+import {MainRoutes, RoomRoutes} from "./Routes";
 import {WHITE} from "../Colors";
 import HeaderLeft from "../components/view/HeaderLeft";
 import MainTab from "../screens/tab/MainTab";
 import ImagePickerScreen from "../screens/main/ImagePickerScreen";
 import RoomTab from "../screens/tab/RoomTab";
-import RoomRegisterScreen from "../screens/main/RoomRegisterScreen";
 import ProfileUpdateScreen from "../screens/main/ProfileUpdateScreen";
+import GallerySwiperScreen from "../screens/room/GallerySwiperScreen";
 
 const Stack = createNativeStackNavigator()
 
@@ -25,6 +25,7 @@ const MainStack = () => {
             <Stack.Screen name={MainRoutes.PROFILE_UPDATE} component={ProfileUpdateScreen}
                           options={{headerShown: false}}/>
             <Stack.Screen name={MainRoutes.IMAGE_PICKER} component={ImagePickerScreen}/>
+            <Stack.Screen name={RoomRoutes.GALLERY_SWIPER} component={GallerySwiperScreen}/>
         </Stack.Navigator>
     );
 };

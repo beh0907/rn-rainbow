@@ -1,6 +1,8 @@
 import axios from "axios";
 import {BASE_URL_API} from "@env"
 import * as SecureStore from "../utils/PreferenceStore";
+import {Platform} from "react-native";
+import {getLocalUri} from "../components/list/ImagePicker";
 
 export const signIn = async ({id, password}) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`, {
@@ -34,18 +36,22 @@ export const signUp = async (user) => {
 }
 
 export const modify = async (user, photo) => {
+    // const localUri = Platform.select({
+    //     ios: await getLocalUri(photo.id),
+    //     android: photo.uri,
+    // });
 
     const formData = new FormData()
-    formData.append('user', user);
-    formData.append('file', photo)
+    formData.append("user", new Blob([JSON.stringify(user)], { type: "application/json" }));
+    formData.append("file", {uri: photo.uri, type: "image/jpeg", filename: photo.filename});
 
-    console.log("유저", user)
-    console.log("포토", photo)
-    console.log("폼 데이타",formData)
-
-    const response = await axios.post(`${BASE_URL_API}/user/modifyTest`, formData);
+    const response = await axios.post(`${BASE_URL_API}/user/modifyTest`, formData,
+        {
+            headers: {
+                'Content-Type': 'multipart/form-data',
+            },
+        });
     // const response = await axios.put(`${BASE_URL_API}/user/modify`, user);
-
     return response.data
 }
 
