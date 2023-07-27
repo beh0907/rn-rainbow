@@ -34,6 +34,13 @@ export const signUp = async (user) => {
 };
 
 export const modify = async (user, uri) => {
+    //user 객체 셋팅
+    const json = JSON.stringify(user);
+    const blob = new Blob([json], {
+        type: 'application/json'
+    });
+
+    //file 객체 셋팅
     const fileExtension = uri.split('.').pop();
     const fileName = `${user.id}_image_${Date.now()}.${fileExtension}`;
     const file = {
@@ -41,20 +48,17 @@ export const modify = async (user, uri) => {
         type: `image/${fileExtension}`,
         name: fileName
     };
+
     const formData = new FormData();
-    formData.append('user', new Blob([JSON.stringify(user)], { type: 'application/json' }));
+    formData.append('user', json);
     formData.append('file', file);
 
-    console.log('유저', JSON.stringify(user));
-    console.log('파일', file);
-
-    const response = await axios.post(`${BASE_URL_API}/user/modifyTest`, formData,
+    const response = await axios.post(`${BASE_URL_API}/user/modifyRN`, formData,
         {
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'multipart/form-data;charset=UTF-8'
             }
         });
-    // const response = await axios.put(`${BASE_URL_API}/user/modify`, user);
     return response.data;
 };
 
