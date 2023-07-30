@@ -98,7 +98,7 @@ const SignInScreen = () => {
                         outlineColor='#0000001F'
                         label="아이디"
                         value={form.id}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginBottom: 20, backgroundColor: WHITE}}
                         onSubmitEditing={() => passwordRef.current.focus()}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({id: text.trim()})}
@@ -111,7 +111,7 @@ const SignInScreen = () => {
                         outlineColor='#0000001F'
                         label="비밀번호"
                         value={form.password}
-                        style={{width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginBottom: 20, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.DONE}
                         onChangeText={(text) => updateForm({password: text.trim()})}
                         secureTextEntry={isHidePassword}

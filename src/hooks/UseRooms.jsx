@@ -16,7 +16,10 @@ const UseRooms = () => {
     const lastRef = useRef(0);
 
     const fetchNextPage = useCallback(async (page) => {
-        if (!isLoadingRef.current) {
+        console.log('페이지', lastRef.current);
+        console.log('리프레시 여부', isFetch.current);
+
+        if (!isLoadingRef.current && isFetch.current) {
             isLoadingRef.current = true;
 
             const list = await readRoomList({ page });
@@ -28,7 +31,7 @@ const UseRooms = () => {
 
             //페이지당 20개씩 가져오지만 20개가 아닐 경우 페이지가 끝났음을 인식
             if (list.length !== 20) {
-                isFetch.current = false
+                isFetch.current = false;
             }
 
             isLoadingRef.current = false;
@@ -39,14 +42,13 @@ const UseRooms = () => {
         setRefetching(true);
         setRooms([]);
         lastRef.current = 1;
-        isFetch.current = true
+        isFetch.current = true;
         await fetchNextPage(lastRef.current);
         setRefetching(false);
     };
 
     useEffect(() => {
-        if (isFetch.current)
-            fetchNextPage(++lastRef.current);
+        fetchNextPage(++lastRef.current);
     }, [fetchNextPage]);
 
     return { rooms, fetchNextPage, refetch, refetching };

@@ -91,7 +91,7 @@ const SignUpScreen = () => {
                         outlineColor='#0000001F'
                         label="아이디"
                         value={form.id}
-                        style={{width: '100%', fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', backgroundColor: WHITE}}
                         onSubmitEditing={() => passwordRef.current.focus()}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({id: text.trim()})}
@@ -104,7 +104,7 @@ const SignUpScreen = () => {
                         outlineColor='#0000001F'
                         label="비밀번호"
                         value={form.password}
-                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({password: text.trim()})}
                         secureTextEntry={isHidePassword}
@@ -130,7 +130,7 @@ const SignUpScreen = () => {
                         // selectionColor={PRIMARY.DEFAULT}
                         label="비밀번호 확인"
                         value={form.passwordConfirm}
-                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({passwordConfirm: text.trim()})}
                         secureTextEntry={isHidePasswordConfirm}
@@ -155,7 +155,7 @@ const SignUpScreen = () => {
                         outlineColor='#0000001F'
                         label="닉네임"
                         value={form.nickName}
-                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.NEXT}
                         onChangeText={(text) => updateForm({nickName: text.trim()})}
                         onSubmitEditing={() => mailRef.current.focus()}
@@ -168,7 +168,7 @@ const SignUpScreen = () => {
                         outlineColor='#0000001F'
                         label="이메일"
                         value={form.mail}
-                        style={{width: '100%', marginTop: 20, fontSize: 14, backgroundColor: WHITE}}
+                        style={{width: '100%', marginTop: 20, backgroundColor: WHITE}}
                         returnKeyType={ReturnKeyTypes.DONE}
                         onChangeText={(text) => updateForm({mail: text.trim()})}
                         onSubmitEditing={onSubmit}

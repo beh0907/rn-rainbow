@@ -49,6 +49,7 @@ const ProfileUpdateScreen = props => {
     const onModify = async () => {
         try {
             const paramUser = { ...user, ...profile };
+
             const result = await modify({ ...user, ...profile }, image);
 
             console.log('결과', result);
@@ -96,7 +97,7 @@ const ProfileUpdateScreen = props => {
                             outlineColor='#0000001F'
                             label='이름'
                             value={profile.name}
-                            style={{ width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE }}
+                            style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             onSubmitEditing={() => nickNameRef.current.focus()}
                             returnKeyType={ReturnKeyTypes.NEXT}
                             onChangeText={(text) => setProfile({ ...profile, name: text })}
@@ -110,7 +111,7 @@ const ProfileUpdateScreen = props => {
                             outlineColor='#0000001F'
                             label='닉네임'
                             value={profile.nickName}
-                            style={{ width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE }}
+                            style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             returnKeyType={ReturnKeyTypes.NEXT}
                             onChangeText={(text) => setProfile({ ...profile, nickName: text })}
                             onSubmitEditing={() => mailRef.current.focus()}
@@ -125,7 +126,7 @@ const ProfileUpdateScreen = props => {
                             label='이메일'
                             textContentType={'emailAddress'}
                             value={profile.mail}
-                            style={{ width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE }}
+                            style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             returnKeyType={ReturnKeyTypes.NEXT}
                             onChangeText={(text) => setProfile({ ...profile, mail: text })}
                             onSubmitEditing={() => phoneRef.current.focus()}
@@ -141,7 +142,7 @@ const ProfileUpdateScreen = props => {
                             label='전화번호'
                             textContentType={'telephoneNumber'}
                             value={profile.phone}
-                            style={{ width: '100%', marginBottom: 20, fontSize: 14, backgroundColor: WHITE }}
+                            style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             returnKeyType={ReturnKeyTypes.DONE}
                             onChangeText={(text) => setProfile({ ...profile, phone: addHyphen(text) })}
                             onSubmitEditing={() => {
@@ -174,16 +175,12 @@ const ProfileUpdateScreen = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: WHITE
-    },
-    settingButton: {
-        paddingHorizontal: 20,
-        alignItems: 'flex-end'
+        backgroundColor: WHITE,
     },
     profile: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingBottom: 20
+        paddingVertical: 20
     },
     photo: {
         width: 100,
@@ -213,7 +210,7 @@ const styles = StyleSheet.create({
         flexGrow: 0,
         backgroundColor: WHITE,
         paddingHorizontal: 20,
-        paddingTop: 40,
+        // paddingTop: 40,
         borderTopLeftRadius: 20,
         borderTopRightRadius: 20
     }

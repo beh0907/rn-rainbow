@@ -19,6 +19,8 @@ const getTabBarIcon = ({focused, color, size, name}) => {
     return <MaterialCommunityIcons name={iconName} size={size} color={color}/>
 }
 
+const AddButtonScreen = () => null
+
 const MainTab = () => {
     return (
         <SafeAreaProvider>
@@ -41,7 +43,7 @@ const MainTab = () => {
                                 tabBarLabel: '게시글'
                             }}/>
 
-                <Tab.Screen name={ContentRoutes.ROOM_REGISTER} component={RoomRegisterScreen}
+                <Tab.Screen name={'addButton'} component={AddButtonScreen}
                             options={{tabBarButton: () => <TabBarAddButton/>}}/>
 
                 <Tab.Screen name={ContentRoutes.TEST} component={TestScreen}

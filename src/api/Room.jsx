@@ -1,5 +1,6 @@
 import axios from "axios";
 import { BASE_URL_API } from "@env"
+import { uriToFile } from '../utils/imageUtil';
 
 export const readRoom = async (roomNum) => {
     const response = await axios.get(`${BASE_URL_API}/room/read?roomNum=${roomNum}`);
@@ -21,12 +22,29 @@ export const readBookmarkRoomList = async (listRoomNum) => {
     return response.data
 }
 
-export const registerRoom = async (room, file) => {
-    const formData = new FormData()
-    formData.append('room', room);
-    formData.append('file', file)
+export const registerRoom = async (room, uri) => {
+    const formData = new FormData();
 
-    const response = await axios.post(`${BASE_URL_API}/room/register`, formData);
+    //user 객체 셋팅
+    const json = JSON.stringify(room);
+    const blob = new Blob([json], {
+        type: 'application/json;'
+    });
+    formData.append('room', json);
+
+    if (uri !== null) {
+        //file 객체 셋팅
+        const file = uriToFile(room.id, uri)
+        formData.append('file', file);
+    }
+
+    const response = await axios.postForm(`${BASE_URL_API}/room/register`, formData)
+        .catch(e => {
+        console.log('에러', e);
+        console.log('에러 응답', e.response);
+        console.log('에러 코드', e.status);
+    });
+
     return response.data
 }
 

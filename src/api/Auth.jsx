@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { BASE_URL_API } from '@env';
 import * as SecureStore from '../utils/PreferenceStore';
+import { uriToFile } from '../utils/imageUtil';
 
 export const signIn = async ({ id, password }) => {
     const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`, {
@@ -34,31 +35,28 @@ export const signUp = async (user) => {
 };
 
 export const modify = async (user, uri) => {
+    const formData = new FormData();
+
     //user 객체 셋팅
     const json = JSON.stringify(user);
     const blob = new Blob([json], {
-        type: 'application/json'
+        type: 'application/json;'
     });
-
-    //file 객체 셋팅
-    const fileExtension = uri.split('.').pop();
-    const fileName = `${user.id}_image_${Date.now()}.${fileExtension}`;
-    const file = {
-        uri: uri,
-        type: `image/${fileExtension}`,
-        name: fileName
-    };
-
-    const formData = new FormData();
     formData.append('user', json);
-    formData.append('file', file);
 
-    const response = await axios.post(`${BASE_URL_API}/user/modifyRN`, formData,
-        {
-            headers: {
-                'Content-Type': 'multipart/form-data;charset=UTF-8'
-            }
+    if (uri !== null) {
+        //file 객체 셋팅
+        const file = uriToFile(user.id, uri);
+        formData.append('file', file);
+    }
+
+    const response = await axios.postForm(`${BASE_URL_API}/user/modifyRN`, formData)
+        .catch(e => {
+            console.log('에러', e);
+            console.log('에러 응답', e.response);
+            console.log('에러 코드', e.status);
         });
+
     return response.data;
 };
 

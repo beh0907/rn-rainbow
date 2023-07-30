@@ -1,22 +1,22 @@
-import React, {useCallback, useState} from 'react';
-import {BackHandler, StyleSheet, View} from "react-native";
-import {useFocusEffect} from "@react-navigation/native";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {Searchbar, Text, ToggleButton} from "react-native-paper";
-import {useUserState} from "../../contexts/UserContext";
-import AllRoomList from "../../components/list/AllRoomList";
-import {useMessageState} from "../../contexts/MessageContext";
-import {BLACK, GRAY, PRIMARY} from "../../Colors";
-import AvatarText from "react-native-paper/src/components/Avatar/AvatarText";
+import React, { useCallback, useState } from 'react';
+import { BackHandler, StyleSheet, View } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Searchbar, Text, ToggleButton } from 'react-native-paper';
+import { useUserState } from '../../contexts/UserContext';
+import AllRoomList from '../../components/list/AllRoomList';
+import { useMessageState } from '../../contexts/MessageContext';
+import { BLACK, PRIMARY } from '../../Colors';
+import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 
 const HomeScreen = props => {
-    const {top, bottom} = useSafeAreaInsets()
+    const { top, bottom } = useSafeAreaInsets();
 
-    const [user,] = useUserState()
-    const [, setMessage] = useMessageState()
+    const [user] = useUserState();
+    const [, setMessage] = useMessageState();
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
-    const [toggleVal, setToggleVal] = useState('card')
+    const [toggleVal, setToggleVal] = useState('card');
 
     const onChangeSearch = query => setSearchQuery(query);
 
@@ -29,9 +29,9 @@ const HomeScreen = props => {
             //스낵바 출력 셋팅
             setMessage(prev => ({
                 ...prev,
-                snackMessage: "한번 더 뒤로가기를 누르시면 앱이 종료됩니다.",
+                snackMessage: '한번 더 뒤로가기를 누르시면 앱이 종료됩니다.',
                 snackVisible: true
-            }))
+            }));
 
             exitApp = true;
 
@@ -47,7 +47,7 @@ const HomeScreen = props => {
             BackHandler.exitApp();  // 앱 종료
         }
         return true;
-    }
+    };
 
     useFocusEffect(
         useCallback(() => {
@@ -59,36 +59,37 @@ const HomeScreen = props => {
     );
 
     return (
-        <View style={[styles.container, {marginTop: top, marginBottom: bottom}]}>
+        <View style={[styles.container, { marginTop: top, marginBottom: bottom }]}>
 
 
             <View style={styles.containerUser}>
-                <AvatarText style={{marginBottom: 16}} label={user.nickName.charAt(0)} Text size={64}/>
-                <Text variant={"titleLarge"} style={{fontWeight: "bold"}}>{user.nickName}</Text>
-                <Text variant={"titleSmall"} style={{color: GRAY.DARK}}>{user.mail}</Text>
+                <AvatarText label={user.nickName.charAt(0)} Text size={48} />
+
+                <View style={{ marginStart: 16 }}>
+                    <Text variant={'titleLarge'} style={{ fontWeight: 'bold' }}>{user.nickName}</Text>
+                    {/*<Text variant={"titleSmall"} style={{color: GRAY.DARK}}>{user.mail}</Text>*/}
+                </View>
             </View>
 
 
             <Searchbar
-                placeholder="추모관을 검색해주세요."
+                placeholder='추모관을 검색해주세요.'
                 onChangeText={onChangeSearch}
                 value={searchQuery}
             />
 
-            <View style={{flexDirection: "row", justifyContent: "space-between", marginTop: 20}}>
-                <Text variant="titleLarge" style={{color: BLACK, alignItems:"center"}}>전체 추모관</Text>
-
+            <View style={{ flexDirection: 'row', marginTop: 20, alignItems:"center" }}>
+                <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 
                 <ToggleButton.Group
-                    style={{justifyContent:"flex-end"}}
                     onValueChange={value => setToggleVal(value)}
                     value={toggleVal}>
-                    <ToggleButton icon="view-stream" value="card" iconColor={PRIMARY.DEFAULT}/>
-                    <ToggleButton icon="view-list" value="list" iconColor={PRIMARY.DEFAULT}/>
-                    <ToggleButton icon="view-dashboard" value="grid" iconColor={PRIMARY.DEFAULT}/>
+                    <ToggleButton icon='view-stream' value='card' iconColor={PRIMARY.DEFAULT} />
+                    <ToggleButton icon='view-list' value='list' iconColor={PRIMARY.DEFAULT} />
+                    <ToggleButton icon='view-dashboard' value='grid' iconColor={PRIMARY.DEFAULT} />
                 </ToggleButton.Group>
             </View>
-            <AllRoomList/>
+            <AllRoomList />
         </View>
     );
 };
@@ -100,19 +101,20 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         paddingHorizontal: 16,
-        height: "100%"
+        height: '100%'
     },
     containerUser: {
         paddingVertical: 20,
-        alignItems: "center"
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     containerMenu: {
         elevation: 2, // 그림자 효과를 주기 위해 elevation 값 추가
         backgroundColor: 'white', // 카드뷰 배경색을 흰색으로 설정
         borderRadius: 8, // 카드뷰에 둥근 모서리를 주기 위해 borderRadius 값 추가
         marginBottom: 16, // 아이템들 사이의 간격을 주기 위해 marginBottom 값 추가
-        padding: 16, // 카드뷰 내부의 컨텐츠에 패딩을 추가
-    },
-})
+        padding: 16 // 카드뷰 내부의 컨텐츠에 패딩을 추가
+    }
+});
 
 export default HomeScreen;

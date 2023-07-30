@@ -15,7 +15,6 @@ const RoomTab = () => {
     const {params} = useRoute();
     const {roomNum} = params
 
-    //우측 상단 버튼
     useLayoutEffect(() => {
         navigation.setOptions({
             headerTitle: "Room No." + String(roomNum).padStart(4, '0'),
