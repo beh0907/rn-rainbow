@@ -29,7 +29,7 @@ const RoomRegisterScreen = props => {
     const genderRef = useRef(null);
 
     //날짜 다이얼로그 설정
-    const [date, setDate] = useState(new Date());
+    const [date, setDate] = useState('2023-07-31');
     const [open, setOpen] = useState(false);
 
     const pickImage = async () => {
@@ -42,6 +42,8 @@ const RoomRegisterScreen = props => {
             quality: 1
 
         });
+
+        console.log(result)
 
         if (result.assets) {
             setImage(result.assets[0].uri);

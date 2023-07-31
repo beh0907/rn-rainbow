@@ -40,7 +40,8 @@ export const modify = async (user, uri) => {
     //user 객체 셋팅
     const json = JSON.stringify(user);
     const blob = new Blob([json], {
-        type: 'application/json;'
+        type: 'application/json',
+        encoding: 'utf-8'
     });
     formData.append('user', json);
 
@@ -49,6 +50,11 @@ export const modify = async (user, uri) => {
         const file = uriToFile(user.id, uri);
         formData.append('file', file);
     }
+
+    console.log(user);
+    console.log(json);
+    console.log(blob);
+    console.log(formData);
 
     const response = await axios.postForm(`${BASE_URL_API}/user/modifyRN`, formData)
         .catch(e => {

@@ -82,6 +82,7 @@ const HomeScreen = props => {
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 
                 <ToggleButton.Group
+
                     onValueChange={value => setToggleVal(value)}
                     value={toggleVal}>
                     <ToggleButton icon='view-stream' value='card' iconColor={PRIMARY.DEFAULT} />
@@ -89,7 +90,8 @@ const HomeScreen = props => {
                     <ToggleButton icon='view-dashboard' value='grid' iconColor={PRIMARY.DEFAULT} />
                 </ToggleButton.Group>
             </View>
-            <AllRoomList />
+
+            <AllRoomList value={toggleVal} />
         </View>
     );
 };

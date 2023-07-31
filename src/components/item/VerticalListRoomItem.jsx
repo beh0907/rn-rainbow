@@ -6,7 +6,7 @@ import {Image, Pressable, StyleSheet, useWindowDimensions, View} from "react-nat
 import {useNavigation} from "@react-navigation/native";
 import {MainRoutes} from "../../navigations/Routes";
 
-const VerticalRoomItem = memo(({room}) => {
+const VerticalListRoomItem = memo(({room}) => {
     const {width, height} = useWindowDimensions()
     const navigation = useNavigation();
 
@@ -47,9 +47,9 @@ const VerticalRoomItem = memo(({room}) => {
     );
 });
 
-VerticalRoomItem.displayName = 'VerticalRoomItem'
+VerticalListRoomItem.displayName = 'VerticalListRoomItem'
 
-VerticalRoomItem.propTypes = {
+VerticalListRoomItem.propTypes = {
     room: PropTypes.object.isRequired
 };
 
@@ -59,7 +59,6 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         overflow: 'hidden',
         elevation: 2,
-        marginBottom: 20
     },
     image: {
         width: '100%',
@@ -93,9 +92,9 @@ const styles = StyleSheet.create({
         color: 'white',
     },
     icon: {
-        width: 16,
-        height: 20
+        width: 14,
+        height: 14
     }
 });
 
-export default VerticalRoomItem;
+export default VerticalListRoomItem;
