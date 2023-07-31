@@ -35,13 +35,12 @@ const ProfileUpdateScreen = props => {
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            // allowsEditing: true,
-            aspect: [4, 3], //이미지 편집 X,Y 비율
+            allowsEditing: true,
+            aspect: [1, 1], //이미지 편집 X,Y 비율
             quality: 1
-
         });
 
-        if (!result.canceled) {
+        if (result.assets) {
             setImage(result.assets[0].uri);
         }
     };
@@ -77,7 +76,7 @@ const ProfileUpdateScreen = props => {
                     <View style={[styles.photo, user.photoURL || { backgroundColor: GRAY.DEFAULT }]}>
                         <FastImage source={{ uri: user.photoURL || image }} style={styles.photo} />
                         <Pressable style={styles.editButton} onPress={pickImage}>
-                            <MaterialCommunityIcons name='pencil' size={20} color={WHITE} />
+                            <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>
                     </View>
 

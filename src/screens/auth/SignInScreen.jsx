@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
-import {Alert, Image, Keyboard, ScrollView, StyleSheet, Text, View} from "react-native";
+import {Alert, Image, Keyboard, ScrollView, StyleSheet, View} from "react-native";
 import {AuthRoutes} from "../../navigations/Routes";
 import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
@@ -14,7 +14,7 @@ import {useUserState} from "../../contexts/UserContext";
 import {getAuthMessages, signIn} from "../../api/Auth";
 import * as SecureStore from "../../utils/PreferenceStore";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
-import {TextInput} from "react-native-paper";
+import {TextInput, Text} from "react-native-paper";
 import {STORE_USER_KEYS} from "../../utils/PreferenceStore";
 
 const SignInScreen = () => {
@@ -81,10 +81,10 @@ const SignInScreen = () => {
             <StatusBar style={"dark"}/>
             <View style={[styles.container, {marginTop: top}]}>
 
-                {/*<View>*/}
-                {/*    <Image source={require('../../../assets/icon.png')}/>*/}
-                {/*    <Text variant="headlineLarge">레인보우브릿지</Text>*/}
-                {/*</View>*/}
+                <View style={{width:"100%", alignItems:"center"}}>
+                    <Image source={require('../../../assets/icon.png')}/>
+                    {/*<Text style={{color:PRIMARY.DEFAULT}} variant="headlineLarge">레인보우브릿지</Text>*/}
+                </View>
 
                 {/*로그인 정보 입력 폼*/}
                 <ScrollView style={[styles.form, {paddingBottom: bottom ? bottom + 10 : 40}]}

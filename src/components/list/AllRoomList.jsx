@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {FlatList, StyleSheet, View} from "react-native";
-import VerticalRoomItem from "./VerticalRoomItem";
+import VerticalRoomItem from "../item/VerticalRoomItem";
 import useRooms from "../../hooks/UseRooms";
 
 const AllRoomList = () => {

@@ -1,44 +1,58 @@
-import React, { useState } from 'react';
-import { Button, StyleSheet, Image, View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import React, { useEffect, useState } from 'react';
+import { Alert, Button, Image, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-const TestScreen = props => {
+const CameraExample = () => {
     const { top, bottom } = useSafeAreaInsets();
+    const [imageUri, setImageUri] = useState(null);
 
-    const [image, setImage] = useState(null);
+    useEffect(() => {
+        // 앱이 처음 실행될 때 권한을 요청합니다.
+        requestCameraPermission();
+    }, []);
 
-    const pickImage = async () => {
-        let result = await ImagePicker.launchImageLibraryAsync({
-            allowsMultipleSelection:true,
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            allowsEditing: false,
-            aspect: [4, 3],
-            quality: 1,
-        });
+    const requestCameraPermission = async () => {
+        const { status } = await ImagePicker.requestCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('카메라 권한이 필요합니다.');
+        }
+    };
 
-        if (!result.canceled) {
-            setImage(result.assets[0].uri);
+    const pickImageFromCamera = async () => {
+        const { status } = await ImagePicker.getCameraPermissionsAsync();
+        if (status !== 'granted') {
+            alert('카메라 권한이 필요합니다.');
+            return;
+        }
+
+        try {
+            const result = await ImagePicker.launchCameraAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1
+            });
+
+            if (result.assets) {
+                setImageUri(result.assets[0].uri);
+            }
+
+        } catch (e) {
+            if (e.message.includes('Call to function \'ExponentImagePicker.launchCameraAsync\' has been rejected')) {
+                console.log(e)
+            } else {
+                throw e;
+            }
         }
     };
 
     return (
-        <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' , marginTop:top}}>
-            <Button title="Pick an image from camera roll" onPress={pickImage} />
-            {image && <Image source={{ uri: image }} style={{ width: 200, height: 200 }} />}
+        <View style={{ justifyContent: 'center', alignItems: 'center', flex: 1 }}>
+            {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
+            <Button title='카메라 열기' onPress={pickImageFromCamera} />
         </View>
     );
 };
 
-TestScreen.propTypes = {};
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        marginHorizontal: 16,
-        justifyContent: 'center',
-        alignItems: 'center'
-    }
-});
-
-export default TestScreen;
+export default CameraExample;

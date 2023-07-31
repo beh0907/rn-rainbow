@@ -5,9 +5,9 @@ import {
     View,
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
-import SimplePaginationDot from "./SimplePaginationDot";
+import SimplePaginationDot from "../item/SimplePaginationDot";
 import {BASE_URL_FILE} from "@env"
-import CarouselItem from "./CarouselItem";
+import CarouselItem from "../item/CarouselItem";
 
 const ImageCarousel = ({rooms}) => {
     const carouselRef = useRef(null);

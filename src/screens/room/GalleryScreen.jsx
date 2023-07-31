@@ -3,7 +3,7 @@ import {FlatList, StyleSheet, View} from "react-native";
 import {readGalleryList} from "../../api/Gallery";
 import {useNavigation} from "@react-navigation/native";
 import {RoomRoutes} from "../../navigations/Routes";
-import GalleryItem from "../../components/list/GalleryItem";
+import GalleryItem from "../../components/item/GalleryItem";
 import MasonryList from '@react-native-seoul/masonry-list';
 
 const GalleryScreen = ({route}) => {
@@ -32,7 +32,7 @@ const GalleryScreen = ({route}) => {
                 keyExtractor={(item) => item.seq}
                 numColumns={3}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item, index}) => <GalleryItem item={item} index={index} onPress={() => onPress(index)}/>}
+                renderItem={({ item, i }) => <GalleryItem item={item} onPress={() => onPress(i)}/>}
                 // refreshing={isLoadingNext}
                 // onRefresh={() => refetch({first: ITEM_CNT})}
                 // onEndReachedThreshold={0.1}
