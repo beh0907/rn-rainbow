@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -30,7 +30,7 @@ const ProfileUpdateScreen = props => {
     const mailRef = useRef();
     const phoneRef = useRef();
 
-    const pickImage = async () => {
+    const pickImage = useCallback(async () => {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
@@ -43,7 +43,7 @@ const ProfileUpdateScreen = props => {
         if (result.assets) {
             setImage(result.assets[0].uri);
         }
-    };
+    });
 
     const onModify = async () => {
         try {
@@ -144,8 +144,7 @@ const ProfileUpdateScreen = props => {
                             style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             returnKeyType={ReturnKeyTypes.DONE}
                             onChangeText={(text) => setProfile({ ...profile, phone: addHyphen(text) })}
-                            onSubmitEditing={() => {
-                            }}
+                            inputMode={"numeric"}
                         />
 
 

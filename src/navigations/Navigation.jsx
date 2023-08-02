@@ -7,9 +7,11 @@ import { useUserState } from '../contexts/UserContext';
 import * as SecureStore from '../utils/PreferenceStore';
 import { STORE_SETTING_KEYS, STORE_USER_KEYS } from '../utils/PreferenceStore';
 import MainStack from './MainStack';
-import { signIn } from '../api/Auth';
+import { getAuthMessages, signIn } from '../api/Auth';
 import * as MediaLibrary from 'expo-media-library';
 import { Camera } from 'expo-camera';
+import { Alert } from 'react-native';
+import { AuthFormTypes } from '../reducer/AuthFormReducer';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -17,7 +19,8 @@ const ImageAssets = [
     require('../../assets/background/bg_intro_1.png'),
     require('../../assets/background/bg_intro_2.png'),
     require('../../assets/background/bg_intro_3.png'),
-    require('../../assets/background/bg_intro_4.png')
+    require('../../assets/background/bg_intro_4.png'),
+    require('../../assets/logo.png')
 ];
 
 const Navigation = () => {
@@ -64,8 +67,22 @@ const Navigation = () => {
                 }
 
                 setIsReady(true);
-            } catch (e) {
-                setIsReady(true);
+            } catch (error) {
+                const code = error.code;
+                const status = error.response?.status;
+
+                //타임아웃
+                if (code === "ECONNABORTED" || status === 408) {
+                    Alert.alert('통신 에러', '서버와의 통신에 실패하였습니다', [{
+                        text: '확인',
+                        onPress: () => setIsReady(true)
+                    }]);
+                } else {
+                    Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
+                        text: '확인',
+                        onPress: () => setIsReady(true)
+                    }])
+                }
             }
         })();
     }, [setUser, setIsReady, setCheckIntro, requestMediaPermission, requestCameraPermission]);

@@ -23,30 +23,9 @@ export const addHyphen = (phone) => {
     return phone;
 }
 
-export const addPeriodToDate = (text) => {
-    console.log(text)
-    const cleaned = text.replace(/\D/g, ''); // 숫자만 추출
-    const match = cleaned.match(/^(\d{0,4})(\d{0,2})(\d{0,2})$/);
-
-    if (match) {
-        const year = match[1];
-        const month = match[2];
-        const day = match[3];
-
-        // 월과 일이 존재하는 경우 '.'으로 구분하여 연결합니다.
-        let formattedDate = '';
-        if (year) {
-            formattedDate += year;
-            if (month) {
-                formattedDate += `.${month}`;
-                if (day) {
-                    formattedDate += `.${day}`;
-                }
-            }
-        }
-
-        return formattedDate;
-    }
-
-    return text;
+export const formatDate = date => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    return `${year}-${month}-${day}`;
 };

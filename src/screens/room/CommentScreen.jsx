@@ -1,23 +1,26 @@
 import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from "react-native";
+import { FlatList, StyleSheet, View } from 'react-native';
 import {Text} from "react-native-paper";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {readCommentList} from "../../api/Comment";
+import { useUserState } from '../../contexts/UserContext';
+import { useRoomState } from '../../contexts/RoomContext';
 
-const CommentScreen = ({route}) => {
-    const {roomNum} = route.params;
+const CommentScreen = () => {
+    const [user,] = useUserState()
+    const [room, ] = useRoomState();
     const [comments, setComments] = useState({})
 
     useEffect(() => {
         (async () => {
-            setComments(await readCommentList(roomNum))
-            console.log("커멘트", comments)
+            setComments(await readCommentList(room.roomNum))
         })();
     }, [])
 
     return (
         <View style={[styles.container]}>
-            <Text>메모리</Text>
+            <FlatList
+                keyExtractor={(item) => item.seq}
+                data={comments} renderItem={({item}) =><Text>{item.content}</Text>}/>
         </View>
     );
 };
@@ -27,7 +30,7 @@ CommentScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 16,
+        padding: 16,
         justifyContent: 'center',
         alignItems: 'center'
     }

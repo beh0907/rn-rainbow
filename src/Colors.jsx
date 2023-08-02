@@ -5,9 +5,6 @@ export const PRIMARY = {
     LIGHT: '#D0BCFF',
     DEFAULT: '#7F67BE',
     DARK:'#381E72'
-
-
-
     // LIGHT: '#74d5ff',
     // DEFAULT: '#1CB9EC',
     // DARK:'#0075a3'
@@ -23,4 +20,9 @@ export const DANGER = {
     LIGHT:'#FCA5A5',
     DEFAULT: '#EF4444',
     DARK: '#B91C1C'
+}
+
+export const GENDER = {
+    MALE:'#1f9dff',
+    FEMALE:'#ff63cb'
 }

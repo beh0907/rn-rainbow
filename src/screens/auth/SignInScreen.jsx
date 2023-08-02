@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useReducer, useRef, useState} from 'react';
 import {useFocusEffect, useNavigation} from "@react-navigation/native";
-import {Alert, Image, Keyboard, ScrollView, StyleSheet, View} from "react-native";
+import { Alert, Image, Keyboard, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import {AuthRoutes} from "../../navigations/Routes";
 import {ReturnKeyTypes} from "../../components/view/Input";
 import Button from "../../components/button/Button";
@@ -16,10 +16,12 @@ import * as SecureStore from "../../utils/PreferenceStore";
 import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {TextInput, Text} from "react-native-paper";
 import {STORE_USER_KEYS} from "../../utils/PreferenceStore";
+import AutoHeightImage from 'react-native-auto-height-image';
 
 const SignInScreen = () => {
     const navigation = useNavigation()
     const {top, bottom} = useSafeAreaInsets()
+    const {width} = useWindowDimensions()
 
     const passwordRef = useRef()
 
@@ -82,7 +84,14 @@ const SignInScreen = () => {
             <View style={[styles.container, {marginTop: top}]}>
 
                 <View style={{width:"100%", alignItems:"center"}}>
-                    <Image source={require('../../../assets/icon.png')}/>
+                    <AutoHeightImage
+                        width={width - 40}
+                        source={require('../../../assets/logo.png')}
+                    />
+
+
+
+                    {/*<Image source={require('../../../assets/logo.png')} style={{width:300}} resizeMode={"contain"}/>*/}
                     {/*<Text style={{color:PRIMARY.DEFAULT}} variant="headlineLarge">레인보우브릿지</Text>*/}
                 </View>
 

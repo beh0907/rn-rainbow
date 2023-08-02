@@ -1,8 +1,9 @@
 import axios from "axios";
 import {BASE_URL_API} from "@env"
+import { axiosApiInstance } from './AxiosInstance';
 
 export const readGalleryList = async (num) => {
-    const response = await axios.get(`${BASE_URL_API}/gallery/readList?num=${num}`);
+    const response = await axiosApiInstance.get(`/gallery/readList?num=${num}`);
     return response.data
 }
 
@@ -19,7 +20,7 @@ export const registerGallery = async (galleries, filesUri) => {
 
     console.log(formData)
 
-    const response = await axios.post(`${BASE_URL_API}/room/register`, formData,
+    const response = await axiosApiInstance.post(`/room/register`, formData,
         {
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -30,7 +31,7 @@ export const registerGallery = async (galleries, filesUri) => {
 
 //아직 안 씀
 // export const modify = async (room, file) => {
-//     const response = await axios.post(`${BASE_URL_API}/gallery/modify`, {
+//     const response = await axiosApiInstance.post(`/gallery/modify`, {
 //         params: {
 //             room,
 //             file

@@ -1,20 +1,17 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { readRoom } from '../../api/Room';
+import { useUserState } from '../../contexts/UserContext';
+import { useRoomState } from '../../contexts/RoomContext';
 
-const RoomScreen = ({ route }) => {
-    const { roomNum } = route.params;
-
-    const [room, setRoom] = useState({});
+const RoomScreen = () => {
+    const [room, setRoom] = useRoomState();
     // const [diaries,setDiaries] = useState({})
 
     useEffect(() => {
-        (async () => {
-            setRoom(await readRoom(roomNum));
-            console.log('룸', room);
-        })();
-    }, []);
+
+    }, [])
 
     return (
         <View style={[styles.container]}>

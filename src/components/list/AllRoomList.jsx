@@ -4,26 +4,8 @@ import VerticalCardRoomItem from '../item/VerticalCardRoomItem';
 import useRooms from '../../hooks/UseRooms';
 import PropTypes from 'prop-types';
 import VerticalListRoomItem from '../item/VerticalListRoomItem';
-import VerticalGridCardRoomItem from '../item/VerticalGridCardRoomItem';
 
 const AllRoomList = ({ value }) => {
-    const [renderItemType, setRenderItemType] = useState('card'); // 초기값으로 card 설정
-
-    useEffect(() => {
-        // value 값에 따라 renderItem 유형 변경
-        switch (value) {
-            case 'list':
-                setRenderItemType('list');
-                break;
-            case 'grid':
-                setRenderItemType('grid');
-                break;
-            default:
-                setRenderItemType('card');
-                break;
-        }
-    }, [value]);
-
     const {
         rooms,
         fetchNextPage,
@@ -40,14 +22,7 @@ const AllRoomList = ({ value }) => {
             style={styles.container}
             data={rooms}
             renderItem={({ item }) => {
-                switch (renderItemType) {
-                    case 'list':
-                        return <VerticalListRoomItem room={item} />;
-                    case 'grid':
-                        return <VerticalGridCardRoomItem room={item} />;
-                    default: // card
-                        return <VerticalCardRoomItem room={item} />;
-                }
+                return  value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />
             }}
             keyExtractor={(item, index) => index.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
@@ -64,11 +39,11 @@ AllRoomList.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        paddingTop: 10,
+        marginTop: 10,
         width: '100%'
     },
     separator: {
-        marginVertical: 10,
+        // marginVertical: 10,
     }
 });
 

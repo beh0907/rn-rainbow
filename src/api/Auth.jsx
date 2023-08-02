@@ -2,33 +2,34 @@ import axios from 'axios';
 import { BASE_URL_API } from '@env';
 import * as SecureStore from '../utils/PreferenceStore';
 import { uriToFile } from '../utils/imageUtil';
+import { axiosApiInstance } from './AxiosInstance';
 
 export const signIn = async ({ id, password }) => {
-    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}&password=${password}`, {
+    const response = await axiosApiInstance.get(`/user/login?id=${id}&password=${password}`, {
         headers: {
             fcmToken: ''
         }
-    });
+    })
     response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
     response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
 
     return response.data;
 };
 export const duplicateId = async (id) => {
-    const response = await axios.get(`${BASE_URL_API}/user/login?id=${id}`);
+    const response = await axiosApiInstance.get(`/user/login?id=${id}`);
     return response.data;
 };
 export const duplicateMail = async (mail) => {
-    const response = await axios.get(`${BASE_URL_API}/user/login?mail=${mail}`);
+    const response = await axiosApiInstance.get(`/user/login?mail=${mail}`);
     return response.data;
 };
 export const duplicateNickname = async (nickName) => {
-    const response = await axios.get(`${BASE_URL_API}/user/login?nickName=${nickName}`);
+    const response = await axiosApiInstance.get(`/user/login?nickName=${nickName}`);
     return response.data;
 };
 
 export const signUp = async (user) => {
-    const response = await axios.post(`${BASE_URL_API}/user/register`, user);
+    const response = await axiosApiInstance.post(`/user/register`, user);
 
     //리턴 정보가 "0"이면 실패
     return response.data === '0' ? null : user;

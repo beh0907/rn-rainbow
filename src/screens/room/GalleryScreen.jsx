@@ -5,15 +5,17 @@ import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
 import GalleryItem from '../../components/item/GalleryItem';
 import MasonryList from '@react-native-seoul/masonry-list';
+import { useRoomState } from '../../contexts/RoomContext';
 
-const GalleryScreen = ({ route }) => {
-    const { roomNum } = route.params;
+const GalleryScreen = () => {
+    const [room, ] = useRoomState();
     const [galleries, setGalleries] = useState([]);
     const navigation = useNavigation();
 
     useEffect(() => {
         (async () => {
-            setGalleries(await readGalleryList(roomNum));
+            setGalleries(await readGalleryList(room.roomNum));
+            console.log("갤러리", galleries)
         })();
     }, []);
 
@@ -37,7 +39,6 @@ const GalleryScreen = ({ route }) => {
                 numColumns={3}
                 showsVerticalScrollIndicator={false}
                 renderItem={({ item, i }) => <GalleryItem item={item} onPress={() => onPress(i)} />}
-
                 // refreshing={isLoadingNext}
                 // onRefresh={() => refetch({first: ITEM_CNT})}
                 // onEndReachedThreshold={0.1}

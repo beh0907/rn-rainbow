@@ -13,6 +13,7 @@
     "@babel/runtime": "^7.20.6",
     "@expo/metro-config": "^0.10.6",
     "@expo/vector-icons": "^13.0.0",
+    "@react-native-community/datetimepicker": "7.2.0",
     "@react-native-seoul/masonry-list": "^1.4.2",
     "@react-navigation/bottom-tabs": "^6.5.7",
     "@react-navigation/material-top-tabs": "^6.6.3",

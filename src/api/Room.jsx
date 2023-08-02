@@ -1,24 +1,25 @@
 import axios from "axios";
 import { BASE_URL_API } from "@env"
 import { uriToFile } from '../utils/imageUtil';
+import { axiosApiInstance } from './AxiosInstance';
 
 export const readRoom = async (roomNum) => {
-    const response = await axios.get(`${BASE_URL_API}/room/read?roomNum=${roomNum}`);
+    const response = await axiosApiInstance.get(`/room/read?roomNum=${roomNum}`);
     return response.data
 }
 
 export const readRoomList = async ({page, type, keyword}) => {
-    const response = await axios.get(`${BASE_URL_API}/room/readList?page=${page}&type=${type}&keyword=${keyword}`);
+    const response = await axiosApiInstance.get(`/room/readList?page=${page}&type=${type}&keyword=${keyword}`);
     return response.data
 }
 
 export const readMyRoomList = async (id) => {
-    const response = await axios.get(`${BASE_URL_API}/room/readMyList?id=${id}`);
+    const response = await axiosApiInstance.get(`/room/readMyList?id=${id}`);
     return response.data
 }
 
 export const readBookmarkRoomList = async (listRoomNum) => {
-    const response = await axios.post(`${BASE_URL_API}/room/readBookmarkList`, listRoomNum);
+    const response = await axiosApiInstance.post(`/room/readBookmarkList`, listRoomNum);
     return response.data
 }
 
@@ -53,7 +54,7 @@ export const modifyRoom = async (room, file) => {
     formData.append('room', room);
     formData.append('file', file)
 
-    const response = await axios.post(`${BASE_URL_API}/room/modify`, formData);
+    const response = await axiosApiInstance.post(`/room/modify`, formData);
     return response.data
 }
 

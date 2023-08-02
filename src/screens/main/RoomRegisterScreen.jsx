@@ -10,7 +10,9 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import * as ImagePicker from 'expo-image-picker';
 import Button from '../../components/button/Button';
-import * as Room from '../../api/Room'
+import * as Room from '../../api/Room';
+import DatePicker from '../../components/view/DatePicker';
+import { formatDate } from '../../utils/checkInputForm';
 
 const RoomRegisterScreen = props => {
     //사이즈 관련 변수
@@ -29,9 +31,10 @@ const RoomRegisterScreen = props => {
     const genderRef = useRef(null);
 
     //날짜 다이얼로그 설정
-    const [date, setDate] = useState('2023-07-31');
-    const [open, setOpen] = useState(false);
+    const [date, setDate] = useState(new Date());
+    const [show, setShow] = useState(false);
 
+    /**이미지를 선택 */
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -43,19 +46,37 @@ const RoomRegisterScreen = props => {
 
         });
 
-        console.log(result)
+        console.log(result);
 
         if (result.assets) {
             setImage(result.assets[0].uri);
         }
     };
 
+    /**날짜 다이얼로그 설정 */
+    const onChange = (event, selectedDate) => {
+        const currentDate = selectedDate;
+        setShow(false);
+        setDate(currentDate);
+
+        console.log('이벤트');
+        ageRef.current.focus();
+    };
+
+    /**추모관 생성*/
     const onRegister = async () => {
-        const result = await Room.registerRoom()
+        const result = await Room.registerRoom();
     };
 
     return (
         <SafeInputView>
+            <DatePicker
+                date={date}
+                setDate={setDate}
+                show={show}
+                setShow={setShow}
+                ref={ageRef}
+            />
 
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
@@ -116,14 +137,13 @@ const RoomRegisterScreen = props => {
                                 outlineStyle={{ borderWidth: 1 }}
                                 outlineColor='#0000001F'
                                 label='기일'
-                                value={date}
+                                value={formatDate(date)}
                                 style={{
                                     width: '100%', backgroundColor: WHITE, flex: 1, marginEnd: 20
                                 }}
                                 returnKeyType={ReturnKeyTypes.NEXT}
                                 onChangeText={(text) => setRoom({ ...room, date: text })}
-                                onFocus={() => setOpen(true)}
-                                onSubmitEditing={() => ageRef.current.focus()}
+                                onFocus={() => setShow(true)}
                             />
 
                             {/*나이 설정*/}
@@ -141,14 +161,11 @@ const RoomRegisterScreen = props => {
                                     backgroundColor: WHITE,
                                     flex: 1
                                 }}
+                                inputMode={'numeric'}
                                 returnKeyType={ReturnKeyTypes.DONE}
                                 onChangeText={(text) => setRoom({ ...room, age: text })}
-                                onSubmitEditing={() => {
-                                }}
                             />
-
                         </View>
-
 
                         <SwitchSelector
                             initial={1}

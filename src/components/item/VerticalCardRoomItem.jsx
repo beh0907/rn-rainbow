@@ -5,6 +5,7 @@ import { BASE_URL_FILE } from '@env';
 import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
+import AutoHeightImage from 'react-native-auto-height-image';
 
 const VerticalCardRoomItem = memo(({ room }) => {
     const { width, height } = useWindowDimensions();
@@ -29,10 +30,9 @@ const VerticalCardRoomItem = memo(({ room }) => {
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <Image style={styles.icon}
-                               source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
+                        <AutoHeightImage width={room.gender === 1 ? 20 : 14}
+                                         source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
                         <Text style={styles.description}>{room.date}</Text>
-                        {/*<Paragraph style={styles.description}>{room.date}({room.age})</Paragraph>*/}
                     </View>
                 </Card.Content>
 
@@ -57,7 +57,8 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         overflow: 'hidden',
         elevation: 2,
-        flex: 1
+        flex: 1,
+        marginBottom: 20
     },
     image: {
         width: '100%'
@@ -87,10 +88,6 @@ const styles = StyleSheet.create({
         marginStart: 10,
         fontSize: 14,
         color: 'white'
-    },
-    icon: {
-        width: 14,
-        height: 14
     }
 });
 

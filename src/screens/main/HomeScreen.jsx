@@ -16,7 +16,7 @@ const HomeScreen = props => {
     const [, setMessage] = useMessageState();
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
-    const [toggleVal, setToggleVal] = useState('card');
+    const [toggleVal, setToggleVal] = useState('list');
 
     const onChangeSearch = query => setSearchQuery(query);
 
@@ -82,12 +82,10 @@ const HomeScreen = props => {
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 
                 <ToggleButton.Group
-
                     onValueChange={value => setToggleVal(value)}
                     value={toggleVal}>
-                    <ToggleButton icon='view-stream' value='card' iconColor={PRIMARY.DEFAULT} />
                     <ToggleButton icon='view-list' value='list' iconColor={PRIMARY.DEFAULT} />
-                    <ToggleButton icon='view-dashboard' value='grid' iconColor={PRIMARY.DEFAULT} />
+                    <ToggleButton icon='view-stream' value='card' iconColor={PRIMARY.DEFAULT} />
                 </ToggleButton.Group>
             </View>
 
