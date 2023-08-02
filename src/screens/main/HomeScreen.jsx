@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Searchbar, Text, ToggleButton } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
-import { useMessageState } from '../../contexts/MessageContext';
+import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { BLACK, PRIMARY } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 
@@ -13,7 +13,7 @@ const HomeScreen = props => {
     const { top, bottom } = useSafeAreaInsets();
 
     const [user] = useUserState();
-    const [, setMessage] = useMessageState();
+    const [, setSnackbar] = useSnackBarState();
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
     const [toggleVal, setToggleVal] = useState('list');
@@ -27,11 +27,10 @@ const HomeScreen = props => {
         // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
         if (exitApp === undefined || !exitApp) {
             //스낵바 출력 셋팅
-            setMessage(prev => ({
-                ...prev,
-                snackMessage: '한번 더 뒤로가기를 누르시면 앱이 종료됩니다.',
-                snackVisible: true
-            }));
+            setSnackbar({
+                message: '한번 더 뒤로가기를 누르시면 앱이 종료됩니다.',
+                visible: true
+            });
 
             exitApp = true;
 

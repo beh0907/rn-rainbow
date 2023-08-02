@@ -13,6 +13,9 @@ const VerticalListRoomItem = memo(({ room }) => {
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
 
+    console.log('나의 아이템?', room);
+
+
     // console.log("URL : ", `${BASE_URL_FILE_AWS}${room.id}/${room.roomNum}/profile/${room.image}`)
 
     const pressItem = ({ roomNum }) => {

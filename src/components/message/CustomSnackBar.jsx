@@ -2,20 +2,20 @@ import * as React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Portal, Snackbar} from 'react-native-paper';
 import {useUserState} from "../../contexts/UserContext";
-import {useMessageState} from "../../contexts/MessageContext";
+import {useSnackBarState} from "../../contexts/SnackBarContext";
 
-const SnackBar = () => {
-    const [message, setMessage] = useMessageState()
-    const {snackMessage, snackVisible} = message;
+const CustomSnackBar = () => {
+    const [snackBar, setSnackbar] = useSnackBarState()
+    const {message, visible} = snackBar
 
-    const onDismissSnackBar = () => setMessage(prev => ({...prev, snackVisible: false}));
+    const onDismissSnackBar = () => setSnackbar(prev => ({...prev, visible: false}));
 
     return (
         <View style={styles.popupArea}>
             <Portal>
                 <Snackbar
                     duration={2000}
-                    visible={snackVisible}
+                    visible={visible}
                     onDismiss={onDismissSnackBar}
                     action={{
                         // label: '확인',
@@ -23,7 +23,7 @@ const SnackBar = () => {
                             // Do something
                         },
                     }}>
-                    {snackMessage}
+                    {message}
                 </Snackbar>
             </Portal>
         </View>
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default SnackBar;
+export default CustomSnackBar;

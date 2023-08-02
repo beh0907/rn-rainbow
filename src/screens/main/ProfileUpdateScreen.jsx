@@ -12,12 +12,12 @@ import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
 import { addHyphen } from '../../utils/checkInputForm';
 import { modify } from '../../api/Auth';
-import { useMessageState } from '../../contexts/MessageContext';
+import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();
-    const [, setMessage] = useMessageState();
+    const [, setSnackbar] = useSnackBarState();
     const { top, bottom } = useSafeAreaInsets();
     const navigation = useNavigation();
 
@@ -43,7 +43,7 @@ const ProfileUpdateScreen = props => {
         if (result.assets) {
             setImage(result.assets[0].uri);
         }
-    });
+    }, []);
 
     const onModify = async () => {
         try {
@@ -57,10 +57,9 @@ const ProfileUpdateScreen = props => {
             if (result === 1) {
                 console.log('결과', "체크체크");
                 setUser(paramUser);
-                setMessage(prev => ({
-                    ...prev,
-                    snackMessage: '유저 정보가 수정되었습니다.',
-                    snackVisible: true
+                setSnackbar(prev => ({
+                    message: '유저 정보가 수정되었습니다.',
+                    visible: true
                 }));
             }
         } catch (e) {

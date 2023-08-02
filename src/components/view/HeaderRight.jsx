@@ -1,28 +1,28 @@
 import { Pressable } from 'react-native';
 import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { GRAY, PRIMARY } from '../../Colors';
+import { PRIMARY } from '../../Colors';
 
-const HeaderRight = ({ disabled, onPress, name }) => {
+const HeaderRight = ({ onPress, name, color }) => {
     return (
-        <Pressable hitSlop={10} disabled={disabled} onPress={onPress}>
+        <Pressable hitSlop={10} onPress={onPress}>
             <MaterialCommunityIcons
                 name={name}
                 size={24}
-                color={disabled ? GRAY.DEFAULT : PRIMARY.DEFAULT}
+                color={color}
             />
         </Pressable>
     );
 };
 
 HeaderRight.defaultProps = {
-    disabled: false,
+    color: PRIMARY.DEFAULT
 };
 
 HeaderRight.propTypes = {
-    disabled: PropTypes.bool,
     onPress: PropTypes.func,
     name: PropTypes.string.isRequired,
+    color: PropTypes.string,
 };
 
 export default HeaderRight;

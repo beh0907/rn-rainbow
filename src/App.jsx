@@ -3,10 +3,11 @@ import Navigation from './navigations/Navigation';
 import { UserProvider } from './contexts/UserContext';
 import * as React from 'react';
 import { DefaultTheme, PaperProvider } from 'react-native-paper';
-import { MessageProvider } from './contexts/MessageContext';
-import SnackBar from './components/message/SnackBar';
+import { SnackBarProvider } from './contexts/SnackBarContext';
+import CustomSnackBar from './components/message/CustomSnackBar';
 import { PRIMARY } from './Colors';
-import { RoomProvider } from './contexts/RoomContext';
+import CustomDialog from './components/message/CustomDialog';
+import { DialogProvider } from './contexts/DialogContext';
 
 export default function App() {
     const theme = {
@@ -24,15 +25,19 @@ export default function App() {
 
     return (
         <PaperProvider theme={theme}>
-            <MessageProvider>
-                <UserProvider>
+            <SnackBarProvider>
+                <DialogProvider>
+                    <UserProvider>
+                        {/*다이얼로그*/}
+                        <CustomDialog />
                         {/*하단 스낵바 알림 메시지*/}
-                        <SnackBar />
+                        <CustomSnackBar />
 
                         <StatusBar style='dark' />
                         <Navigation />
-                </UserProvider>
-            </MessageProvider>
+                    </UserProvider>
+                </DialogProvider>
+            </SnackBarProvider>
         </PaperProvider>
     );
 }

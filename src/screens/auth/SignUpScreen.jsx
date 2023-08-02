@@ -12,7 +12,7 @@ import {authFormReducer, AuthFormTypes, initAuthForm} from "../../reducer/AuthFo
 import {useUserState} from "../../contexts/UserContext";
 import {TextInput} from "react-native-paper";
 import {signUp} from "../../api/Auth";
-import {useMessageState} from "../../contexts/MessageContext";
+import {useSnackBarState} from "../../contexts/SnackBarContext";
 
 const SignUpScreen = () => {
     const navigation = useNavigation()
@@ -25,7 +25,7 @@ const SignUpScreen = () => {
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState() // 글로벌 유저 상태정보
-    const [, setMessage] = useMessageState() // 글로벌 알림 메시지 상태정보
+    const [, setSnackbar] = useSnackBarState() // 글로벌 알림 메시지 상태정보
 
     const [isHidePassword, setHidePassword] = useState(true)
     const [isHidePasswordConfirm, setHidePasswordConfirm] = useState(true)
@@ -56,11 +56,10 @@ const SignUpScreen = () => {
                 const user = await signUp(form)
 
                 //스낵바 출력 셋팅
-                setMessage(prev => ({
-                    ...prev,
+                setSnackbar({
                     snackMessage: (user.id === null ? "회원가입에 실패하였습니다." : "회원가입을 성공하였습니다."),
-                    snackVisible: true
-                }))
+                    visible: true
+                })
 
                 // 회원가입 성공 시 로그인 화면으로 이동
                 if (user.id !== null)

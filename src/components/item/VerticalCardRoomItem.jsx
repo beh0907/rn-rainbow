@@ -2,7 +2,7 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Text, Title } from 'react-native-paper';
 import { BASE_URL_FILE } from '@env';
-import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import AutoHeightImage from 'react-native-auto-height-image';
@@ -10,6 +10,8 @@ import AutoHeightImage from 'react-native-auto-height-image';
 const VerticalCardRoomItem = memo(({ room }) => {
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
+
+    console.log('나의 아이템?', room);
 
     const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
