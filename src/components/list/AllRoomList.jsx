@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { FlatList, StyleSheet, View } from 'react-native';
 import VerticalCardRoomItem from '../item/VerticalCardRoomItem';
 import useRooms from '../../hooks/UseRooms';
@@ -17,12 +17,11 @@ const AllRoomList = ({ value }) => {
     return (
         <FlatList
             key={value}
-            numColumns={value === 'grid' ? 2 : 1}
             showsVerticalScrollIndicator={false}
             style={styles.container}
             data={rooms}
             renderItem={({ item }) => {
-                return  value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />
+                return value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />;
             }}
             keyExtractor={(item, index) => index.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator}></View>}
@@ -31,6 +30,10 @@ const AllRoomList = ({ value }) => {
             onRefresh={refetch}
         />
     );
+};
+
+AllRoomList.defaultProps = {
+    value: 'list'
 };
 
 AllRoomList.propTypes = {

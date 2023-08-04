@@ -1,19 +1,19 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FlatList, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useRoomState } from '../../contexts/RoomContext';
 import CommentItem from '../../components/item/CommentItem';
 import * as Comment from '../../api/Comment';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
-import { Text, TextInput } from 'react-native-paper';
+import { Button, TextInput } from 'react-native-paper';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import { useDialogState } from '../../contexts/DialogContext';
 
 const CommentScreen = () => {
     const [user] = useUserState();
     const [room] = useRoomState();
-    const [snackBar, setSnackbar] = useSnackBarState();
-    const [dialog, setDialog] = useDialogState();
+    const [, setSnackbar] = useSnackBarState();
+    const [, setDialog] = useDialogState();
 
     const [comments, setComments] = useState({});
     const [comment, setComment] = useState('');
@@ -21,7 +21,29 @@ const CommentScreen = () => {
     const readCommentList = useCallback(async () => {
         setComments(await Comment.readCommentList(room.roomNum));
         console.log('밸류', comments);
-    }, [])
+    }, []);
+
+    const registerComment = async () => {
+        Keyboard.dismiss()
+
+        //댓글 등록
+        await Comment.registerComment({
+            roomNum: room.roomNum,
+            userId: user.id,
+            content: comment,
+            emoticon: 1
+        });
+
+        // 등록 완료 안내 스낵바
+        setSnackbar({
+            message: '댓글이 등록되었습니다.',
+            visible: true
+        });
+        setComment('');
+
+        //등록 후 리로드
+        await readCommentList();
+    };
 
     const removeComment = useCallback(async ({ seq }) => {
         console.log('seq', seq);
@@ -35,29 +57,31 @@ const CommentScreen = () => {
                     message: (result !== null ? '댓글이 삭제되었습니다.' : '통신 오류로 인해 댓글 삭제를 실패하였습니다.'),
                     visible: true
                 });
-                await readCommentList()
+                await readCommentList();
             },
             visible: true
         });
-
-
     }, []);
 
     useEffect(() => {
         (async () => {
-            await readCommentList()
+            await readCommentList();
         })();
-    }, [snackBar]);
+    }, []);
 
     return (
         <View style={[styles.container]}>
             <FlatList
+                showsVerticalScrollIndicator={false}
                 style={styles.commentList}
                 ItemSeparatorComponent={() => <View style={styles.separator}></View>}
                 keyExtractor={(item) => item.seq}
                 data={comments}
-                renderItem={({ item }) => <CommentItem comment={item} isMine={user.id === item.userId}
-                                                       removeComment={removeComment} />}
+                renderItem={({ item }) =>
+                    //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                    <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
+                                 removeComment={removeComment} />
+                }
             />
 
 
@@ -72,11 +96,10 @@ const CommentScreen = () => {
                     returnKeyType={ReturnKeyTypes.DONE}
                     onChangeText={setComment}
                     value={comment}
+                    onSubmitEditing={registerComment}
                 />
-                <TouchableOpacity style={styles.postButton} onPress={() => {
-                }}>
-                    <Text style={styles.postButtonText}>작성</Text>
-                </TouchableOpacity>
+                <Button style={styles.postButton} onPress={registerComment} mode={'elevated'}
+                        disabled={comment === ''}>등록</Button>
             </View>
         </View>
     );
@@ -101,17 +124,14 @@ const styles = StyleSheet.create({
     commentInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 16
+        marginTop: 16,
     },
     commentInput: {
         flex: 1
     },
     postButton: {
-        marginLeft: 12,
-        backgroundColor: '#007bff',
-        paddingHorizontal: 12,
-        paddingVertical: 8,
-        borderRadius: 8
+        marginStart: 12,
+        borderRadius: 8,
     },
     postButtonText: {
         color: 'white',

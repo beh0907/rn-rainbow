@@ -17,6 +17,7 @@ import BouncyCheckbox from "react-native-bouncy-checkbox";
 import {TextInput, Text} from "react-native-paper";
 import {STORE_USER_KEYS} from "../../utils/PreferenceStore";
 import AutoHeightImage from 'react-native-auto-height-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const SignInScreen = () => {
     const navigation = useNavigation()
@@ -72,7 +73,6 @@ const SignInScreen = () => {
     //다른 화면에서 로그인 화면으로 포커스가 되돌아올 때
     //기존 state 값들을 초기화
     useFocusEffect(
-
         useCallback(() => {
             return () => dispatch({type: AuthFormTypes.RESET})
         }, [])
@@ -88,8 +88,6 @@ const SignInScreen = () => {
                         width={width - 40}
                         source={require('../../../assets/logo.png')}
                     />
-
-
 
                     {/*<Image source={require('../../../assets/logo.png')} style={{width:300}} resizeMode={"contain"}/>*/}
                     {/*<Text style={{color:PRIMARY.DEFAULT}} variant="headlineLarge">레인보우브릿지</Text>*/}

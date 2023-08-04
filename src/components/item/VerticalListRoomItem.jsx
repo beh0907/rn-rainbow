@@ -2,21 +2,15 @@ import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Text, Title } from 'react-native-paper';
 import { BASE_URL_FILE } from '@env';
-import { Pressable, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { GENDER, PRIMARY } from '../../Colors';
+import { PRIMARY } from '../../Colors';
 import AutoHeightImage from 'react-native-auto-height-image';
 
 const VerticalListRoomItem = memo(({ room }) => {
-    const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
-
-    console.log('나의 아이템?', room);
-
-
-    // console.log("URL : ", `${BASE_URL_FILE_AWS}${room.id}/${room.roomNum}/profile/${room.image}`)
 
     const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
@@ -33,13 +27,15 @@ const VerticalListRoomItem = memo(({ room }) => {
                                 source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
 
                     <Card.Content style={styles.titleContainer}>
-                        <Title style={styles.title}>{room.name} ({room.age})</Title>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <Title style={styles.title}>{room.name} ({room.age})</Title>
+                            <AutoHeightImage width={room.gender === 1 ? 20 : 14}
+                                             source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
+                        </View>
+
                         <Text style={styles.description}>{room.date}</Text>
                         <View style={styles.imageContainer}>
-                            <View style={{ flexDirection: 'row' }}>
-                                <AutoHeightImage width={room.gender === 1 ? 20 : 14}
-                                                 source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
-                            </View>
+                            <Text variant={'bodyMedium'}>{'No.' + String(room.roomNum).padStart(4, '0')}</Text>
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                                 <MaterialCommunityIcons name={'account'} size={16} color={PRIMARY.DEFAULT}
                                                         style={{ alignItems: 'center' }} />
@@ -65,7 +61,8 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         overflow: 'hidden',
         elevation: 2,
-        marginBottom: 20
+        marginBottom: 20,
+        marginHorizontal:20
     },
     image: {
         flex: 1,

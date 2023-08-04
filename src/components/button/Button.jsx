@@ -10,7 +10,6 @@ export const ButtonTypes = {
 }
 
 const ButtonTypeColors = {
-
     PRIMARY: {
         LIGHT: PRIMARY.LIGHT,
         DEFAULT: PRIMARY.DEFAULT,

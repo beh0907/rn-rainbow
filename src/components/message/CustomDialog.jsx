@@ -27,8 +27,8 @@ const CustomDialog = () => {
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <Dialog.Actions>
                             {/*확인 이벤트가 등록됐을 경우에만 표시한다*/}
-                            {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
-                            <Button onPress={onDismissDialog}>닫기</Button>
+                            <Button onPress={onConfirmDialog}>확인</Button>
+                            <Button onPress={onDismissDialog}>취소</Button>
                         </Dialog.Actions>
                     </View>
 

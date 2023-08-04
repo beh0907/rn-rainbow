@@ -14,6 +14,9 @@ import { addHyphen } from '../../utils/checkInputForm';
 import { modify } from '../../api/Auth';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
+import {BASE_URL_FILE} from "@env"
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();
@@ -72,8 +75,15 @@ const ProfileUpdateScreen = props => {
             <View style={[styles.container, { paddingTop: top }]}>
 
                 <View style={styles.profile}>
-                    <View style={[styles.photo, user.photoURL || { backgroundColor: GRAY.DEFAULT }]}>
-                        <FastImage source={{ uri: user.photoURL || image }} style={styles.photo} />
+                    <View style={[styles.photo]}>
+                        {
+                            user.image ?
+                                <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={100}
+                                             style={styles.photo} />
+                                : <AvatarText label={user.nickName.charAt(0)} Text size={100}
+                                              style={styles.photo} />
+                        }
+
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>
@@ -177,7 +187,7 @@ const styles = StyleSheet.create({
     profile: {
         justifyContent: 'center',
         alignItems: 'center',
-        paddingVertical: 20
+        paddingBottom: 20
     },
     photo: {
         width: 100,

@@ -1,27 +1,33 @@
 import React, { memo } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import PropTypes from 'prop-types';
-import Button from '../button/Button';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { PRIMARY } from '../../Colors';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { BASE_URL_FILE } from '@env';
 
-const CommentItem = memo(({ comment, isMine, removeComment }) => {
+const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
     return (
         <View style={styles.container}>
-            {/*<Image*/}
-            {/*    source={require('../../../assets/icon/ic_dog.png')} // 프로필 이미지 주소*/}
-            {/*    style={styles.profileImage}*/}
-            {/*/>*/}
-            <AvatarText style={styles.profileImage} label={comment.nickName.charAt(0)} Text size={36} />
+
+            {
+                comment.image ?
+                    <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} size={48}
+                                 style={styles.profileImage} />
+                    : <AvatarText label={comment.nickName.charAt(0)} Text size={48}
+                                  style={styles.profileImage} />
+            }
+
+            {/*<AvatarText style={styles.profileImage} label={comment.nickName.charAt(0)} Text size={36} />*/}
             <View style={styles.commentInfo}>
                 <Text style={styles.nickName}>{comment.nickName}</Text>
                 <Text style={styles.commentDate}>{comment.date}</Text>
                 <Text style={styles.commentContent}>{comment.content}</Text>
             </View>
-            {isMine && (
+            {isCanDelete && (
                 <TouchableOpacity style={styles.deleteButton} onPress={() => removeComment(comment)}>
-                    <MaterialCommunityIcons name="delete" size={24} color={PRIMARY.DEFAULT} />
+                    <MaterialCommunityIcons name='delete' size={24} color={PRIMARY.DEFAULT} />
                 </TouchableOpacity>
             )}
         </View>
@@ -29,12 +35,12 @@ const CommentItem = memo(({ comment, isMine, removeComment }) => {
 });
 
 CommentItem.defaultProps = {
-    isMine: false
+    isCanDelete: false
 };
 
 CommentItem.propTypes = {
     comment: PropTypes.object.isRequired,
-    isMine: PropTypes.bool,
+    isCanDelete: PropTypes.bool,
     removeComment: PropTypes.func
 };
 
@@ -62,14 +68,15 @@ const styles = StyleSheet.create({
         marginBottom: 4
     },
     commentContent: {
-        fontSize: 14
+        fontSize: 14,
+        flexWrap: 'wrap'
     },
     deleteButton: {
         position: 'absolute',
         top: 0,
         right: 0,
-        paddingHorizontal: 8,
-    },
+        paddingHorizontal: 8
+    }
 });
 
 export default CommentItem;

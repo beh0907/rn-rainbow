@@ -28,7 +28,6 @@ const VerticalCardRoomItem = memo(({ room }) => {
                 {/*/>*/}
                 <Card.Cover style={styles.image}
                             source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
-                {/*source={{uri: `${BASE_URL_FILE_AWS}${room.id}/${room.roomNum}/profile/${room.image}`}}/>*/}
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -60,7 +59,8 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         elevation: 2,
         flex: 1,
-        marginBottom: 20
+        marginBottom: 20,
+        marginHorizontal: 20
     },
     image: {
         width: '100%'

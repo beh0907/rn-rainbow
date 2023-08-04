@@ -8,6 +8,8 @@ import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { BLACK, PRIMARY } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { BASE_URL_FILE } from '@env';
 
 const HomeScreen = props => {
     const { top, bottom } = useSafeAreaInsets();
@@ -57,12 +59,18 @@ const HomeScreen = props => {
         }, [])
     );
 
+    console.log(user);
+
     return (
         <View style={[styles.container, { marginTop: top, marginBottom: bottom }]}>
-
-
             <View style={styles.containerUser}>
-                <AvatarText label={user.nickName.charAt(0)} Text size={48} />
+
+                {
+                    user.image ?
+                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={48} />
+                        : <AvatarText label={user.nickName.charAt(0)} Text size={48} />
+                }
+
 
                 <View style={{ marginStart: 16 }}>
                     <Text variant={'titleLarge'} style={{ fontWeight: 'bold' }}>{user.nickName}</Text>
@@ -72,12 +80,15 @@ const HomeScreen = props => {
 
 
             <Searchbar
+                style={{ marginHorizontal: 16 }}
                 placeholder='추모관을 검색해주세요.'
                 onChangeText={onChangeSearch}
                 value={searchQuery}
             />
 
-            <View style={{ flexDirection: 'row', marginTop: 20, alignItems:"center" }}>
+            <View style={{
+                flexDirection: 'row', marginTop: 20, alignItems: 'center', paddingHorizontal: 16
+            }}>
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 
                 <ToggleButton.Group
@@ -99,10 +110,10 @@ HomeScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal: 16,
         height: '100%'
     },
     containerUser: {
+        paddingHorizontal: 16,
         paddingVertical: 20,
         flexDirection: 'row',
         alignItems: 'center'
