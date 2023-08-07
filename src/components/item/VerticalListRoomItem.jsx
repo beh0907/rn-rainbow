@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import { Card, Text, Title } from 'react-native-paper';
+import { Card, Paragraph, Text, Title } from 'react-native-paper';
 import { BASE_URL_FILE } from '@env';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -62,7 +62,8 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         elevation: 2,
         marginBottom: 20,
-        marginHorizontal:20
+        marginHorizontal:20,
+        backgroundColor:'white'
     },
     image: {
         flex: 1,

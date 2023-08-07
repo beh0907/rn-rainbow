@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Searchbar, Text, ToggleButton } from 'react-native-paper';
+import { RadioButton, Text, ToggleButton } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
@@ -10,6 +10,7 @@ import { BLACK, PRIMARY } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import { BASE_URL_FILE } from '@env';
+import InputTextButton from '../../components/view/inputTextButton';
 
 const HomeScreen = props => {
     const { top, bottom } = useSafeAreaInsets();
@@ -20,10 +21,8 @@ const HomeScreen = props => {
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
     const [toggleVal, setToggleVal] = useState('list');
 
-    const onChangeSearch = query => setSearchQuery(query);
 
     let exitApp;
-
     /**백 버튼 이벤트 동작*/
     const handleBackButton = () => {
         // 2000(2초) 안에 back 버튼을 한번 더 클릭 할 경우 앱 종료
@@ -59,8 +58,6 @@ const HomeScreen = props => {
         }, [])
     );
 
-    console.log(user);
-
     return (
         <View style={[styles.container, { marginTop: top, marginBottom: bottom }]}>
             <View style={styles.containerUser}>
@@ -78,13 +75,16 @@ const HomeScreen = props => {
                 </View>
             </View>
 
-
-            <Searchbar
-                style={{ marginHorizontal: 16 }}
-                placeholder='추모관을 검색해주세요.'
-                onChangeText={onChangeSearch}
-                value={searchQuery}
-            />
+            <InputTextButton
+                styles={{
+                    input: {
+                        marginHorizontal: 16
+                    }
+                }}
+                value={searchQuery} onChangeText={setSearchQuery}
+                icon={'text-search'}
+                placeholder={'검색어를 입력해주세요.'} onSubmit={() => {
+            }} />
 
             <View style={{
                 flexDirection: 'row', marginTop: 20, alignItems: 'center', paddingHorizontal: 16

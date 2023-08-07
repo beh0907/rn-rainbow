@@ -52,11 +52,6 @@ export const modify = async (user, uri) => {
         formData.append('file', file);
     }
 
-    console.log(user);
-    console.log(json);
-    console.log(blob);
-    console.log(formData);
-
     const response = await axios.postForm(`${BASE_URL_API}/user/modifyRN`, formData)
         .catch(e => {
             console.log('에러', e);

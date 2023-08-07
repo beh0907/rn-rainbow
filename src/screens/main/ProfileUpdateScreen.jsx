@@ -154,6 +154,7 @@ const ProfileUpdateScreen = props => {
                             returnKeyType={ReturnKeyTypes.DONE}
                             onChangeText={(text) => setProfile({ ...profile, phone: addHyphen(text) })}
                             inputMode={"numeric"}
+                            maxLength={13}
                         />
 
 

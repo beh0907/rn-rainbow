@@ -1,33 +1,87 @@
-import React, { useEffect, useLayoutEffect, useState } from 'react';
-import { StyleSheet, View } from 'react-native';
-import { Text } from 'react-native-paper';
-import { readRoom } from '../../api/Room';
-import { useUserState } from '../../contexts/UserContext';
+import React, { useState } from 'react';
+import { StyleSheet, TextInput, View } from 'react-native';
+import { Avatar, Divider, Text } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
+import { BASE_URL_FILE } from '@env';
+import InputTextButton from '../../components/view/inputTextButton';
 
 const RoomScreen = () => {
-    const [room, setRoom] = useRoomState();
-    // const [diaries,setDiaries] = useState({})
-
-    useEffect(() => {
-
-    }, [])
+    const [room] = useRoomState();
 
     return (
-        <View style={[styles.container]}>
-            <Text>추모관 메인 화면</Text>
+        <View style={styles.container}>
+            {/* Pet Information */}
+            <View style={styles.petInfoContainer}>
+                <Avatar.Image
+                    size={100}
+                    source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }}
+                />
+                <View style={styles.petInfoTextContainer}>
+                    <Text style={styles.petName}>{room.name}</Text>
+                    <Text style={styles.petDetails}>{room.age} years old, {room.gender === 1 ? 'Male' : 'Female'}</Text>
+                </View>
+            </View>
+            <Divider style={styles.divider} />
+
+            {/*날짜*/}
+            <View style={styles.dateContainer}>
+                <Text style={styles.dateText}>떠나보낸 날짜 : {room.date}</Text>
+            </View>
+            <Divider style={styles.divider} />
+
+            {/*인삿말*/}
+            <View style={styles.messageContainer}>
+                <Text style={styles.messageTitle}>인사말</Text>
+                <Text style={styles.messageText}>
+                    {room.content}
+                </Text>
+            </View>
         </View>
     );
 };
 
-RoomScreen.propTypes = {};
-
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 16,
-        justifyContent: 'center',
-        alignItems: 'center'
+        padding: 16
+    },
+    petInfoContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 16
+    },
+    petInfoTextContainer: {
+        marginLeft: 16
+    },
+    petName: {
+        fontSize: 24,
+        fontWeight: 'bold'
+    },
+    petDetails: {
+        fontSize: 16,
+        color: 'gray'
+    },
+    divider: {
+        height: 1,
+        backgroundColor: 'gray',
+        marginVertical: 16
+    },
+    dateContainer: {
+        marginBottom: 16
+    },
+    dateText: {
+        fontSize: 18,
+        fontWeight: 'bold'
+    },
+    messageContainer: {},
+    messageTitle: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        marginBottom: 8
+    },
+    messageText: {
+        fontSize: 16,
+        lineHeight: 24
     }
 });
 

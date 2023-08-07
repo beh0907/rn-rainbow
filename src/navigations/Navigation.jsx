@@ -12,6 +12,7 @@ import * as MediaLibrary from 'expo-media-library';
 import { Camera } from 'expo-camera';
 import { Alert } from 'react-native';
 import { AuthFormTypes } from '../reducer/AuthFormReducer';
+import { useDialogState } from '../contexts/DialogContext';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -35,6 +36,9 @@ const Navigation = () => {
     //미디어 권한
     const [mediaStatus, requestMediaPermission] = MediaLibrary.usePermissions();
     const [cameraStatus, requestCameraPermission] = Camera.useCameraPermissions();
+
+    //다이얼로그 설정
+    const [, setDialog] = useDialogState();
 
     useLayoutEffect(() => {
         (async () => {

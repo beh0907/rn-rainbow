@@ -8,11 +8,11 @@ const CustomDialog = () => {
     const { title, message, onPress, visible } = dialog;
 
     const onConfirmDialog = async () => {
-        onPress()
-        onDismissDialog()
+        await onPress()
+        await onDismissDialog()
     }
 
-    const onDismissDialog = () => setDialog(prev => ({ ...prev, visible: false }));
+    const onDismissDialog = () => setDialog({visible: false });
 
     return (
         <View>
@@ -26,9 +26,8 @@ const CustomDialog = () => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <Dialog.Actions>
-                            {/*확인 이벤트가 등록됐을 경우에만 표시한다*/}
-                            <Button onPress={onConfirmDialog}>확인</Button>
-                            <Button onPress={onDismissDialog}>취소</Button>
+                            {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
+                            <Button onPress={onDismissDialog}>닫기</Button>
                         </Dialog.Actions>
                     </View>
 

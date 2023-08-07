@@ -1,13 +1,13 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useRoomState } from '../../contexts/RoomContext';
 import CommentItem from '../../components/item/CommentItem';
 import * as Comment from '../../api/Comment';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
-import { Button, TextInput } from 'react-native-paper';
-import { ReturnKeyTypes } from '../../components/view/Input';
 import { useDialogState } from '../../contexts/DialogContext';
+import InputTextButton from '../../components/view/inputTextButton';
+import SafeInputView from '../../components/view/SafeInputView';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -18,13 +18,14 @@ const CommentScreen = () => {
     const [comments, setComments] = useState({});
     const [comment, setComment] = useState('');
 
+    console.log("comment", comment)
+
     const readCommentList = useCallback(async () => {
         setComments(await Comment.readCommentList(room.roomNum));
-        console.log('밸류', comments);
     }, []);
 
     const registerComment = async () => {
-        Keyboard.dismiss()
+        Keyboard.dismiss();
 
         //댓글 등록
         await Comment.registerComment({
@@ -46,8 +47,6 @@ const CommentScreen = () => {
     };
 
     const removeComment = useCallback(async ({ seq }) => {
-        console.log('seq', seq);
-
         setDialog({
             title: '댓글 삭제',
             message: '정말 댓글을 삭제하시겠습니까?',
@@ -63,45 +62,37 @@ const CommentScreen = () => {
         });
     }, []);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             await readCommentList();
         })();
     }, []);
 
     return (
-        <View style={[styles.container]}>
-            <FlatList
-                showsVerticalScrollIndicator={false}
-                style={styles.commentList}
-                ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                keyExtractor={(item) => item.seq}
-                data={comments}
-                renderItem={({ item }) =>
-                    //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
-                    <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
-                                 removeComment={removeComment} />
-                }
-            />
-
-
-            {/* 댓글 작성 입력창 */}
-            <View style={styles.commentInputContainer}>
-                <TextInput
-                    mode='outlined'
-                    outlineStyle={{ borderWidth: 1 }}
-                    outlineColor='#0000001F'
-                    label='댓글 작성'
-                    style={styles.commentInput}
-                    returnKeyType={ReturnKeyTypes.DONE}
-                    onChangeText={setComment}
-                    value={comment}
-                    onSubmitEditing={registerComment}
+        <SafeInputView>
+            <View style={[styles.container]}>
+                <FlatList
+                    showsVerticalScrollIndicator={false}
+                    style={styles.commentList}
+                    ItemSeparatorComponent={() => <View style={styles.separator}></View>}
+                    keyExtractor={(item) => item.seq}
+                    data={comments}
+                    renderItem={({ item }) =>
+                        //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                        <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
+                                     removeComment={removeComment} />
+                    }
                 />
-                <Button style={styles.postButton} onPress={registerComment} mode={'elevated'}
-                        disabled={comment === ''}>등록</Button>
+
+                 {/*댓글 작성 입력창*/}
+                <InputTextButton styles={{
+                    input: {
+                        marginTop: 10
+                    }
+                }} value={comment} onChangeText={setComment} icon={'send'}
+                                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} />
             </View>
-        </View>
+        </SafeInputView>
     );
 };
 
@@ -110,7 +101,7 @@ CommentScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
+        margin: 16,
         justifyContent: 'center',
         alignItems: 'center'
     },
@@ -124,18 +115,14 @@ const styles = StyleSheet.create({
     commentInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
-        marginTop: 16,
+        marginTop: 16
     },
     commentInput: {
         flex: 1
     },
     postButton: {
-        marginStart: 12,
-        borderRadius: 8,
-    },
-    postButtonText: {
-        color: 'white',
-        fontWeight: 'bold'
+        marginTop: 12,
+        marginStart: 10
     }
 });
 

@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { TextInput } from 'react-native-paper';
+import { RadioButton, Text, TextInput } from 'react-native-paper';
 import SwitchSelector from 'react-native-switch-selector';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import SafeInputView from '../../components/view/SafeInputView';
@@ -13,15 +13,31 @@ import Button from '../../components/button/Button';
 import * as Room from '../../api/Room';
 import DatePicker from '../../components/view/DatePicker';
 import { formatDate } from '../../utils/checkInputForm';
+import { MainRoutes } from '../../navigations/Routes';
+import { useNavigation } from '@react-navigation/native';
+import { useUserState } from '../../contexts/UserContext';
 
-const RoomRegisterScreen = props => {
+const RoomRegisterScreen = () => {
+    const navigation = useNavigation();
+
     //사이즈 관련 변수
     const { top, bottom } = useSafeAreaInsets();
     const { width, height } = useWindowDimensions();
 
     //추모관 설정 정보
+    const [user] = useUserState();
     const [image, setImage] = useState(null);
-    const [room, setRoom] = useState({});
+    const [room, setRoom] = useState({
+        id: user.id,
+        content: '',
+        permission: '1',
+        name: '',
+        image: '',
+        date: '',
+        gender: '1',
+        age: ''
+        // code: ''
+    });
 
     // 설정 정보 REF
     const nameRef = useRef(null);
@@ -46,37 +62,36 @@ const RoomRegisterScreen = props => {
 
         });
 
-        console.log(result);
-
         if (result.assets) {
             setImage(result.assets[0].uri);
         }
     };
 
-    /**날짜 다이얼로그 설정 */
-    const onChange = (event, selectedDate) => {
-        const currentDate = selectedDate;
-        setShow(false);
-        setDate(currentDate);
-
-        console.log('이벤트');
-        ageRef.current.focus();
-    };
-
     /**추모관 생성*/
     const onRegister = async () => {
-        const result = await Room.registerRoom();
+        console.log('room', { ...room, date: formatDate(date) });
+        console.log('image', image);
+        const result = await Room.registerRoom({ ...room, date: formatDate(date) }, image);
+
+        //등록이 완료되었으므로 현재 화면에서 돌아간다
+        await navigation.goBack();
+
+        //결과 값으로 추가된 방의 ID를 받기 때문에
+        //ID를 넘겨 추모관을 조회한다
+        await navigation.navigate(MainRoutes.ROOM_TAB, {
+            roomNum: result
+        });
     };
 
     return (
         <SafeInputView>
-            <DatePicker
+            {show && <DatePicker
                 date={date}
                 setDate={setDate}
-                show={show}
                 setShow={setShow}
                 ref={ageRef}
-            />
+            />}
+
 
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
@@ -167,28 +182,61 @@ const RoomRegisterScreen = props => {
                             />
                         </View>
 
-                        <SwitchSelector
-                            initial={1}
-                            onPress={value => setRoom(prevState => ({
-                                ...prevState,
-                                gender: value
-                            }))}
-                            textColor={PRIMARY.DEFAULT} //'#7a44cf'
-                            selectedColor={WHITE}
-                            buttonColor={PRIMARY.DEFAULT}
-                            borderColor={PRIMARY.DEFAULT}
-                            hasPadding
-                            options={[
-                                {
-                                    label: '',
-                                    value: 1,
-                                    imageIcon: require('../../../assets/icon/ic_female.png')
-                                }, //images.feminino = require('./path_to/assets/img/feminino.png')
-                                { label: '', value: 0, imageIcon: require('../../../assets/icon/ic_male.png') } //images.masculino = require('./path_to/assets/img/masculino.png')
-                            ]}
-                            testID='gender-switch-selector'
-                            accessibilityLabel='gender-switch-selector'
-                        />
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                            <SwitchSelector
+                                initial={1}
+                                onPress={value => setRoom(prevState => ({
+                                    ...prevState,
+                                    gender: value
+                                }))}
+                                textColor={PRIMARY.DEFAULT} //'#7a44cf'
+                                selectedColor={WHITE}
+                                buttonColor={PRIMARY.DEFAULT}
+                                borderColor={PRIMARY.DEFAULT}
+                                hasPadding
+                                options={[
+                                    {
+                                        label: '',
+                                        value: '0',
+                                        imageIcon: require('../../../assets/icon/ic_female.png')
+                                    },
+                                    {
+                                        label: '',
+                                        value: '1',
+                                        imageIcon: require('../../../assets/icon/ic_male.png')
+                                    }
+                                ]}
+                                style={{ flex: 1 }}
+                            />
+
+                            <View>
+                                <RadioButton.Group
+                                    style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                    onValueChange={(value) => {
+                                        setRoom({ ...room, permission: value });
+                                    }}
+                                    value={room.permission}>
+                                    <View style={{ flexDirection: 'row' }}>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Text>공개</Text>
+                                            <RadioButton value='1' />
+                                        </View>
+                                        <View style={{
+                                            flexDirection: 'row',
+                                            justifyContent: 'center',
+                                            alignItems: 'center'
+                                        }}>
+                                            <Text>비공개</Text>
+                                            <RadioButton value='0' />
+                                        </View>
+                                    </View>
+                                </RadioButton.Group>
+                            </View>
+                        </View>
 
 
                         {/*저장하기 버튼*/}

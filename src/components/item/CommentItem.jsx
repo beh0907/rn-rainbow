@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
         marginRight: 10
     },
     commentInfo: {
-        // flex: 1
+        flex: 1
     },
     nickName: {
         fontWeight: 'bold',

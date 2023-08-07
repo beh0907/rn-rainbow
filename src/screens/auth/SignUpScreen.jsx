@@ -65,7 +65,6 @@ const SignUpScreen = () => {
                 if (user.id !== null)
                     navigation.goBack()
             } catch (e) {
-                // const errorMessage = getAuthErrorMessages(e.code)
                 Alert.alert('회원가입 실패', e.code, [{
                     text: '확인',
                     onPress: () => dispatch({type: AuthFormTypes.TOGGLE_LOADING})

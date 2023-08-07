@@ -15,9 +15,9 @@ import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
 
-const Tab = createMaterialTopTabNavigator();
 
 const RoomTab = () => {
+    const Tab = createMaterialTopTabNavigator();
     const navigation = useNavigation();
 
     //컨텍스트 데이터
@@ -34,47 +34,6 @@ const RoomTab = () => {
 
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
-
-
-    useLayoutEffect(() => {
-        (async () => {
-            setIsBookMark(await PreferenceStore.isBookMark(roomNum))
-        })()
-    }, [])
-
-    useLayoutEffect(() => {
-        (async () => {
-            /**탭 네비게이션 설정*/
-            navigation.setOptions({
-                headerTitle: 'Room No.' + String(roomNum).padStart(4, '0'),
-                headerShadowVisible: false,
-                headerTitleAlign: 'center',
-                headerRight: () => {
-                    return (
-                        user.id === room.id
-                            ? // 내가 개설한 추모관이라면 방 설정
-                            <HeaderRight name={'cogs'} onPress={() => {
-                                console.log('방 설정');
-                            }} />
-                            : // 아니라면 즐겨찾기
-                            <HeaderRight color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
-                                           name={isBookMark ? 'star' : 'star-outline'} onPress={() => {
-                                setIsBookMark(prev => {
-                                    const changeState = !prev;
-
-                                    changeState ? PreferenceStore.addBookMark(roomNum) : PreferenceStore.removeBookMark(roomNum);
-
-                                    setSnackbar({
-                                        message: changeState ? '즐겨찾기가 등록되었습니다' : '즐겨찾기가 해제되었습니다',
-                                        visible: true
-                                    });
-                                    return !prev;
-                                });
-                            }} />);
-                }
-            });
-        })();
-    }, [navigation, roomNum, isBookMark]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -95,12 +54,54 @@ const RoomTab = () => {
         })();
     }, [roomNum]);
 
+    useLayoutEffect(() => {
+        (async () => {
+            /**탭 네비게이션 설정*/
+            navigation.setOptions({
+                headerTitle: 'Room No.' + String(roomNum).padStart(4, '0'),
+                headerShadowVisible: false,
+                headerTitleAlign: 'center',
+                headerRight: () => {
+                    return (
+                        user.id === room.id
+                            ? // 내가 개설한 추모관이라면 방 설정
+                            <HeaderRight name={'cog'} onPress={() => {
+                                console.log('방 설정');
+                            }} />
+                            : // 아니라면 즐겨찾기
+                            <HeaderRight color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
+                                         name={isBookMark ? 'star' : 'star-outline'} onPress={() => {
+                                setIsBookMark(prev => {
+                                    const changeState = !prev;
+
+                                    changeState ? PreferenceStore.addBookMark(roomNum) : PreferenceStore.removeBookMark(roomNum);
+
+                                    setSnackbar({
+                                        message: changeState ? '즐겨찾기가 등록되었습니다' : '즐겨찾기가 해제되었습니다',
+                                        visible: true
+                                    });
+                                    return !prev;
+                                });
+                            }} />);
+                }
+            });
+        })();
+    }, [navigation, roomNum, isBookMark, user, room]);
+
+    useLayoutEffect(() => {
+        (async () => {
+            setIsBookMark(await PreferenceStore.isBookMark(roomNum));
+        })();
+    }, []);
+
     return (
         isReady ?
             <Tab.Navigator screenOptions={{
                 tabBarStyle: { elevation: 0, shadowOpacity: 0 },
                 tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
-                tabBarAndroidRipple: false
+                tabBarAndroidRipple: false,
+                lazy: true,
+                swipeEnabled: false
             }}>
                 <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} />
                 <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />
