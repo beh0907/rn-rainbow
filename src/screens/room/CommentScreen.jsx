@@ -7,7 +7,7 @@ import * as Comment from '../../api/Comment';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import InputTextButton from '../../components/view/inputTextButton';
-import SafeInputView from '../../components/view/SafeInputView';
+import { Text } from 'react-native-paper';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -17,8 +17,6 @@ const CommentScreen = () => {
 
     const [comments, setComments] = useState({});
     const [comment, setComment] = useState('');
-
-    console.log("comment", comment)
 
     const readCommentList = useCallback(async () => {
         setComments(await Comment.readCommentList(room.roomNum));
@@ -69,8 +67,13 @@ const CommentScreen = () => {
     }, []);
 
     return (
-        <SafeInputView>
-            <View style={[styles.container]}>
+        <View style={[styles.container]}>
+
+            {comments.length === 0 ?
+                <View style={styles.emptyComment}>
+                    <Text>등록된 댓글이 없습니다</Text>
+                </View>
+                :
                 <FlatList
                     showsVerticalScrollIndicator={false}
                     style={styles.commentList}
@@ -83,16 +86,18 @@ const CommentScreen = () => {
                                      removeComment={removeComment} />
                     }
                 />
+            }
 
-                 {/*댓글 작성 입력창*/}
-                <InputTextButton styles={{
+            {/*댓글 작성 입력창*/}
+            <InputTextButton
+                value={comment} onChangeText={setComment} icon={'send'}
+                placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={comment === ''}
+                styles={{
                     input: {
                         marginTop: 10
                     }
-                }} value={comment} onChangeText={setComment} icon={'send'}
-                                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} />
-            </View>
-        </SafeInputView>
+                }} />
+        </View>
     );
 };
 
@@ -103,7 +108,8 @@ const styles = StyleSheet.create({
         flex: 1,
         margin: 16,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        height: '100%'
     },
     commentList: {
         flex: 1,
@@ -123,6 +129,11 @@ const styles = StyleSheet.create({
     postButton: {
         marginTop: 12,
         marginStart: 10
+    },
+    emptyComment: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

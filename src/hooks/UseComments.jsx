@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { readRoomList } from '../api/Room';
+import { readCommentList } from '../api/Comment';
 
 const UseRooms = () => {
-    // const [searchState, setSearchState] = useState({
-    //     page: 1,
-    //     type: '',
-    //     keyword: ''
-    // })
-
-    const [rooms, setRooms] = useState([]);
+    const [comments, setComments] = useState([]);
     const [refetching, setRefetching] = useState(false);
     const [amount, setAmount] = useState(20);
 
@@ -28,9 +22,9 @@ const UseRooms = () => {
                 isFetch.current = false;
             }
 
-            //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
+            //새로 가져온 댓글이 하나라도 있다면 리스트에 추가한다
             if (list.length > 0) {
-                setRooms(prev => [...prev, ...list]);
+                setComments(prev => [...prev, ...list]);
                 pageRef.current++;
             }
 
@@ -40,7 +34,7 @@ const UseRooms = () => {
 
     const refetch = async () => {
         setRefetching(true);
-        setRooms([]);
+        setComments([]);
         pageRef.current = 1;
         isFetch.current = true;
         await fetchNextPage(pageRef.current);
@@ -51,7 +45,7 @@ const UseRooms = () => {
         fetchNextPage();
     }, [fetchNextPage]);
 
-    return { rooms, fetchNextPage, refetch, refetching };
+    return { comments, fetchNextPage, refetch, refetching };
 };
 
 export default UseRooms;

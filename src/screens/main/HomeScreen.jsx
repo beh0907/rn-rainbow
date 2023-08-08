@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RadioButton, Text, ToggleButton } from 'react-native-paper';
+import { Text, ToggleButton } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
@@ -82,9 +82,11 @@ const HomeScreen = props => {
                     }
                 }}
                 value={searchQuery} onChangeText={setSearchQuery}
-                icon={'text-search'}
-                placeholder={'검색어를 입력해주세요.'} onSubmit={() => {
-            }} />
+                icon={'search'}
+                disabled={searchQuery === ''}
+                placeholder={'검색어를 입력해주세요.'}
+                onSubmit={() => {
+                }} />
 
             <View style={{
                 flexDirection: 'row', marginTop: 20, alignItems: 'center', paddingHorizontal: 16

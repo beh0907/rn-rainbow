@@ -86,7 +86,7 @@ const RoomTab = () => {
                 }
             });
         })();
-    }, [navigation, roomNum, isBookMark, user, room]);
+    }, [roomNum, isBookMark, user, room]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -99,14 +99,12 @@ const RoomTab = () => {
             <Tab.Navigator screenOptions={{
                 tabBarStyle: { elevation: 0, shadowOpacity: 0 },
                 tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
-                tabBarAndroidRipple: false,
-                lazy: true,
                 swipeEnabled: false
             }}>
                 <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} />
-                <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />
                 <Tab.Screen name={RoomRoutes.GALLERY} component={GalleryScreen} />
                 <Tab.Screen name={RoomRoutes.MEMORY} component={MemoryScreen} />
+                <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />
             </Tab.Navigator>
             :
             <View style={[styles.container, styles.horizontal]}>

@@ -26,8 +26,8 @@ const CustomDialog = () => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <Dialog.Actions>
-                            {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
                             <Button onPress={onDismissDialog}>닫기</Button>
+                            {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
                         </Dialog.Actions>
                     </View>
 

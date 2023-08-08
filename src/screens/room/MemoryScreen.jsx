@@ -3,6 +3,8 @@ import {StyleSheet, View} from "react-native";
 import {Text} from "react-native-paper";
 import {readMemoryList} from "../../api/Memory";
 import { useRoomState } from '../../contexts/RoomContext';
+import MasonryList from '@react-native-seoul/masonry-list';
+import GalleryItem from '../../components/item/GalleryItem';
 
 const RoomScreen = () => {
     const [room, ] = useRoomState();
@@ -17,7 +19,13 @@ const RoomScreen = () => {
 
     return (
         <View style={[styles.container]}>
-            <Text>메모리</Text>
+
+            {memories.length === 0 ?
+                <Text>등록된 추억이 없습니다</Text>
+                :
+                <Text>등록된 추억이 없습니다</Text>
+            }
+
         </View>
     );
 };

@@ -11,8 +11,6 @@ const VerticalCardRoomItem = memo(({ room }) => {
     const { width, height } = useWindowDimensions();
     const navigation = useNavigation();
 
-    console.log('나의 아이템?', room);
-
     const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
             roomNum
@@ -26,8 +24,9 @@ const VerticalCardRoomItem = memo(({ room }) => {
                 {/*    title="Card Title"*/}
                 {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
                 {/*/>*/}
+
                 <Card.Cover style={styles.image}
-                            source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
+                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
                     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
         overflow: 'hidden',
         elevation: 2,
         flex: 1,
-        marginBottom: 20,
+        marginBottom: 10,
         marginHorizontal: 20
     },
     image: {

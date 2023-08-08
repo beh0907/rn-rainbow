@@ -8,8 +8,8 @@ export const readRoom = async (roomNum) => {
     return response.data;
 };
 
-export const readRoomList = async ({ page, type, keyword }) => {
-    const response = await axiosApiInstance.get(`/room/readList?page=${page}&type=${type}&keyword=${keyword}`);
+export const readRoomList = async ({ page, amount, type, keyword }) => {
+    const response = await axiosApiInstance.get(`/room/readList?page=${page}&amount=${amount}&type=${type}&keyword=${keyword}`);
     return response.data;
 };
 

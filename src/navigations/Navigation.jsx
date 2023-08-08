@@ -21,7 +21,8 @@ const ImageAssets = [
     require('../../assets/background/bg_intro_2.png'),
     require('../../assets/background/bg_intro_3.png'),
     require('../../assets/background/bg_intro_4.png'),
-    require('../../assets/logo.png')
+    require('../../assets/logo.png'),
+    require('../../assets/background/bg_temp.jpg'),
 ];
 
 const Navigation = () => {

@@ -10,7 +10,6 @@ import { BASE_URL_FILE } from '@env';
 const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
     return (
         <View style={styles.container}>
-
             {
                 comment.image ?
                     <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} size={48}
@@ -46,7 +45,6 @@ CommentItem.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
         width: '100%',
         flexDirection: 'row',
         alignItems: 'flex-start'
