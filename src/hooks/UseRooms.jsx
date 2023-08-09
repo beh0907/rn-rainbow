@@ -11,14 +11,16 @@ const UseRooms = () => {
     const [rooms, setRooms] = useState([]);
     const [refetching, setRefetching] = useState(false);
     const [amount, setAmount] = useState(20);
+    const [isLoading, setIsLoading] = useState(false)
 
     const isFetch = useRef(true);
-    const isLoadingRef = useRef(false);
     const pageRef = useRef(1);
 
+    console.log("로딩", isLoading)
+
     const fetchNextPage = useCallback(async () => {
-        if (!isLoadingRef.current && isFetch.current) {
-            isLoadingRef.current = true;
+        if (!isLoading && isFetch.current) {
+            setIsLoading(true)
 
             //페이지와 개수 정보를 파라미터로 입력한다
             const list = await readRoomList({ page: pageRef.current, amount });
@@ -34,7 +36,7 @@ const UseRooms = () => {
                 pageRef.current++;
             }
 
-            isLoadingRef.current = false;
+            setIsLoading(false)
         }
     }, []);
 
@@ -43,7 +45,7 @@ const UseRooms = () => {
         setRooms([]);
         pageRef.current = 1;
         isFetch.current = true;
-        await fetchNextPage(pageRef.current);
+        await fetchNextPage();
         setRefetching(false);
     };
 
@@ -51,7 +53,7 @@ const UseRooms = () => {
         fetchNextPage();
     }, [fetchNextPage]);
 
-    return { rooms, fetchNextPage, refetch, refetching };
+    return { rooms, fetchNextPage, refetch, refetching, isLoading };
 };
 
 export default UseRooms;

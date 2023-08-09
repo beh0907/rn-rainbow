@@ -4,13 +4,15 @@ import VerticalCardRoomItem from '../item/VerticalCardRoomItem';
 import useRooms from '../../hooks/UseRooms';
 import PropTypes from 'prop-types';
 import VerticalListRoomItem from '../item/VerticalListRoomItem';
+import { Text } from 'react-native-paper';
 
 const AllRoomList = ({ value }) => {
     const {
         rooms,
         fetchNextPage,
         refetch,
-        refetching
+        refetching,
+        isLoading
     } = useRooms();
 
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
@@ -28,6 +30,8 @@ const AllRoomList = ({ value }) => {
             onEndReached={fetchNextPage}
             refreshing={refetching}
             onRefresh={refetch}
+            ListFooterComponent={isLoading && <Text>목록을 불러오고 있습니다.</Text>}
+            ListFooterComponentStyle={styles.listFooter}
         />
     );
 };
@@ -47,6 +51,11 @@ const styles = StyleSheet.create({
     },
     separator: {
         // marginVertical: 10,
+    },
+    listFooter: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

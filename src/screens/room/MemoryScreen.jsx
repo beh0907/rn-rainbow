@@ -1,21 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {StyleSheet, View} from "react-native";
-import {Text} from "react-native-paper";
-import {readMemoryList} from "../../api/Memory";
+import React, { useEffect, useState } from 'react';
+import { Button, StyleSheet, View } from 'react-native';
+import { Text } from 'react-native-paper';
+import { readMemoryList } from '../../api/Memory';
 import { useRoomState } from '../../contexts/RoomContext';
-import MasonryList from '@react-native-seoul/masonry-list';
-import GalleryItem from '../../components/item/GalleryItem';
+import { ResizeMode, Video } from 'expo-av';
+import { PRIMARY } from '../../Colors';
+import {BASE_URL_FILE} from "@env"
 
 const RoomScreen = () => {
-    const [room, ] = useRoomState();
-    const [memories,setMemories] = useState([])
+    const [room] = useRoomState();
+    const [memories, setMemories] = useState([]);
+
+    //비디오 객체
+    const video = React.useRef(null);
+    const [status, setStatus] = React.useState({});
+
 
     useEffect(() => {
         (async () => {
-            setMemories(await readMemoryList(room.roomNum, 2)) // 1은 이미지 2는 비디오 메모리
-            console.log("메모리", memories)
+            setMemories(await readMemoryList(room.roomNum, 2)); // 1은 이미지 2는 비디오 메모리
         })();
-    }, [])
+    }, []);
 
     return (
         <View style={[styles.container]}>
@@ -23,9 +28,22 @@ const RoomScreen = () => {
             {memories.length === 0 ?
                 <Text>등록된 추억이 없습니다</Text>
                 :
-                <Text>등록된 추억이 없습니다</Text>
+                memories.map(memory => (
+                    <View key={memory.seq} style={styles.container}>
+                        <Video
+                            ref={video}
+                            style={styles.video}
+                            source={{
+                                uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
+                            }}
+                            useNativeControls
+                            resizeMode={ResizeMode.CONTAIN}
+                            isLooping
+                            onPlaybackStatusUpdate={status => setStatus(() => status)}
+                        />
+                    </View>
+                ))
             }
-
         </View>
     );
 };
@@ -38,7 +56,12 @@ const styles = StyleSheet.create({
         marginHorizontal: 16,
         justifyContent: 'center',
         alignItems: 'center'
+    },
+    video: {
+        alignSelf: 'center',
+        width: 320,
+        height: 200
     }
-})
+});
 
 export default RoomScreen;

@@ -10,6 +10,7 @@ import { GRAY, PRIMARY } from '../../Colors';
 import AutoHeightImage from 'react-native-auto-height-image';
 
 const VerticalListRoomItem = memo(({ room }) => {
+    console.log('룸', room);
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {
@@ -35,30 +36,25 @@ const VerticalListRoomItem = memo(({ room }) => {
                     <Card.Content style={styles.titleContainer}>
                         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                             <Subheading style={styles.title}>{room.name} ({room.age})</Subheading>
-                            <AutoHeightImage width={room.gender === 1 ? 20 : 14}
-                                             source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
                         </View>
 
                         <Text style={styles.description}>{room.date}</Text>
                         <View style={styles.imageContainer}>
-
-                            <AutoHeightImage width={room.gender === 1 ? 20 : 14}
+                            <AutoHeightImage width={room.gender === 1 ? 16 : 12}
                                              source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
 
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'eye'} size={16} color={PRIMARY.DEFAULT}
-                                                        style={{ alignItems: 'center' }} />
+                                <MaterialCommunityIcons name={'eye'} size={16} color={PRIMARY.DEFAULT} style={styles.icon} />
                                 <Title style={styles.description}>{room.views}</Title>
                             </View>
 
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'eye'} size={16} color={PRIMARY.DEFAULT}
-                                                        style={{ alignItems: 'center' }} />
-                                <Title style={styles.description}>{room.views}</Title>
+                                <MaterialCommunityIcons name={'comment-text'} size={14} color={PRIMARY.DEFAULT} style={styles.icon}/>
+                                <Title style={styles.description}>{room.comments}</Title>
                             </View>
                         </View>
                     </Card.Content>
@@ -90,7 +86,7 @@ const styles = StyleSheet.create({
         height: '100%'
     },
     titleContainer: {
-        flex: 1,
+        flex: 1.5,
         paddingVertical: 5
     },
     title: {
@@ -118,6 +114,9 @@ const styles = StyleSheet.create({
         width: 1,
         marginHorizontal: 8,
         backgroundColor: GRAY.DARK
+    },
+    icon: {
+        marginEnd: 4
     }
 });
 

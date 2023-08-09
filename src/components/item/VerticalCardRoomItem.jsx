@@ -6,6 +6,8 @@ import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import AutoHeightImage from 'react-native-auto-height-image';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { GRAY, PRIMARY } from '../../Colors';
 
 const VerticalCardRoomItem = memo(({ room }) => {
     const { width, height } = useWindowDimensions();
@@ -20,21 +22,41 @@ const VerticalCardRoomItem = memo(({ room }) => {
     return (
         <Pressable onPress={() => pressItem(room)}>
             <Card key={room.id} style={[styles.container]} elevation={1}>
-                {/*<Card.Title*/}
-                {/*    title="Card Title"*/}
-                {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
-                {/*/>*/}
+
 
                 <Card.Cover style={styles.image}
                             source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
-                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                        <AutoHeightImage width={room.gender === 1 ? 20 : 14}
-                                         source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
+                    <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+                        {/*<AutoHeightImage width={room.gender === 1 ? 20 : 14}*/}
+                        {/*                 source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />*/}
                         <Text style={styles.description}>{room.date}</Text>
+
+                        <View style={styles.imageContainer}>
+                            <AutoHeightImage width={room.gender === 1 ? 16 : 12}
+                                             source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
+
+                            <View style={styles.separator} />
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <MaterialCommunityIcons name={'eye'} size={16} color={"white"} style={styles.icon} />
+                                <Title style={styles.description}>{room.views}</Title>
+                            </View>
+
+                            <View style={styles.separator} />
+
+                            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                                <MaterialCommunityIcons name={'comment-text'} size={14} color={"white"} style={styles.icon}/>
+                                <Title style={styles.description}>{room.comments}</Title>
+                            </View>
+                        </View>
                     </View>
                 </Card.Content>
+
+                <View style={styles.overlayNum}>
+                    <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
+                </View>
 
                 {/*<View style={styles.overlayViews}>*/}
                 {/*    <MaterialCommunityIcons name={"account"} size={16} color={PRIMARY.DEFAULT} style={{alignItems: "center"}}/>*/}
@@ -86,9 +108,30 @@ const styles = StyleSheet.create({
         color: 'white'
     },
     description: {
-        marginStart: 10,
         fontSize: 14,
         color: 'white'
+    },
+    imageContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    separator: {
+        height: 16,
+        width: 1,
+        marginHorizontal: 8,
+        backgroundColor: GRAY.LIGHT
+    },
+    overlayNum: {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: 8,
+        margin: 8,
+        borderRadius: 8
+    },
+    icon: {
+        marginEnd: 4
     }
 });
 

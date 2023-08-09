@@ -1,29 +1,30 @@
-import React, {forwardRef, memo} from 'react';
-import {ImageBackground, StyleSheet, Text, TouchableOpacity, View} from "react-native";
-import {BASE_URL_FILE} from "@env"
-import {MainRoutes} from "../../navigations/Routes";
-import {useNavigation} from "@react-navigation/native";
+import React, { forwardRef, memo } from 'react';
+import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { BASE_URL_FILE } from '@env';
+import { MainRoutes } from '../../navigations/Routes';
+import { useNavigation } from '@react-navigation/native';
 
-const CarouselItem = memo(forwardRef(({item, index, currentIndex}, ref) => {
+const CarouselItem = memo(forwardRef(({ item, index, currentIndex }, ref) => {
     const navigation = useNavigation();
 
-    const pressItem = ({roomNum}) => {
+    const pressItem = ({ roomNum }) => {
         //현재 선택중인 아이템을 터치했을 때
         if (index === currentIndex) {
             navigation.navigate(MainRoutes.ROOM_TAB, {
                 roomNum
-            })
+            });
         } else { //아니라면 해당 위치로 스크롤 이동
-            ref.current.scrollToIndex(index)
+            ref.current.scrollToIndex(index);
         }
-    }
+    };
 
     return (
         <TouchableOpacity
             activeOpacity={1}
             style={styles.item}
             onPress={() => pressItem(item)}>
-            <ImageBackground source={{uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}`}}
+
+            <ImageBackground source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}
                              style={styles.imageBackground}>
                 <View style={styles.rightTextContainer}>
                     <Text style={styles.rightText}>{item.views}</Text>
@@ -45,13 +46,13 @@ const styles = StyleSheet.create({
         flex: 1,
         borderRadius: 5,
         borderColor: 'white',
-        elevation: 3,
+        elevation: 3
     },
     imageBackground: {
         flex: 2,
         backgroundColor: '#EBEBEB',
         borderWidth: 5,
-        borderColor: 'white',
+        borderColor: 'white'
     },
     rightTextContainer: {
         marginLeft: 'auto',
@@ -60,21 +61,21 @@ const styles = StyleSheet.create({
         padding: 3,
         marginTop: 3,
         borderTopLeftRadius: 5,
-        borderBottomLeftRadius: 5,
+        borderBottomLeftRadius: 5
     },
-    rightText: {color: 'white'},
+    rightText: { color: 'white' },
     lowerContainer: {
         flex: 1,
-        margin: 10,
+        margin: 10
     },
     titleText: {
         fontWeight: 'bold',
-        fontSize: 18,
+        fontSize: 18
     },
     contentText: {
         marginTop: 10,
-        fontSize: 12,
-    },
+        fontSize: 12
+    }
 });
 
 export default CarouselItem;

@@ -32,9 +32,6 @@ export const registerRoom = async (room, uri) => {
         const file = uriToFile(room.id, uri);
         room.image = file.name;
         formData.append('file', file);
-
-        console.log('추모관', room);
-        console.log('file', file);
     }
 
     //room 객체 셋팅

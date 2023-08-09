@@ -69,8 +69,6 @@ const RoomRegisterScreen = () => {
 
     /**추모관 생성*/
     const onRegister = async () => {
-        console.log('room', { ...room, date: formatDate(date) });
-        console.log('image', image);
         const result = await Room.registerRoom({ ...room, date: formatDate(date) }, image);
 
         //등록이 완료되었으므로 현재 화면에서 돌아간다

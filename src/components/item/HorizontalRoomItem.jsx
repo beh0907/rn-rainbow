@@ -21,10 +21,10 @@ const HorizontalRoomItem = memo(({room}) => {
     return (
         <Pressable onPress={() => pressItem(room)}>
             <Card key={room.id} style={[styles.container, {width: width / 2, borderRadius: 36}]}>
-                {/*<Card.Title*/}
-                {/*    title="Card Title"*/}
-                {/*    left={(props) => <AvatarText label={"CARD"} size={36} />}*/}
-                {/*/>*/}
+                {/*<View style={styles.overlayNum}>*/}
+                {/*    <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>*/}
+                {/*</View>*/}
+
                 <Card.Cover style={styles.image}
                             source={{uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}`}}/>
                 <Card.Content style={styles.overlayTitle}>
@@ -37,10 +37,7 @@ const HorizontalRoomItem = memo(({room}) => {
                     </View>
                 </Card.Content>
 
-                {/*<View style={styles.overlayViews}>*/}
-                {/*    <MaterialCommunityIcons name={"account"} size={16} color={PRIMARY.DEFAULT} style={{alignItems: "center"}}/>*/}
-                {/*    <Title style={styles.description}>{room.views}</Title>*/}
-                {/*</View>*/}
+
             </Card>
         </Pressable>
     );
@@ -70,13 +67,13 @@ const styles = StyleSheet.create({
         right: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
     },
-    overlayViews: {
+    overlayNum: {
         position: 'absolute',
         top: 0,
-        right: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        left: 0,
+        // backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        backgroundColor: 'green',
         padding: 8,
-        flexDirection: "row"
     },
     title: {
         fontSize: 16,

@@ -18,8 +18,6 @@ export const registerGallery = async (galleries, filesUri) => {
     formData.append('galleries', galleries);
     formData.append('file', {uri: filesUri, name: filename, type})
 
-    console.log(formData)
-
     const response = await axiosApiInstance.post(`/room/register`, formData,
         {
             headers: {

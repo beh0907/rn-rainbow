@@ -5,8 +5,6 @@ import { GRAY, PRIMARY } from '../../Colors';
 import { Surface } from 'react-native-paper';
 
 const inputTextButton = ({ value, onChangeText, placeholder, icon, onSubmit, styles, disabled }) => {
-    console.log('disabled', disabled);
-
     return (
         <Surface style={[defaultStyles.container, styles?.input]}>
             <TextInput

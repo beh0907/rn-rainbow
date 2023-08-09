@@ -41,12 +41,8 @@ export const signOutSecureStore = async () => {
 };
 
 export const isBookMark = async (roomNum) => {
-    console.log("추모관 번호", roomNum)
-
     // favoriteRooms 리스트 가져오기
     const favoriteRooms = await getListFor(STORE_SETTING_KEYS.FAVORITE_ROOMS);
-
-    console.log("추모관 목록", roomNum)
 
     // favoriteRooms 리스트에 roomNum과 일치하는 아이템 찾기
     const isBookmarked = favoriteRooms.includes(roomNum);

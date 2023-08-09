@@ -5,7 +5,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useNavigation } from '@react-navigation/native';
 import { GRAY, WHITE } from '../../Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import FastImage from '../../components/view/FastImage';
 import { Text, TextInput } from 'react-native-paper';
 import SafeInputView from '../../components/view/SafeInputView';
 import { ReturnKeyTypes } from '../../components/view/Input';
@@ -16,7 +15,7 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
-import {BASE_URL_FILE} from "@env"
+import { BASE_URL_FILE } from '@env';
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();
@@ -58,7 +57,7 @@ const ProfileUpdateScreen = props => {
 
             //1이 들어오면 성공 0이면 실패
             if (result === 1) {
-                console.log('결과', "체크체크");
+                console.log('결과', '체크체크');
                 setUser(paramUser);
                 setSnackbar(prev => ({
                     message: '유저 정보가 수정되었습니다.',
@@ -73,12 +72,14 @@ const ProfileUpdateScreen = props => {
     return (
         <SafeInputView>
             <View style={[styles.container, { paddingTop: top }]}>
-
                 <View style={styles.profile}>
                     <View style={[styles.photo]}>
                         {
-                            user.image ?
-                                <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={100}
+                            //새로 선택했거나 이미 저장된 프로필 사진이 있다면 적용
+                            //이미 저장된 프로필 사진이 있더라도 새로 선택한 사진이 있다면 그것을 표시한다
+                            image || user.image ?
+                                <AvatarImage source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }}
+                                             size={100}
                                              style={styles.photo} />
                                 : <AvatarText label={user.nickName.charAt(0)} Text size={100}
                                               style={styles.photo} />
@@ -153,7 +154,7 @@ const ProfileUpdateScreen = props => {
                             style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                             returnKeyType={ReturnKeyTypes.DONE}
                             onChangeText={(text) => setProfile({ ...profile, phone: addHyphen(text) })}
-                            inputMode={"numeric"}
+                            inputMode={'numeric'}
                             maxLength={13}
                         />
 
@@ -183,7 +184,7 @@ const ProfileUpdateScreen = props => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: WHITE,
+        backgroundColor: WHITE
     },
     profile: {
         justifyContent: 'center',
