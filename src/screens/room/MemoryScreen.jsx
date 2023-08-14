@@ -4,7 +4,7 @@ import { Text } from 'react-native-paper';
 import { readMemoryList } from '../../api/Memory';
 import { useRoomState } from '../../contexts/RoomContext';
 import { ResizeMode, Video } from 'expo-av';
-import { PRIMARY } from '../../Colors';
+import { PRIMARY, WHITE } from '../../Colors';
 import {BASE_URL_FILE} from "@env"
 
 const RoomScreen = () => {
@@ -37,8 +37,7 @@ const RoomScreen = () => {
                                 uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
                             }}
                             useNativeControls
-                            resizeMode={ResizeMode.CONTAIN}
-                            isLooping
+                            resizeMode={ResizeMode.STRETCH}
                             onPlaybackStatusUpdate={status => setStatus(() => status)}
                         />
                     </View>
@@ -53,9 +52,10 @@ RoomScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        marginHorizontal: 16,
+        padding: 16,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: WHITE
     },
     video: {
         alignSelf: 'center',

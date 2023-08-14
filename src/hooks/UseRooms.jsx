@@ -16,8 +16,6 @@ const UseRooms = () => {
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
-    console.log("로딩", isLoading)
-
     const fetchNextPage = useCallback(async () => {
         if (!isLoading && isFetch.current) {
             setIsLoading(true)

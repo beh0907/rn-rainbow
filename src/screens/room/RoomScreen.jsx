@@ -4,6 +4,7 @@ import { Avatar, Divider, Text } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
 import { BASE_URL_FILE } from '@env';
 import InputTextButton from '../../components/view/inputTextButton';
+import { WHITE } from '../../Colors';
 
 const RoomScreen = () => {
     const [room] = useRoomState();
@@ -43,7 +44,8 @@ const RoomScreen = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16
+        padding: 16,
+        backgroundColor: WHITE
     },
     petInfoContainer: {
         flexDirection: 'row',

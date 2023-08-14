@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import Carousel from 'react-native-anchor-carousel';
 import SimplePaginationDot from "../item/SimplePaginationDot";
-import {BASE_URL_FILE} from "@env"
 import CarouselItem from "../item/CarouselItem";
 
 const ImageCarousel = ({rooms}) => {
@@ -20,9 +19,9 @@ const ImageCarousel = ({rooms}) => {
                 style={styles.carousel}
                 data={rooms}
                 renderItem={({item, index}) => <CarouselItem item={item} index={index} currentIndex={currentIndex} ref={carouselRef}/>}
-                itemWidth={0.7 * width}
-                inActiveOpacity={0.3}
-                containerWidth={width}
+                itemWidth={0.8 * width}
+                inActiveOpacity={0.5}
+                // containerWidth={width - 40}
                 onScrollEnd={(item, index) => setCurrentIndex(index)}
                 ref={carouselRef}
             />
@@ -33,7 +32,8 @@ const ImageCarousel = ({rooms}) => {
 
 const styles = StyleSheet.create({
     container: {
-        paddingVertical: 20
+        paddingVertical: 20,
+        alignItems:"center"
     },
     carousel: {
         aspectRatio: 1.5,

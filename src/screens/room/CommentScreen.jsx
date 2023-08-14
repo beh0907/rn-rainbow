@@ -8,6 +8,7 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import InputTextButton from '../../components/view/inputTextButton';
 import { Text } from 'react-native-paper';
+import { WHITE } from '../../Colors';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -106,10 +107,11 @@ CommentScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        margin: 16,
+        padding: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%'
+        height: '100%',
+        backgroundColor: WHITE
     },
     commentList: {
         flex: 1,

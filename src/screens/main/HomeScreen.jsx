@@ -6,7 +6,7 @@ import { Text, ToggleButton } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
-import { BLACK, PRIMARY } from '../../Colors';
+import { BLACK, PRIMARY, WHITE } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import { BASE_URL_FILE } from '@env';
@@ -111,6 +111,7 @@ HomeScreen.propTypes = {};
 
 const styles = StyleSheet.create({
     container: {
+        backgroundColor: WHITE,
         flex: 1,
         height: '100%'
     },

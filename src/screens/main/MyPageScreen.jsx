@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Pressable, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import { Text } from 'react-native-paper';
@@ -9,12 +9,11 @@ import { STORE_SETTING_KEYS } from '../../utils/PreferenceStore';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
-import ImageCarousel from '../../components/list/ImageCarousel';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { BASE_URL_FILE } from '@env';
 import { useDialogState } from '../../contexts/DialogContext';
-import * as Comment from '../../api/Comment';
+import ImageCarousel from '../../components/list/ImageCarousel';
 
 
 const MyPageScreen = () => {
@@ -51,6 +50,8 @@ const MyPageScreen = () => {
             visible: true
         });
     };
+
+    const { width } = useWindowDimensions();
 
     return (
         <View style={{
@@ -192,7 +193,6 @@ const MyPageScreen = () => {
             {/*/>*/}
 
             <ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms} />
-
         </View>
     );
 };
