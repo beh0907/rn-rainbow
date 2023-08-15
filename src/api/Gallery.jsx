@@ -1,6 +1,8 @@
 import axios from 'axios';
-import { BASE_URL_API } from '@env';
 import { axiosApiInstance } from './AxiosInstance';
+import Constants from 'expo-constants';
+
+const { BASE_URL_API} = Constants.expoConfig.extra;
 
 export const readGalleryList = async (num) => {
     const response = await axiosApiInstance.get(`/gallery/readList?num=${num}`);

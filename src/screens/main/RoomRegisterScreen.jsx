@@ -22,7 +22,7 @@ const RoomRegisterScreen = () => {
 
     //사이즈 관련 변수
     const { top, bottom } = useSafeAreaInsets();
-    const { width, height } = useWindowDimensions();
+    const { height } = useWindowDimensions();
 
     //추모관 설정 정보
     const [user] = useUserState();
@@ -59,7 +59,6 @@ const RoomRegisterScreen = () => {
             allowsEditing: true,
             aspect: [1, 1], //이미지 편집 X,Y 비율
             quality: 1
-
         });
 
         if (result.assets) {

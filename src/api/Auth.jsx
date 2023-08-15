@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { BASE_URL_API } from '@env';
 import * as SecureStore from '../utils/PreferenceStore';
 import { uriToFile } from '../utils/imageUtil';
 import { axiosApiInstance } from './AxiosInstance';
@@ -10,6 +9,7 @@ export const signIn = async ({ id, password }) => {
             fcmToken: ''
         }
     })
+
     response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
     response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
 
@@ -52,7 +52,7 @@ export const modify = async (user, uri) => {
         formData.append('file', file);
     }
 
-    const response = await axios.postForm(`${BASE_URL_API}/user/modifyRN`, formData)
+    const response = await axiosApiInstance.postForm(`/user/modifyRN`, formData)
         .catch(e => {
             console.log('에러', e);
             console.log('에러 응답', e.response);
@@ -63,7 +63,7 @@ export const modify = async (user, uri) => {
 };
 
 export const remove = async ({ id }) => {
-    const response = await axios.delete(`${BASE_URL_API}/user/remove?id=${id}`);
+    const response = await axios.delete(`/user/remove?id=${id}`);
 };
 
 export const getAuthMessages = (error) => {

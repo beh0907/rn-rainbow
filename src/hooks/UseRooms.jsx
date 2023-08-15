@@ -11,14 +11,16 @@ const UseRooms = () => {
     const [rooms, setRooms] = useState([]);
     const [refetching, setRefetching] = useState(false);
     const [amount, setAmount] = useState(20);
-    const [isLoading, setIsLoading] = useState(false)
+    const [isLoading, setIsLoading] = useState(false);
 
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
-    const fetchNextPage = useCallback(async () => {
+    const fetchNextPage = useCallback(async (isRefetch = false) => {
+        console.log("콜백", isRefetch)
+
         if (!isLoading && isFetch.current) {
-            setIsLoading(true)
+            setIsLoading(true);
 
             //페이지와 개수 정보를 파라미터로 입력한다
             const list = await readRoomList({ page: pageRef.current, amount });
@@ -30,25 +32,37 @@ const UseRooms = () => {
 
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
             if (list.length > 0) {
-                setRooms(prev => [...prev, ...list]);
+
+                // 새로고침이라면 새로
+                if (isRefetch && isRefetch === true) setRooms(list);
+                else setRooms(prev => [...prev, ...list]);
+
+                // setRooms(prev => [...prev, ...list]);
+
                 pageRef.current++;
             }
 
-            setIsLoading(false)
+            setIsLoading(false);
         }
     }, []);
 
     const refetch = async () => {
         setRefetching(true);
-        setRooms([]);
+
+        // setRooms([]);
+
         pageRef.current = 1;
         isFetch.current = true;
-        await fetchNextPage();
+
+        await fetchNextPage(true);
+
         setRefetching(false);
     };
 
     useEffect(() => {
-        fetchNextPage();
+        (async () => {
+            await fetchNextPage();
+        })();
     }, [fetchNextPage]);
 
     return { rooms, fetchNextPage, refetch, refetching, isLoading };

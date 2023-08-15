@@ -20,7 +20,8 @@ export const save = async (key, value) => {
 
 /**정보를 단일 형태로 가져온다*/
 export const getValueFor = async (key) => {
-    return await SecureStore.getItemAsync(key);
+    const value = await SecureStore.getItemAsync(key);
+    return value !== null ? value : '';
 };
 
 /**정보를 리스트 형태로 가져온다*/

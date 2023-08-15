@@ -1,12 +1,12 @@
 import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Text, Title} from "react-native-paper";
-import {BASE_URL_FILE} from "@env"
 import {Image, Pressable, StyleSheet, useWindowDimensions, View} from "react-native";
 import {useNavigation} from "@react-navigation/native";
 import {MainRoutes} from "../../navigations/Routes";
-import {MaterialCommunityIcons} from "@expo/vector-icons";
-import {PRIMARY} from "../../Colors";
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const HorizontalRoomItem = memo(({room}) => {
     const {width} = useWindowDimensions()

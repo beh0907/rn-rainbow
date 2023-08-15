@@ -26,16 +26,31 @@
         "backgroundColor": "#F97316"
       },
       "permissions": [
-        "READ_EXTERNAL_STORAGE",
-        "READ_MEDIA_IMAGES",
-        "READ_MEDIA_IMAGES",
-        "CAMERA"
-      ]
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.beh0907.rnrainbow"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
+      [
+        "expo-build-properties",
+        {
+          "android": {
+            "kotlinVersion": "1.8.0",
+            "compileSdkVersion": 31,
+            "targetSdkVersion": 31,
+            "buildToolsVersion": "31.0.0"
+          },
+          "ios": {
+            "deploymentTarget": "13.0"
+          }
+        }
+      ],
       [
         "expo-image-picker",
         {
@@ -48,7 +63,31 @@
         {
           "cameraPermission": "Allow $(PRODUCT_NAME) to access your camera."
         }
+      ],
+      [
+        "@react-native-seoul/kakao-login",
+        {
+          "kakaoAppKey": "155fd1fc5c7cb98e457f9dce71ad707f",
+          "kotlinVersion": "1.5.10"
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/icon.png",
+          "color": "#ffffff",
+          "mode": "production"
+        }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "7f9b9ad1-2f72-4ad1-8754-e09c05b5ee22"
+      },
+      "BASE_URL_API": "http://inhyeop.iptime.org:82/rainbow",
+      "BASE_URL_FILE": "http://inhyeop.iptime.org:82/rainbowFiles/",
+      "BASE_URL_BOARD": "http://inhyeop.iptime.org:82/front/board/free.do",
+      "BASE_URL_FILE_AWS": "https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/"
+    }
   }
 }

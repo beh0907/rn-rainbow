@@ -11,10 +11,11 @@ import { MainRoutes } from '../../navigations/Routes';
 import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
-import { BASE_URL_FILE } from '@env';
 import { useDialogState } from '../../contexts/DialogContext';
 import ImageCarousel from '../../components/list/ImageCarousel';
+import Constants from 'expo-constants';
 
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const MyPageScreen = () => {
     const [user, setUser] = useUserState();

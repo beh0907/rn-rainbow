@@ -1,16 +1,18 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Text, Title } from 'react-native-paper';
-import { BASE_URL_FILE } from '@env';
-import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import AutoHeightImage from 'react-native-auto-height-image';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { GRAY, PRIMARY } from '../../Colors';
+import { GRAY } from '../../Colors';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const VerticalCardRoomItem = memo(({ room }) => {
-    const { width, height } = useWindowDimensions();
+    console.log('룸 카드뷰', room);
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {
@@ -40,14 +42,15 @@ const VerticalCardRoomItem = memo(({ room }) => {
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'eye'} size={16} color={"white"} style={styles.icon} />
+                                <MaterialCommunityIcons name={'eye'} size={16} color={'white'} style={styles.icon} />
                                 <Title style={styles.description}>{room.views}</Title>
                             </View>
 
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'comment-text'} size={14} color={"white"} style={styles.icon}/>
+                                <MaterialCommunityIcons name={'comment-text'} size={14} color={'white'}
+                                                        style={styles.icon} />
                                 <Title style={styles.description}>{room.comments}</Title>
                             </View>
                         </View>

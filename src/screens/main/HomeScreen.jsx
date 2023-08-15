@@ -9,8 +9,10 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { BLACK, PRIMARY, WHITE } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
-import { BASE_URL_FILE } from '@env';
 import InputTextButton from '../../components/view/inputTextButton';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const HomeScreen = props => {
     const { top, bottom } = useSafeAreaInsets();
@@ -59,7 +61,7 @@ const HomeScreen = props => {
     );
 
     return (
-        <View style={[styles.container, { marginTop: top, marginBottom: bottom }]}>
+        <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
             <View style={styles.containerUser}>
 
                 {

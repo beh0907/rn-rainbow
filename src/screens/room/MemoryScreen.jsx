@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import { readMemoryList } from '../../api/Memory';
 import { useRoomState } from '../../contexts/RoomContext';
 import { ResizeMode, Video } from 'expo-av';
-import { PRIMARY, WHITE } from '../../Colors';
-import {BASE_URL_FILE} from "@env"
+import { WHITE } from '../../Colors';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const RoomScreen = () => {
     const [room] = useRoomState();

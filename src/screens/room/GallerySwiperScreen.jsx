@@ -1,10 +1,9 @@
 import React, { useEffect, useLayoutEffect, useState } from 'react';
 import {ImageGallerySwiper} from "react-native-image-gallery-swiper";
 import {useRoute} from "@react-navigation/native";
-import {BASE_URL_FILE} from "@env"
-import HeaderRight from '../../components/view/HeaderRight';
-import { GRAY, PRIMARY } from '../../Colors';
-import * as PreferenceStore from '../../utils/PreferenceStore';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const GallerySwiperScreen = () => {
     const {params} = useRoute()

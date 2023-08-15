@@ -29,7 +29,6 @@ const MainTab = () => {
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,
                 // tabBarShowLabel: false
-                lazy: false,
                 // lazyPreloadDistance: 4
             }}>
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}

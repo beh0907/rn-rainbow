@@ -15,7 +15,9 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
-import { BASE_URL_FILE } from '@env';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();

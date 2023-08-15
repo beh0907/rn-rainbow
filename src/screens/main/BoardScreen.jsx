@@ -1,14 +1,17 @@
-import React, {useCallback, useRef, useState} from 'react';
-import {BASE_URL_BOARD} from "@env";
-import {useUserState} from "../../contexts/UserContext";
-import {WebView} from "react-native-webview";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {useFocusEffect} from "@react-navigation/native";
-import {BackHandler} from "react-native";
+import React, { useCallback, useRef, useState } from 'react';
+import { useUserState } from '../../contexts/UserContext';
+import { WebView } from 'react-native-webview';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler, StyleSheet, View } from 'react-native';
+import { WHITE } from '../../Colors';
+import Constants from 'expo-constants';
+
+const { BASE_URL_BOARD } = Constants.expoConfig.extra;
 
 const BoardScreen = props => {
-    const [user,] = useUserState();
-    const {top, bottom} = useSafeAreaInsets();
+    const [user] = useUserState();
+    const { top, bottom } = useSafeAreaInsets();
 
     const webViewRef = useRef(null);
     const [canGoBack, setCanGoBack] = useState(false);
@@ -27,7 +30,7 @@ const BoardScreen = props => {
             BackHandler.addEventListener('hardwareBackPress', onBackPress);
             return () =>
                 BackHandler.removeEventListener('hardwareBackPress', onBackPress);
-        }, [canGoBack]),
+        }, [canGoBack])
     );
 
     const onShouldStartLoadWithRequest = event => {
@@ -36,20 +39,29 @@ const BoardScreen = props => {
             return false; // Block the URL with '#' from loading
         }
         return true; // Allow other URLs to load
-    }
+    };
 
     return (
-        <WebView
-            ref={webViewRef}
-            source={{uri: `${BASE_URL_BOARD}?user_id=${user.id}`}}
-            style={{marginTop: top}}
-            javaScriptEnabled={true}
-            onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
-            onNavigationStateChange={(navState) => {
-                setCanGoBack(navState.canGoBack)
-            }}
-        />
+        <View style={[styles.container, { paddingTop: top }]}>
+            <WebView
+                ref={webViewRef}
+                source={{ uri: `${BASE_URL_BOARD}?user_id=${user.id}` }}
+                javaScriptEnabled={true}
+                onShouldStartLoadWithRequest={onShouldStartLoadWithRequest}
+                onNavigationStateChange={(navState) => {
+                    setCanGoBack(navState.canGoBack);
+                }}
+            />
+        </View>
+
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: WHITE
+    }
+});
 
 export default BoardScreen;

@@ -5,7 +5,9 @@ import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { PRIMARY } from '../../Colors';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
-import { BASE_URL_FILE } from '@env';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
     return (

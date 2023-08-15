@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Image, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { BASE_URL_FILE } from '@env';
 import { Card } from 'react-native-paper';
 import { PRIMARY } from '../../Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import Constants from 'expo-constants';
 
+const { BASE_URL_FILE} = Constants.expoConfig.extra;
 
 const GalleryItem = ({ item, onPress, isDeleteMode, isSelected }) => {
     const imageUrl = `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`;

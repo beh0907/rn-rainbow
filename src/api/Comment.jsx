@@ -1,6 +1,8 @@
 import axios from "axios";
-import { BASE_URL_API } from "@env"
 import { axiosApiInstance } from './AxiosInstance';
+import Constants from 'expo-constants';
+
+const { BASE_URL_API} = Constants.expoConfig.extra;
 
 export const readCommentList = async (num) => {
     const response = await axiosApiInstance.get(`/comment/readList?num=${num}`);

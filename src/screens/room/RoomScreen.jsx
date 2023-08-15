@@ -1,10 +1,12 @@
-import React, { useState } from 'react';
-import { StyleSheet, TextInput, View } from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import { Avatar, Divider, Text } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
-import { BASE_URL_FILE } from '@env';
-import InputTextButton from '../../components/view/inputTextButton';
 import { WHITE } from '../../Colors';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
+
 
 const RoomScreen = () => {
     const [room] = useRoomState();

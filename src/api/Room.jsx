@@ -1,5 +1,3 @@
-import axios from 'axios';
-import { BASE_URL_API } from '@env';
 import { uriToFile } from '../utils/imageUtil';
 import { axiosApiInstance } from './AxiosInstance';
 
@@ -41,7 +39,7 @@ export const registerRoom = async (room, uri) => {
     });
     formData.append('room', json);
 
-    const response = await axios.postForm(`${BASE_URL_API}/room/register`, formData)
+    const response = await axiosApiInstance.postForm(`/room/register`, formData)
         .catch(e => {
             console.log('에러', e);
             console.log('에러 응답', e.response);
@@ -61,7 +59,7 @@ export const modifyRoom = async (room, file) => {
 };
 
 export const removeRoom = async (room) => {
-    const response = await axios.delete(`${BASE_URL_API}/room/remove`, {
+    const response = await axiosApiInstance.delete(`/room/remove`, {
         data: room
     });
     return response.data;

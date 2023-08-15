@@ -8,10 +8,9 @@ import * as SecureStore from '../utils/PreferenceStore';
 import { STORE_SETTING_KEYS, STORE_USER_KEYS } from '../utils/PreferenceStore';
 import MainStack from './MainStack';
 import { getAuthMessages, signIn } from '../api/Auth';
-import * as MediaLibrary from 'expo-media-library';
+import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import { Alert } from 'react-native';
-import { AuthFormTypes } from '../reducer/AuthFormReducer';
 import { useDialogState } from '../contexts/DialogContext';
 
 const ImageAssets = [
@@ -22,7 +21,7 @@ const ImageAssets = [
     require('../../assets/background/bg_intro_3.png'),
     require('../../assets/background/bg_intro_4.png'),
     require('../../assets/logo.png'),
-    require('../../assets/background/bg_temp.jpg'),
+    require('../../assets/background/bg_temp.jpg')
 ];
 
 const Navigation = () => {
@@ -35,7 +34,7 @@ const Navigation = () => {
     const [checkIntro, setCheckIntro] = useState('');
 
     //미디어 권한
-    const [mediaStatus, requestMediaPermission] = MediaLibrary.usePermissions();
+    const [mediaStatus, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
     const [cameraStatus, requestCameraPermission] = Camera.useCameraPermissions();
 
     //다이얼로그 설정
@@ -47,19 +46,23 @@ const Navigation = () => {
                 //스플래시 화면을 표시한다
                 await SplashScreen.preventAutoHideAsync();
 
+
                 //미디어 및 카메라 접근 권한을 요청한다
                 await requestMediaPermission();
                 await requestCameraPermission();
                 // const {granted} = await requestMediaPermission()
                 // const {granted} = await requestCameraPermission()
 
+
                 // 백그라운드 이미지 캐싱
                 await Promise.all(
                     ImageAssets.map(image => Asset.fromModule(image).downloadAsync())
                 );
 
+
                 //인트로 체크 여부를 가져와 설정한다
                 setCheckIntro(await SecureStore.getValueFor(STORE_SETTING_KEYS.CHECK_INTRO));
+
 
                 //SecureStore에 저장된 로그인 정보를 가져온다
                 const id = await SecureStore.getValueFor(STORE_USER_KEYS.ID);
@@ -68,16 +71,19 @@ const Navigation = () => {
 
                 if (id !== '' && password !== '') {
                     const user = await signIn({ id, password });
+
                     if (user) setUser(user);
                 }
 
                 setIsReady(true);
             } catch (error) {
+
+                console.log('2');
                 const code = error.code;
                 const status = error.response?.status;
 
                 //타임아웃
-                if (code === "ECONNABORTED" || status === 408) {
+                if (code === 'ECONNABORTED' || status === 408) {
                     Alert.alert('통신 에러', '서버와의 통신에 실패하였습니다', [{
                         text: '확인',
                         onPress: () => setIsReady(true)
@@ -86,7 +92,7 @@ const Navigation = () => {
                     Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
                         text: '확인',
                         onPress: () => setIsReady(true)
-                    }])
+                    }]);
                 }
             }
         })();

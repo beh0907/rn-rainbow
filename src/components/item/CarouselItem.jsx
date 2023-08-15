@@ -1,8 +1,10 @@
 import React, { forwardRef, memo } from 'react';
 import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { BASE_URL_FILE } from '@env';
 import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const CarouselItem = memo(forwardRef(({ item, index, currentIndex }, ref) => {
     const navigation = useNavigation();

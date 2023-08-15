@@ -1,16 +1,18 @@
 import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Subheading, Text, Title } from 'react-native-paper';
-import { BASE_URL_FILE } from '@env';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GRAY, PRIMARY } from '../../Colors';
 import AutoHeightImage from 'react-native-auto-height-image';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const VerticalListRoomItem = memo(({ room }) => {
-    console.log('룸', room);
+    console.log('룸 리스트', room);
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {
@@ -46,14 +48,16 @@ const VerticalListRoomItem = memo(({ room }) => {
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'eye'} size={16} color={PRIMARY.DEFAULT} style={styles.icon} />
+                                <MaterialCommunityIcons name={'eye'} size={16} color={PRIMARY.DEFAULT}
+                                                        style={styles.icon} />
                                 <Title style={styles.description}>{room.views}</Title>
                             </View>
 
                             <View style={styles.separator} />
 
                             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                                <MaterialCommunityIcons name={'comment-text'} size={14} color={PRIMARY.DEFAULT} style={styles.icon}/>
+                                <MaterialCommunityIcons name={'comment-text'} size={14} color={PRIMARY.DEFAULT}
+                                                        style={styles.icon} />
                                 <Title style={styles.description}>{room.comments}</Title>
                             </View>
                         </View>
@@ -76,7 +80,7 @@ const styles = StyleSheet.create({
         borderRadius: 16,
         overflow: 'hidden',
         elevation: 2,
-        marginBottom: 10,
+        marginVertical: 5,
         marginHorizontal: 20,
         backgroundColor: 'white'
     },
@@ -102,7 +106,8 @@ const styles = StyleSheet.create({
     },
     overlayTitle: {
         position: 'absolute',
-        borderRadius: 16,
+        borderBottomLeftRadius: 12,
+        borderBottomRightRadius: 12,
         bottom: 0,
         left: 0,
         right: 0,

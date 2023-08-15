@@ -1,7 +1,9 @@
 import React, {memo} from 'react';
 import PropTypes from 'prop-types';
 import {Card, Paragraph, Title} from "react-native-paper";
-import {BASE_URL_FILE} from "@env"
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const TestItem = memo(({test}) => {
     return (

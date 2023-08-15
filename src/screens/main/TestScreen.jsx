@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Text } from 'react-native-paper';
+import { Button, StyleSheet, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WHITE } from '../../Colors';
-import Carousel from 'react-native-anchor-carousel';
+import * as Notifications from 'expo-notifications';
 
 const CameraExample = () => {
     const { top, bottom } = useSafeAreaInsets();
@@ -50,35 +49,23 @@ const CameraExample = () => {
         }
     };
 
-    const { width } = useWindowDimensions();
+    const schedulePushNotification = async () => {
+        await Notifications.scheduleNotificationAsync({
+            content: {
+                title: 'You\'ve got mail! 📬',
+                body: 'Here is the notification body',
+                data: { data: 'goes here' }
+            },
+            trigger: { seconds: 1 }
+        });
+    };
+
+
     return (
         <View style={styles.container}>
-            {/*{imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}*/}
-            {/*<Button title='카메라 열기' onPress={pickImageFromCamera} />*/}
-
-            <Carousel
-                loop={true}
-                width={width}
-                height={width / 2}
-                autoPlay={true}
-                data={[...new Array(6).keys()]}
-                scrollAnimationDuration={10}
-                onSnapToItem={(index) => console.log('current index:', index)}
-                renderItem={({ index }) => (
-                    <View
-                        style={{
-                            flex: 1,
-                            borderWidth: 1,
-                            justifyContent: 'center'
-                        }}
-                    >
-                        <Text style={{ textAlign: 'center', fontSize: 30 }}>
-                            {index}
-                        </Text>
-                    </View>
-                )}
-            />
-
+            {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
+            <Button title='카메라 열기' onPress={pickImageFromCamera} />
+            <Button title='알림 보내기' onPress={schedulePushNotification} />
         </View>
     );
 };
