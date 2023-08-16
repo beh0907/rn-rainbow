@@ -91,7 +91,7 @@ const HomeScreen = props => {
                 }} />
 
             <View style={{
-                flexDirection: 'row', marginTop: 20, alignItems: 'center', paddingHorizontal: 16
+                flexDirection: 'row', marginTop: 20, marginBottom:10, alignItems: 'center', paddingHorizontal: 16
             }}>
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 

@@ -29,9 +29,10 @@
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.READ_MEDIA_IMAGES",
         "android.permission.CAMERA",
-        "android.permission.RECORD_AUDIO"
+        "android.permission.RECORD_AUDIO",
+        "android.permission.POST_NOTIFICATIONS"
       ],
-      "package": "com.beh0907.rnrainbow"
+      "package": "com.skymilk.rainbow"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,9 +43,9 @@
         {
           "android": {
             "kotlinVersion": "1.8.0",
-            "compileSdkVersion": 31,
-            "targetSdkVersion": 31,
-            "buildToolsVersion": "31.0.0"
+            "compileSdkVersion": 33,
+            "targetSdkVersion": 33,
+            "buildToolsVersion": "33.0.0"
           },
           "ios": {
             "deploymentTarget": "13.0"

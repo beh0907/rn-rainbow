@@ -9,7 +9,8 @@ export const MainRoutes = {
     ROOM_TAB: '추모관',
     ROOM: '추모관 메뉴',
     PROFILE_UPDATE: "프로필 갱신",
-    ROOM_REGISTER: "추모관 개설"
+    ROOM_REGISTER: "추모관 개설",
+    ROOM_UPDATE: "추모관 수정",
 }
 
 export const ContentRoutes = {

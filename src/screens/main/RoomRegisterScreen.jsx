@@ -1,9 +1,8 @@
 import React, { useRef, useState } from 'react';
 import { Image, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { RadioButton, Text, TextInput } from 'react-native-paper';
-import SwitchSelector from 'react-native-switch-selector';
-import { GRAY, PRIMARY, WHITE } from '../../Colors';
+import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
+import { GENDER, GRAY, WHITE } from '../../Colors';
 import SafeInputView from '../../components/view/SafeInputView';
 import FastImage from '../../components/view/FastImage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
@@ -22,7 +21,7 @@ const RoomRegisterScreen = () => {
 
     //사이즈 관련 변수
     const { top, bottom } = useSafeAreaInsets();
-    const { height } = useWindowDimensions();
+    const { height, width } = useWindowDimensions();
 
     //추모관 설정 정보
     const [user] = useUserState();
@@ -89,14 +88,14 @@ const RoomRegisterScreen = () => {
                 ref={ageRef}
             />}
 
-
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
                     <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
                         {
                             image
                                 ? <FastImage source={{ uri: image }} style={styles.photo} />
-                                : <Image source={require('../../../assets/icon/ic_dog.png')} style={styles.photo} />
+                                : <Image source={require('../../../assets/background/bg_temp.jpg')}
+                                         style={styles.photo} />
                         }
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
@@ -179,36 +178,41 @@ const RoomRegisterScreen = () => {
                             />
                         </View>
 
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <SwitchSelector
-                                initial={1}
-                                onPress={value => setRoom(prevState => ({
+                        <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+
+                            <SegmentedButtons
+                                value={room.gender}
+                                onValueChange={value => setRoom(prevState => ({
                                     ...prevState,
                                     gender: value
                                 }))}
-                                textColor={PRIMARY.DEFAULT} //'#7a44cf'
-                                selectedColor={WHITE}
-                                buttonColor={PRIMARY.DEFAULT}
-                                borderColor={PRIMARY.DEFAULT}
-                                hasPadding
-                                options={[
-                                    {
-                                        label: '',
-                                        value: '0',
-                                        imageIcon: require('../../../assets/icon/ic_female.png')
-                                    },
+                                style={{ flex: 1 }}
+                                buttons={[
                                     {
                                         label: '',
                                         value: '1',
-                                        imageIcon: require('../../../assets/icon/ic_male.png')
+                                        icon: require('../../../assets/icon/ic_male.png'),
+                                        checkedColor: GENDER.MALE,
+                                        uncheckedColor: GRAY.DEFAULT
+                                    },
+                                    {
+                                        label: '',
+                                        value: '0',
+                                        icon: require('../../../assets/icon/ic_female.png'),
+                                        checkedColor: GENDER.FEMALE,
+                                        uncheckedColor: GRAY.DEFAULT
                                     }
                                 ]}
-                                style={{ flex: 1 }}
                             />
 
-                            <View>
+                            <View style={{ marginHorizontal: 25 }}>
                                 <RadioButton.Group
-                                    style={{ flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}
+                                    style={{
+                                        flexDirection: 'row',
+                                        justifyContent: 'center',
+                                        alignItems: 'center',
+                                        flex: 1
+                                    }}
                                     onValueChange={(value) => {
                                         setRoom({ ...room, permission: value });
                                     }}

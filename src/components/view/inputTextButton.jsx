@@ -3,8 +3,12 @@ import { StyleSheet, TextInput, TouchableOpacity } from 'react-native';
 import { MaterialIcons } from '@expo/vector-icons';
 import { GRAY, PRIMARY } from '../../Colors';
 import { Surface } from 'react-native-paper';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const inputTextButton = ({ value, onChangeText, placeholder, icon, onSubmit, styles, disabled }) => {
+
     return (
         <Surface style={[defaultStyles.container, styles?.input]}>
             <TextInput

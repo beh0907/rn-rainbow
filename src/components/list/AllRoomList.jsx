@@ -5,6 +5,7 @@ import useRooms from '../../hooks/UseRooms';
 import PropTypes from 'prop-types';
 import VerticalListRoomItem from '../item/VerticalListRoomItem';
 import { Text } from 'react-native-paper';
+import { FlashList } from '@shopify/flash-list';
 
 const AllRoomList = ({ value }) => {
     const {
@@ -27,10 +28,10 @@ const AllRoomList = ({ value }) => {
 
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
     return (
-        <FlatList
+        <FlashList
+            estimatedItemSize={ value === 'card' ? 205 : 124} // 카드뷰라면 205, 리스트라면 124로 예상사이즈 설정
             key={value}
             showsVerticalScrollIndicator={false}
-            style={styles.container}
             data={rooms}
             renderItem={renderItem}
             keyExtractor={keyExtractor}
@@ -54,8 +55,7 @@ AllRoomList.propTypes = {
 
 const styles = StyleSheet.create({
     container: {
-        marginTop: 10,
-        width: '100%'
+        // paddingTop:10
     },
     separator: {
         // marginVertical: 10,

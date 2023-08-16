@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { FlatList, Keyboard, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Keyboard, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useRoomState } from '../../contexts/RoomContext';
 import CommentItem from '../../components/item/CommentItem';
@@ -8,7 +8,9 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import InputTextButton from '../../components/view/inputTextButton';
 import { Text } from 'react-native-paper';
-import { WHITE } from '../../Colors';
+import { PRIMARY } from '../../Colors';
+import { useNavigation } from '@react-navigation/native';
+import { FlashList } from '@shopify/flash-list';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -18,10 +20,30 @@ const CommentScreen = () => {
 
     const [comments, setComments] = useState({});
     const [comment, setComment] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
+
+    const navigation = useNavigation();
+    const { width, height } = useWindowDimensions();
+
+    useLayoutEffect(() => {
+        (async () => {
+            await readCommentList();
+        })();
+    }, []);
 
     const readCommentList = useCallback(async () => {
-        setComments(await Comment.readCommentList(room.roomNum));
-    }, []);
+        setIsLoading(true);
+
+        const list = await Comment.readCommentList(room.roomNum);
+
+        navigation.setOptions({
+            tabBarLabel: `추모의 말 ${list.length}`
+        });
+
+        setComments(list);
+
+        setIsLoading(false);
+    }, [navigation, isLoading, comments]);
 
     const registerComment = async () => {
         Keyboard.dismiss();
@@ -61,23 +83,26 @@ const CommentScreen = () => {
         });
     }, []);
 
-    useLayoutEffect(() => {
-        (async () => {
-            await readCommentList();
-        })();
-    }, []);
-
+    if (isLoading)
+        return (
+            <View style={[styles.container]}>
+                <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
+            </View>
+        );
     return (
         <View style={[styles.container]}>
-
+            {/*로딩 중일때는 인디케이터 표시*/}
             {comments.length === 0 ?
                 <View style={styles.emptyComment}>
                     <Text>등록된 댓글이 없습니다</Text>
                 </View>
                 :
-                <FlatList
+                <FlashList
+                    estimatedListSize={{ width, height }}
+                    estimatedItemSize={92}
                     showsVerticalScrollIndicator={false}
-                    style={styles.commentList}
+                    // style={styles.commentList}
+                    // contentContainerStyle={styles.commentList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
                     keyExtractor={(item) => item.seq}
                     data={comments}
@@ -109,9 +134,7 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         justifyContent: 'center',
-        alignItems: 'center',
-        height: '100%',
-        backgroundColor: WHITE
+        alignItems: 'center'
     },
     commentList: {
         flex: 1,
@@ -119,14 +142,6 @@ const styles = StyleSheet.create({
     },
     separator: {
         marginVertical: 16
-    },
-    commentInputContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 16
-    },
-    commentInput: {
-        flex: 1
     },
     postButton: {
         marginTop: 12,

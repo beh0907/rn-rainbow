@@ -10,6 +10,7 @@ import MainStack from './MainStack';
 import { getAuthMessages, signIn } from '../api/Auth';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
+import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
 
@@ -33,7 +34,7 @@ const Navigation = () => {
     //인트로 상태 여부를 체크합니다
     const [checkIntro, setCheckIntro] = useState('');
 
-    //미디어 권한
+    //권한
     const [mediaStatus, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
     const [cameraStatus, requestCameraPermission] = Camera.useCameraPermissions();
 
@@ -50,6 +51,7 @@ const Navigation = () => {
                 //미디어 및 카메라 접근 권한을 요청한다
                 await requestMediaPermission();
                 await requestCameraPermission();
+                await Notifications.requestPermissionsAsync();
                 // const {granted} = await requestMediaPermission()
                 // const {granted} = await requestCameraPermission()
 

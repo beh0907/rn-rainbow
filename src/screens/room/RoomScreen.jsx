@@ -7,7 +7,6 @@ import Constants from 'expo-constants';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-
 const RoomScreen = () => {
     const [room] = useRoomState();
 
@@ -17,7 +16,7 @@ const RoomScreen = () => {
             <View style={styles.petInfoContainer}>
                 <Avatar.Image
                     size={100}
-                    source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }}
+                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}
                 />
                 <View style={styles.petInfoTextContainer}>
                     <Text style={styles.petName}>{room.name}</Text>

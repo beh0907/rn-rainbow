@@ -17,8 +17,6 @@ const UseRooms = () => {
     const pageRef = useRef(1);
 
     const fetchNextPage = useCallback(async (isRefetch = false) => {
-        console.log("콜백", isRefetch)
-
         if (!isLoading && isFetch.current) {
             setIsLoading(true);
 
@@ -34,7 +32,7 @@ const UseRooms = () => {
             if (list.length > 0) {
 
                 // 새로고침이라면 새로
-                if (isRefetch && isRefetch === true) setRooms(list);
+                if (isRefetch === true ) setRooms(list);
                 else setRooms(prev => [...prev, ...list]);
 
                 // setRooms(prev => [...prev, ...list]);
@@ -44,7 +42,7 @@ const UseRooms = () => {
 
             setIsLoading(false);
         }
-    }, []);
+    }, [isLoading, isFetch, rooms]);
 
     const refetch = async () => {
         setRefetching(true);

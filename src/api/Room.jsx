@@ -22,7 +22,40 @@ export const readBookmarkRoomList = async (listRoomNum) => {
 };
 
 export const registerRoom = async (room, uri) => {
+    const formData = setFormData(room, uri)
 
+    const response = await axiosApiInstance.postForm(`/room/register`, formData)
+        .catch(e => {
+            console.log('에러', e);
+            console.log('에러 응답', e.response);
+            console.log('에러 코드', e.status);
+        });
+
+    return response.data;
+};
+
+export const modifyRoom = async (room, uri) => {
+    const formData = setFormData(room, uri)
+
+    const response = await axiosApiInstance.postForm(`/room/modify`, formData)
+        .catch(e => {
+            console.log('에러', e);
+            console.log('에러 응답', e.response);
+            console.log('에러 코드', e.status);
+        });
+
+    return response.data;
+};
+
+export const removeRoom = async (room) => {
+    const response = await axiosApiInstance.delete(`/room/remove`, {
+        data: room
+    });
+    return response.data;
+};
+
+
+const setFormData = (room, uri) => {
     const formData = new FormData();
 
     if (uri !== null) {
@@ -39,28 +72,5 @@ export const registerRoom = async (room, uri) => {
     });
     formData.append('room', json);
 
-    const response = await axiosApiInstance.postForm(`/room/register`, formData)
-        .catch(e => {
-            console.log('에러', e);
-            console.log('에러 응답', e.response);
-            console.log('에러 코드', e.status);
-        });
-
-    return response.data;
-};
-
-export const modifyRoom = async (room, file) => {
-    const formData = new FormData();
-    formData.append('room', room);
-    formData.append('file', file);
-
-    const response = await axiosApiInstance.post(`/room/modify`, formData);
-    return response.data;
-};
-
-export const removeRoom = async (room) => {
-    const response = await axiosApiInstance.delete(`/room/remove`, {
-        data: room
-    });
-    return response.data;
-};
+    return formData
+}

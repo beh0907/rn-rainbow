@@ -9,6 +9,7 @@ import ProfileUpdateScreen from '../screens/main/ProfileUpdateScreen';
 import GallerySwiperScreen from '../screens/room/GallerySwiperScreen';
 import RoomRegisterScreen from '../screens/main/RoomRegisterScreen';
 import { RoomProvider } from '../contexts/RoomContext';
+import RoomUpdateScreen from '../screens/main/RoomUpdateScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -26,6 +27,7 @@ const MainStack = () => {
 
                 <Stack.Screen name={MainRoutes.ROOM_TAB} component={RoomTab} />
                 <Stack.Screen name={MainRoutes.ROOM_REGISTER} component={RoomRegisterScreen} />
+                <Stack.Screen name={MainRoutes.ROOM_UPDATE} component={RoomUpdateScreen} />
                 <Stack.Screen name={MainRoutes.PROFILE_UPDATE} component={ProfileUpdateScreen} />
                 <Stack.Screen name={RoomRoutes.GALLERY_SWIPER} component={GallerySwiperScreen} />
             </Stack.Navigator>

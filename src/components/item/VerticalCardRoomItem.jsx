@@ -8,6 +8,8 @@ import AutoHeightImage from 'react-native-auto-height-image';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GRAY } from '../../Colors';
 import Constants from 'expo-constants';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -29,7 +31,13 @@ const VerticalCardRoomItem = memo(({ room }) => {
                 <Card.Cover style={styles.image}
                             source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
                 <Card.Content style={styles.overlayTitle}>
-                    <Title style={styles.title}>{room.name} ({room.age})</Title>
+
+                    {/*반려동물 이름 및 나이*/}
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <Title numberOfLines={1} style={styles.title}>{room.name}</Title>
+                        <Title style={styles.title}> ({room.age})</Title>
+                    </View>
+
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         {/*<AutoHeightImage width={room.gender === 1 ? 20 : 14}*/}
                         {/*                 source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />*/}
@@ -56,6 +64,16 @@ const VerticalCardRoomItem = memo(({ room }) => {
                         </View>
                     </View>
                 </Card.Content>
+
+                <View style={styles.overlayUser}>
+                    {
+                        room.userImage ?
+                            <AvatarImage source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} size={24} />
+                            : <AvatarText label={room.userNickName.charAt(0)} Text size={24} />
+                    }
+                    <Text numberOfLines={1}
+                          style={{ marginLeft: 5, color: 'white', width: 64 }}>{room.userNickName}</Text>
+                </View>
 
                 <View style={styles.overlayNum}>
                     <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
@@ -124,10 +142,21 @@ const styles = StyleSheet.create({
         marginHorizontal: 8,
         backgroundColor: GRAY.LIGHT
     },
-    overlayNum: {
+    overlayUser: {
         position: 'absolute',
         top: 0,
         left: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        padding: 8,
+        margin: 8,
+        borderRadius: 8,
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    overlayNum: {
+        position: 'absolute',
+        top: 0,
+        right: 0,
         backgroundColor: 'rgba(0, 0, 0, 0.2)',
         padding: 8,
         margin: 8,

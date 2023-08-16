@@ -1,5 +1,5 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
 import GalleryItem from '../../components/item/GalleryItem';
@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as Gallery from '../../api/Gallery';
 import { Button } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
-import { WHITE } from '../../Colors';
+import { PRIMARY, WHITE } from '../../Colors';
 
 const GalleryScreen = () => {
     const MAX_SELECT = 20;
@@ -18,24 +18,34 @@ const GalleryScreen = () => {
     const [user] = useUserState();
     const [room] = useRoomState();
 
+    const [, setSnackbar] = useSnackBarState();
+
     const [galleries, setGalleries] = useState([]);
     const [isDeleteMode, setIsDeleteMode] = useState(false);
-
-    const [, setSnackbar] = useSnackBarState();
+    const [isLoading, setIsLoading] = useState(true);
     const [selectGalleries, setSelectGalleries] = useState([]);
 
     const navigation = useNavigation();
 
-
-    useEffect(() => {
+    useLayoutEffect(() => {
         (async () => {
             await readGalleryList();
         })();
     }, []);
 
     const readGalleryList = useCallback(async () => {
-        setGalleries(await Gallery.readGalleryList(room.roomNum));
-    }, []);
+        setIsLoading(true);
+
+        const list = await Gallery.readGalleryList(room.roomNum);
+
+        navigation.setOptions({
+            tabBarLabel: `갤러리 ${list.length}`
+        });
+
+        setGalleries(list);
+
+        setIsLoading(false);
+    }, [navigation, isLoading, galleries]);
 
     const isSelectedGallery = (gallery) => {
         return selectGalleries.findIndex((item) => item.seq === gallery.seq) > -1;
@@ -119,18 +129,28 @@ const GalleryScreen = () => {
         setIsDeleteMode(prev => !prev);
     };
 
+    if (isLoading)
+        return (
+            <View style={[styles.container]}>
+                <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
+            </View>
+        );
     return (
         <View style={styles.container}>
             {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
                 user.id === room.id &&
                 <View style={styles.listHeader}>
-                    <Button icon='camera' mode='contained' onPress={pickImage}>추가</Button>
-                    <Button icon={isDeleteMode ? 'check' : 'delete'} mode='contained' onPress={deleteImage}>삭제</Button>
+                    <Button style={{ flex: 1, marginHorizontal: 10 }} icon='camera' mode='contained'
+                            onPress={pickImage}>추가</Button>
+                    <Button style={{ flex: 1, marginHorizontal: 10 }} icon={isDeleteMode ? 'check' : 'delete'}
+                            mode='contained' onPress={deleteImage}>{isDeleteMode ? '선택' : '삭제'}</Button>
                 </View>
             }
 
             {galleries.length === 0 ?
-                <Text>등록된 이미지가 없습니다</Text>
+                <View style={styles.text}>
+                    <Text>등록된 이미지가 없습니다</Text>
+                </View>
                 :
                 <MasonryList
                     style={{ height: '100%', width: '100%' }}
@@ -163,11 +183,17 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        height: '100%',
         backgroundColor: WHITE
     },
     listHeader: {
-        flexDirection: 'row'
+        flexDirection: 'row',
+        justifyContent: 'center',
+        marginVertical: 10
+    },
+    text: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center'
     }
 });
 

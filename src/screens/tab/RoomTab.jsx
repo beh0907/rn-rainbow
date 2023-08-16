@@ -1,5 +1,5 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
-import { RoomRoutes } from '../../navigations/Routes';
+import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import CommentScreen from '../room/CommentScreen';
 import RoomScreen from '../room/RoomScreen';
 import GalleryScreen from '../room/GalleryScreen';
@@ -14,6 +14,7 @@ import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const RoomTab = () => {
@@ -67,6 +68,9 @@ const RoomTab = () => {
                             ? // 내가 개설한 추모관이라면 방 설정
                             <HeaderRight name={'cog'} onPress={() => {
                                 console.log('방 설정');
+                                navigation.navigate(MainRoutes.ROOM_UPDATE, {
+                                    room
+                                })
                             }} />
                             : // 아니라면 즐겨찾기
                             <HeaderRight color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
@@ -97,11 +101,11 @@ const RoomTab = () => {
     return (
         isReady ?
             <Tab.Navigator screenOptions={{
-                tabBarStyle: { elevation: 0, shadowOpacity: 0 },
+                // tabBarStyle: { elevation: 0, shadowOpacity: 0 },
                 tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
                 swipeEnabled: false
             }}>
-                <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} />
+                <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen}/>
                 <Tab.Screen name={RoomRoutes.GALLERY} component={GalleryScreen} />
                 <Tab.Screen name={RoomRoutes.MEMORY} component={MemoryScreen} />
                 <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />

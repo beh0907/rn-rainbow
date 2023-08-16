@@ -189,15 +189,15 @@ const SignInScreen = () => {
                     </View>
 
 
-                    <Button title={'카카오 로그인'} onPress={loginKakao}
-                            styles={{
-                                container: {
-                                    marginTop: 50,
-                                },
-                                button: {
-                                    borderRadius: 4
-                                }
-                            }} />
+                    {/*<Button title={'카카오 로그인'} onPress={loginKakao}*/}
+                    {/*        styles={{*/}
+                    {/*            container: {*/}
+                    {/*                marginTop: 50,*/}
+                    {/*            },*/}
+                    {/*            button: {*/}
+                    {/*                borderRadius: 4*/}
+                    {/*            }*/}
+                    {/*        }} />*/}
                 </ScrollView>
             </View>
         </SafeInputView>
