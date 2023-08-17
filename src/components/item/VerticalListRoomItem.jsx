@@ -51,8 +51,8 @@ const VerticalListRoomItem = memo(({ room }) => {
                         </View>
 
                         {/*반려동물 이름 및 나이*/}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                            <Subheading numberOfLines={1} style={styles.title}>{room.name}</Subheading>
+                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                            <Subheading numberOfLines={1} style={styles.title}>{room.name} </Subheading>
                             <Subheading> ({room.age})</Subheading>
                         </View>
 
@@ -111,7 +111,8 @@ const styles = StyleSheet.create({
     },
     titleContainer: {
         flex: 1.5,
-        paddingVertical: 5
+        paddingVertical: 5,
+        marginEnd:10
     },
     title: {
         fontWeight: 'bold'

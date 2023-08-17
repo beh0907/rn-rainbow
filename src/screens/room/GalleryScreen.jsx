@@ -93,6 +93,8 @@ const GalleryScreen = () => {
 
         //선택된 이미지가 있다면
         if (result.assets) {
+            console.log(result.assets)
+
             //선택된 이미지들을 서버로 전송한다
             await Gallery.registerGallery(room, result.assets);
 

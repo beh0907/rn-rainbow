@@ -8,7 +8,7 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import InputTextButton from '../../components/view/inputTextButton';
 import { Text } from 'react-native-paper';
-import { PRIMARY } from '../../Colors';
+import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 
@@ -134,7 +134,8 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 16,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor:WHITE
     },
     commentList: {
         flex: 1,
@@ -150,7 +151,7 @@ const styles = StyleSheet.create({
     emptyComment: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
     }
 });
 

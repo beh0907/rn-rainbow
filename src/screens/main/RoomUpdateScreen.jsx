@@ -16,6 +16,7 @@ import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import Constants from 'expo-constants';
+import { useRoomState } from '../../contexts/RoomContext';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -28,8 +29,10 @@ const RoomUpdateScreen = () => {
 
     //추모관 설정 정보
     const [user] = useUserState();
+    const [,setRoom] = useRoomState()
+    
     const [image, setImage] = useState(null);
-    const [room, setRoom] = useState(useRoute().params.room);
+    const [updateRoom, setUpdateRoom] = useState(useRoute().params.room);
 
     // 설정 정보 REF
     const nameRef = useRef(null);
@@ -39,7 +42,7 @@ const RoomUpdateScreen = () => {
     const genderRef = useRef(null);
 
     //날짜 다이얼로그 설정
-    const [date, setDate] = useState(new Date(room.date));
+    const [date, setDate] = useState(new Date(updateRoom.date));
     const [show, setShow] = useState(false);
 
     /**이미지를 선택 */
@@ -60,7 +63,11 @@ const RoomUpdateScreen = () => {
 
     /**추모관 생성*/
     const onModify = async () => {
-        const result = await Room.modifyRoom({ ...room, date: formatDate(date) }, image);
+        const paramRoom = { ...updateRoom, date: formatDate(date) };
+
+        const result = await Room.modifyRoom(paramRoom, image);
+        //업데이트가 완료됐을 때 전역 추모관 객체를 갱신한다
+        setRoom(paramRoom)
 
         //등록이 완료되었으므로 현재 화면에서 돌아간다
         await navigation.goBack();
@@ -68,7 +75,7 @@ const RoomUpdateScreen = () => {
 
     /**추모관 삭제*/
     const onDelete = async () => {
-        // const result = await Room.removeRoom({ ...room, date: formatDate(date) });
+        // const result = await Room.removeRoom({ ...updateRoom, date: formatDate(date) });
 
         //등록이 완료되었으므로 현재 화면에서 돌아간다
         await navigation.goBack();
@@ -86,11 +93,11 @@ const RoomUpdateScreen = () => {
 
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
-                    <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
+                    <View style={[styles.photo, updateRoom.image || { backgroundColor: GRAY.DEFAULT }]}>
                         {
-                            image || room.image
+                            image || updateRoom.image
                                 ? <FastImage
-                                    source={{ uri: image ? image : `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }}
+                                    source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }}
                                     style={styles.photo} />
                                 : <Image source={require('../../../assets/background/bg_temp.jpg')}
                                          style={styles.photo} />
@@ -112,11 +119,11 @@ const RoomUpdateScreen = () => {
                         outlineStyle={{ borderWidth: 1 }}
                         outlineColor='#0000001F'
                         label='이름'
-                        value={room.name}
+                        value={updateRoom.name}
                         style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE }}
                         onSubmitEditing={() => contentRef.current.focus()}
                         returnKeyType={ReturnKeyTypes.NEXT}
-                        onChangeText={(text) => setRoom({ ...room, name: text })}
+                        onChangeText={(text) => setUpdateRoom({ ...updateRoom, name: text })}
                     />
 
                     {/*인사말 설정*/}
@@ -128,10 +135,10 @@ const RoomUpdateScreen = () => {
                         outlineStyle={{ borderWidth: 1 }}
                         outlineColor='#0000001F'
                         label='인사말'
-                        value={room.content}
+                        value={updateRoom.content}
                         style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE, height: height * 0.15 }}
                         returnKeyType={ReturnKeyTypes.NEXT}
-                        onChangeText={(text) => setRoom({ ...room, content: text })}
+                        onChangeText={(text) => setUpdateRoom({ ...updateRoom, content: text })}
                         onSubmitEditing={() => dateRef.current.focus()}
                     />
 
@@ -150,7 +157,7 @@ const RoomUpdateScreen = () => {
                                 width: '100%', backgroundColor: WHITE, flex: 1, marginEnd: 20
                             }}
                             returnKeyType={ReturnKeyTypes.NEXT}
-                            onChangeText={(text) => setRoom({ ...room, date: text })}
+                            onChangeText={(text) => setUpdateRoom({ ...updateRoom, date: text })}
                             onFocus={() => setShow(true)}
                         />
 
@@ -162,7 +169,7 @@ const RoomUpdateScreen = () => {
                             outlineColor='#0000001F'
                             label='나이'
                             textContentType={'telephoneNumber'}
-                            value={room.age.toString()}
+                            value={updateRoom.age.toString()}
                             style={{
                                 width: '100%',
                                 fontSize: 14,
@@ -171,15 +178,15 @@ const RoomUpdateScreen = () => {
                             }}
                             inputMode={'numeric'}
                             returnKeyType={ReturnKeyTypes.DONE}
-                            onChangeText={(text) => setRoom({ ...room, age: text })}
+                            onChangeText={(text) => setUpdateRoom({ ...updateRoom, age: text })}
                         />
                     </View>
 
                     <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 
                         <SegmentedButtons
-                            value={room.gender.toString()}
-                            onValueChange={value => setRoom(prevState => ({
+                            value={updateRoom.gender.toString()}
+                            onValueChange={value => setUpdateRoom(prevState => ({
                                 ...prevState,
                                 gender: value
                             }))}
@@ -211,9 +218,9 @@ const RoomUpdateScreen = () => {
                                     flex: 1
                                 }}
                                 onValueChange={(value) => {
-                                    setRoom({ ...room, permission: value });
+                                    setUpdateRoom({ ...updateRoom, permission: value });
                                 }}
-                                value={room.permission.toString()}>
+                                value={updateRoom.permission.toString()}>
                                 <View style={{ flexDirection: 'row' }}>
                                     <View style={{
                                         flexDirection: 'row',

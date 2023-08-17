@@ -15,7 +15,7 @@ export const registerGallery = async (room, assets) => {
     //갤러리 asset 배열로 받아온다
     assets.map(asset => {
         const uri = asset.uri;
-        const name = uri.split('/').pop();
+        const name = `${room.id}_${room.roomNum}` + uri.split('/').pop();
         const match = /\.(\w+)$/.exec(name ?? '');
         const type = match ? `image/${match[1]}` : 'image';
 

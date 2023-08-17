@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { ScrollView, StyleSheet, View } from 'react-native';
 import { Avatar, Divider, Text } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
 import { WHITE } from '../../Colors';
@@ -12,32 +12,36 @@ const RoomScreen = () => {
 
     return (
         <View style={styles.container}>
-            {/* Pet Information */}
-            <View style={styles.petInfoContainer}>
-                <Avatar.Image
-                    size={100}
-                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}
-                />
-                <View style={styles.petInfoTextContainer}>
-                    <Text style={styles.petName}>{room.name}</Text>
-                    <Text style={styles.petDetails}>{room.age} years old, {room.gender === 1 ? 'Male' : 'Female'}</Text>
+            <ScrollView showsVerticalScrollIndicator={false}>
+                {/* Pet Information */}
+                <View style={styles.petInfoContainer}>
+                    <Avatar.Image
+                        size={100}
+                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}
+                    />
+                    <View style={styles.petInfoTextContainer}>
+                        <Text
+                            style={styles.petName}>{room.name}</Text>
+                        <Text style={styles.petDetails}>{room.age} years
+                            old, {room.gender === 1 ? 'Male' : 'Female'}</Text>
+                    </View>
                 </View>
-            </View>
-            <Divider style={styles.divider} />
+                <Divider style={styles.divider} />
 
-            {/*날짜*/}
-            <View style={styles.dateContainer}>
-                <Text style={styles.dateText}>떠나보낸 날짜 : {room.date}</Text>
-            </View>
-            <Divider style={styles.divider} />
+                {/*날짜*/}
+                <View style={styles.dateContainer}>
+                    <Text style={styles.dateText}>떠나보낸 날짜 : {room.date}</Text>
+                </View>
+                <Divider style={styles.divider} />
 
-            {/*인삿말*/}
-            <View style={styles.messageContainer}>
-                <Text style={styles.messageTitle}>인사말</Text>
-                <Text style={styles.messageText}>
-                    {room.content}
-                </Text>
-            </View>
+                {/*인삿말*/}
+                <View style={styles.messageContainer}>
+                    <Text style={styles.messageTitle}>인사말</Text>
+                    <Text style={styles.messageText}>
+                        {room.content}
+                    </Text>
+                </View>
+            </ScrollView>
         </View>
     );
 };
@@ -54,7 +58,8 @@ const styles = StyleSheet.create({
         marginBottom: 16
     },
     petInfoTextContainer: {
-        marginLeft: 16
+        marginLeft: 16,
+        flex: 1
     },
     petName: {
         fontSize: 24,
