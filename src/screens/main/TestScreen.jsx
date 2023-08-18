@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, View } from 'react-native';
+import { Button, StyleSheet, View, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WHITE } from '../../Colors';
@@ -65,6 +65,7 @@ const CameraExample = () => {
         <View style={styles.container}>
             {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
             <Button title='카메라 열기' onPress={pickImageFromCamera} />
+            <View style={{ height: 20 }} />
             <Button title='알림 보내기' onPress={schedulePushNotification} />
         </View>
     );

@@ -11,9 +11,9 @@ import { StatusBar } from 'expo-status-bar';
 import { PRIMARY, WHITE } from '../../Colors';
 import { authFormReducer, AuthFormTypes, initAuthForm } from '../../reducer/AuthFormReducer';
 import { useUserState } from '../../contexts/UserContext';
-import { getAuthMessages, signIn } from '../../api/Auth';
+import * as Auth from '../../api/Auth';
 import * as SecureStore from '../../utils/PreferenceStore';
-import { STORE_USER_KEYS } from '../../utils/PreferenceStore';
+import { signOutSecureStore, STORE_USER_KEYS } from '../../utils/PreferenceStore';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Text, TextInput } from 'react-native-paper';
 import AutoHeightImage from 'react-native-auto-height-image';
@@ -31,44 +31,63 @@ const SignInScreen = () => {
     const [isAutoLogin, setAutoLogin] = useState(false);
     const [isHidePassword, setHidePassword] = useState(true);
 
-
-    const loginKakao = async () => {
-        const token = await KakaoLogins.login();
-        //로그인하기
-        const profile = await KakaoLogins.getProfile();
-        //프로필 가져오기
-        console.log(token, profile);
-    };
-
-    const onSubmit = async () => {
+    const onSignIn = async () => {
         Keyboard.dismiss();
 
         if (!form.disabled && !form.isLoading) {
             dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
 
             try {
-                const user = await signIn(form);
+                const user = await Auth.signIn(form);
 
                 /**자동 로그인이 체크되어 있다면
                  로그인 정보를 저장한다*/
                 if (isAutoLogin) {
-                    await SecureStore.save(STORE_USER_KEYS.ID, user.id);
-                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, form.password);
+                    await SecureStore.signInSecureStore({
+                        [STORE_USER_KEYS.ID]: user.id,
+                        [STORE_USER_KEYS.PASSWORD]: form.password,
+                        [STORE_USER_KEYS.PROVIDER]: 'NATIVE',
+                        [STORE_USER_KEYS.ACCESS_TOKEN]: '',
+                        [STORE_USER_KEYS.REFRESH_TOKEN]: ''
+                    });
                 } else {
-                    await SecureStore.save(STORE_USER_KEYS.ID, '');
-                    await SecureStore.save(STORE_USER_KEYS.PASSWORD, '');
+                    await SecureStore.signOutSecureStore();
                 }
 
                 setUser(user);
                 console.log(user);
             } catch (e) {
-                Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
+                Alert.alert('로그인 실패', Auth.getAuthMessages(e.response.status), [{
                     text: '확인',
                     onPress: () => dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
                 }]);
             }
         }
     };
+
+    const onSignInKaKao = async () => {
+        //로그인하기
+        const token = await KakaoLogins.login();
+        //프로필 가져오기
+        const profile = await KakaoLogins.getProfile();
+
+        console.log("토큰 : ", token)
+        console.log("프로필 : ", profile)
+
+        const user = await Auth.signInKaKao(profile)
+
+        await SecureStore.signInSecureStore({
+            [STORE_USER_KEYS.ID]: profile.id,
+            [STORE_USER_KEYS.PASSWORD]: '',
+            [STORE_USER_KEYS.PROVIDER]: 'KAKAO',
+            [STORE_USER_KEYS.ACCESS_TOKEN]: '',
+            [STORE_USER_KEYS.REFRESH_TOKEN]: ''
+        });
+
+        setUser(user);
+        console.log(user);
+    };
+
     const updateForm = payload => {
         const newForm = { ...form, ...payload };
         const disabled = !newForm.id || !newForm.password;
@@ -130,7 +149,7 @@ const SignInScreen = () => {
                         returnKeyType={ReturnKeyTypes.DONE}
                         onChangeText={(text) => updateForm({ password: text.trim() })}
                         secureTextEntry={isHidePassword}
-                        onSubmitEditing={onSubmit}
+                        onSubmitEditing={onSignIn}
                         right={
                             <TextInput.Icon
                                 forceTextInputFocus={false}
@@ -160,7 +179,7 @@ const SignInScreen = () => {
 
                     {/*로그인 버튼*/}
                     <Button title='로그인'
-                            onPress={onSubmit}
+                            onPress={onSignIn}
                             disabled={form.disabled}
                             isLoading={form.isLoading}
                             styles={{
@@ -189,15 +208,15 @@ const SignInScreen = () => {
                     </View>
 
 
-                    {/*<Button title={'카카오 로그인'} onPress={loginKakao}*/}
-                    {/*        styles={{*/}
-                    {/*            container: {*/}
-                    {/*                marginTop: 50,*/}
-                    {/*            },*/}
-                    {/*            button: {*/}
-                    {/*                borderRadius: 4*/}
-                    {/*            }*/}
-                    {/*        }} />*/}
+                    <Button title={'카카오 로그인'} onPress={onSignInKaKao}
+                            styles={{
+                                container: {
+                                    marginTop: 50,
+                                },
+                                button: {
+                                    borderRadius: 4
+                                }
+                            }} />
                 </ScrollView>
             </View>
         </SafeInputView>

@@ -13,6 +13,8 @@ import { Camera } from 'expo-camera';
 import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
+import * as KakaoLogins from '@react-native-seoul/kakao-login';
+import * as Auth from '../api/Auth';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -65,17 +67,33 @@ const Navigation = () => {
                 //인트로 체크 여부를 가져와 설정한다
                 setCheckIntro(await SecureStore.getValueFor(STORE_SETTING_KEYS.CHECK_INTRO));
 
-
                 //SecureStore에 저장된 로그인 정보를 가져온다
                 const id = await SecureStore.getValueFor(STORE_USER_KEYS.ID);
                 const password = await SecureStore.getValueFor(STORE_USER_KEYS.PASSWORD);
                 const provider = await SecureStore.getValueFor(STORE_USER_KEYS.PROVIDER);
 
-                if (id !== '' && password !== '') {
-                    const user = await signIn({ id, password });
+                console.log('아이디', id);
+                console.log('비밀번호', password);
 
-                    if (user) setUser(user);
+                let user;
+
+                switch (provider) {
+                    case "NATIVE":
+                        user = await signIn({ id, password });
+                        break
+                    case "KAKAO":
+                        const token = await KakaoLogins.login();
+                        const profile = await KakaoLogins.getProfile();
+
+                        user = await Auth.signInKaKao(profile)
+                        break
+                    default:
+                        break;
                 }
+
+                //네이티브 혹은 카카오 로그인이 정상적으로 됐다면
+                //유저 정보를 저장한다
+                if (user) setUser(user);
 
                 setIsReady(true);
             } catch (error) {

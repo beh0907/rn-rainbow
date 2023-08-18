@@ -3,18 +3,32 @@ import * as SecureStore from '../utils/PreferenceStore';
 import { uriToFile } from '../utils/imageUtil';
 import { axiosApiInstance } from './AxiosInstance';
 
-export const signIn = async ({ id, password }) => {
+export const signIn = async ({ id, password }, fcmToken = '') => {
     const response = await axiosApiInstance.get(`/user/login?id=${id}&password=${password}`, {
         headers: {
-            fcmToken: ''
+            fcmToken: fcmToken
         }
-    })
+    });
 
     response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
     response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
 
     return response.data;
 };
+
+export const signInKaKao = async (user, fcmToken = '') => {
+    const response = await axiosApiInstance.post(`/user/kakaoLogin`, user, {
+        headers: {
+            fcmToken: fcmToken
+        }
+    });
+
+    response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
+    response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
+
+    return response.data;
+};
+
 export const duplicateId = async (id) => {
     const response = await axiosApiInstance.get(`/user/login?id=${id}`);
     return response.data;

@@ -6,6 +6,7 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "dark",
+    "scheme": "com.skymilk.rainbow",
     "splash": {
       "image": "./assets/background/bg_splash.png",
       "resizeMode": "cover",
@@ -26,13 +27,16 @@
         "backgroundColor": "#F97316"
       },
       "permissions": [
+        "android.permission.WRITE_EXTERNAL_STORAGE",
         "android.permission.READ_EXTERNAL_STORAGE",
         "android.permission.READ_MEDIA_IMAGES",
+        "android.permission.READ_MEDIA_VIDEO",
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.POST_NOTIFICATIONS"
       ],
-      "package": "com.skymilk.rainbow"
+      "package": "com.skymilk.rainbow",
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -42,10 +46,11 @@
         "expo-build-properties",
         {
           "android": {
-            "kotlinVersion": "1.8.0",
             "compileSdkVersion": 33,
             "targetSdkVersion": 33,
-            "buildToolsVersion": "33.0.0"
+            "buildToolsVersion": "33.0.0",
+            "minSdkVersion": 23,
+            "kotlinVersion": "1.8.10"
           },
           "ios": {
             "deploymentTarget": "13.0"
@@ -69,7 +74,7 @@
         "@react-native-seoul/kakao-login",
         {
           "kakaoAppKey": "155fd1fc5c7cb98e457f9dce71ad707f",
-          "kotlinVersion": "1.5.10"
+          "kotlinVersion": "1.7.10"
         }
       ],
       [

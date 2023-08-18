@@ -30,6 +30,18 @@ export const getListFor = async (key) => {
     return temp ? JSON.parse(temp) : [];
 };
 
+/**로그인 시 유저 정보를 저장한다*/
+export const signInSecureStore = async (user) => {
+    const keys = Object.keys(user);
+
+    // Loop through all the keys in STORE_USER_KEYS and set them to empty strings
+    for (const key of keys) {
+
+        //빈 값은 공백으로 추가한다
+        await save(key, user[key]? user[key] : '');
+    }
+};
+
 /**로그아웃 시 유저 정보를 삭제한다*/
 export const signOutSecureStore = async () => {
     const keys = Object.values(STORE_USER_KEYS);

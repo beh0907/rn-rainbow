@@ -29,7 +29,7 @@ export default function App() {
     const responseListener = useRef();
 
     useEffect(() => {
-        // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+        registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
         //알림을 받았을 때 이벤트
         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
@@ -103,10 +103,15 @@ const registerForPushNotificationsAsync = async () => {
             return;
         }
 
+
         token = (await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId
         })).data;
-        console.log('토큰', token);
+        console.log('토큰1', token);
+
+        console.log('토큰2', (await Notifications.getDevicePushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+        })).data);
     } else {
         alert('Must use physical device for Push Notifications');
     }
