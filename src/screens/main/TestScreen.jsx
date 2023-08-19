@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { Button, StyleSheet, View, Image } from 'react-native';
+import { Button, StyleSheet, View } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WHITE } from '../../Colors';
 import * as Notifications from 'expo-notifications';
+import { Image } from 'expo-image';
 
 const CameraExample = () => {
     const { top, bottom } = useSafeAreaInsets();

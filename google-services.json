@@ -1,0 +1,92 @@
+{
+  "project_info": {
+    "project_number": "196518350344",
+    "project_id": "inhyeop-rainbow",
+    "storage_bucket": "inhyeop-rainbow.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196518350344:android:804f99e05f82a4c6a40bbd",
+        "android_client_info": {
+          "package_name": "com.inhyeop.rainbow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196518350344-pta7frt34klk5ki1ekar7arvkh6hlj3h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inhyeop.rainbow",
+            "certificate_hash": "9ec37833e4251ee2298b7e3a4622753cc01c85b2"
+          }
+        },
+        {
+          "client_id": "196518350344-uf0j7otr5ivbl2hnodqg78m83fmbo0du.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inhyeop.rainbow",
+            "certificate_hash": "47c9fe572fe80d3d5f486e61f34015a12ace62dd"
+          }
+        },
+        {
+          "client_id": "196518350344-mk3devb54i3ll54ers00a8ll9lvop33h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrEvuKB8dE-PoFJqEuSxw5S1AXJ3BYufo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196518350344-mk3devb54i3ll54ers00a8ll9lvop33h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:196518350344:android:e1e5471acd113b11a40bbd",
+        "android_client_info": {
+          "package_name": "com.skymilk.rainbow"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "196518350344-39r6ahkmlpr2k6k99nfho8gbgun2vcuh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.skymilk.rainbow",
+            "certificate_hash": "0c12a8209809a9c8dbb9a8f91c7f164b082a3a75"
+          }
+        },
+        {
+          "client_id": "196518350344-mk3devb54i3ll54ers00a8ll9lvop33h.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrEvuKB8dE-PoFJqEuSxw5S1AXJ3BYufo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "196518350344-mk3devb54i3ll54ers00a8ll9lvop33h.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

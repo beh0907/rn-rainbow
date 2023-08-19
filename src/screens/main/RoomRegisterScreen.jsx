@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
 import { GENDER, GRAY, WHITE } from '../../Colors';
 import SafeInputView from '../../components/view/SafeInputView';
-import FastImage from '../../components/view/FastImage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import * as ImagePicker from 'expo-image-picker';
@@ -15,6 +14,7 @@ import { formatDate } from '../../utils/checkInputForm';
 import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
+import { Image } from 'expo-image';
 
 const RoomRegisterScreen = () => {
     const navigation = useNavigation();
@@ -91,12 +91,8 @@ const RoomRegisterScreen = () => {
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
                     <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
-                        {
-                            image
-                                ? <FastImage source={{ uri: image }} style={styles.photo} />
-                                : <Image source={require('../../../assets/background/bg_temp.jpg')}
-                                         style={styles.photo} />
-                        }
+                        <Image source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}
+                               style={styles.photo} />
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>

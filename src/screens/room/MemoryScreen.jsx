@@ -1,15 +1,15 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Text } from 'react-native-paper';
 import * as Memory from '../../api/Memory';
 import { useRoomState } from '../../contexts/RoomContext';
-import { ResizeMode, Video } from 'expo-av';
 import { PRIMARY, WHITE } from '../../Colors';
 import Constants from 'expo-constants';
 import { useNavigation } from '@react-navigation/native';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
-
-const { BASE_URL_FILE } = Constants.expoConfig.extra;
+import * as ImagePicker from 'expo-image-picker';
+import { FlashList } from '@shopify/flash-list';
+import MemoryItem from '../../components/item/MemoryItem';
+import CommentItem from '../../components/item/CommentItem';
 
 const RoomScreen = () => {
     const [room] = useRoomState();
@@ -17,11 +17,8 @@ const RoomScreen = () => {
     const [memories, setMemories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
 
-    //비디오 객체
-    const video = React.useRef(null);
-    const [status, setStatus] = React.useState({});
-
     const navigation = useNavigation();
+    const { width, height } = useWindowDimensions();
 
     useLayoutEffect(() => {
         (async () => {
@@ -43,32 +40,45 @@ const RoomScreen = () => {
         setIsLoading(false);
     }, [navigation, isLoading, memories]);
 
+    const pickVideo = useCallback(async () => {
+        // No permissions request is necessary for launching the image library
+        const result = await ImagePicker.launchImageLibraryAsync({
+            // allowsMultipleSelection:true,
+            mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+            quality: 1
+        });
+
+        if (result.assets) {
+            // setImage(result.assets[0].uri);
+        }
+    }, []);
+
+
     if (isLoading)
         return (
             <View style={[styles.container]}>
                 <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
             </View>
         );
-
     return (
         <View style={[styles.container]}>
             {memories.length === 0 ?
                 <Text>등록된 추억이 없습니다</Text>
                 :
-                memories.map(memory => (
-                    <View key={memory.seq} style={styles.container}>
-                        <Video
-                            ref={video}
-                            style={styles.video}
-                            source={{
-                                uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
-                            }}
-                            useNativeControls
-                            resizeMode={ResizeMode.STRETCH}
-                            onPlaybackStatusUpdate={status => setStatus(() => status)}
-                        />
-                    </View>
-                ))
+                <FlashList
+                    estimatedListSize={{ width, height }}
+                    estimatedItemSize={200}
+                    showsVerticalScrollIndicator={false}
+                    // style={styles.commentList}
+                    // contentContainerStyle={styles.commentList}
+                    ItemSeparatorComponent={() => <View style={styles.separator}></View>}
+                    keyExtractor={(item) => item.seq}
+                    data={memories}
+                    renderItem={({ item }) =>
+                        //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                        <MemoryItem memory={item} />
+                    }
+                />
             }
         </View>
     );
@@ -83,11 +93,6 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
         backgroundColor: WHITE
-    },
-    video: {
-        alignSelf: 'center',
-        width: 320,
-        height: 200
     }
 });
 

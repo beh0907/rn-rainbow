@@ -80,7 +80,6 @@ export default function App() {
 }
 
 const registerForPushNotificationsAsync = async () => {
-    let token;
 
     if (Platform.OS === 'android') {
         await Notifications.setNotificationChannelAsync('default', {
@@ -104,14 +103,16 @@ const registerForPushNotificationsAsync = async () => {
         }
 
 
-        token = (await Notifications.getExpoPushTokenAsync({
+        const token1 = (await Notifications.getExpoPushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId
         })).data;
-        console.log('토큰1', token);
 
-        console.log('토큰2', (await Notifications.getDevicePushTokenAsync({
+        const token2 = (await Notifications.getDevicePushTokenAsync({
             projectId: Constants.expoConfig.extra.eas.projectId
-        })).data);
+        })).data
+
+        console.log('토큰1', token1); //EXPO 내부 토큰
+        console.log('토큰2', token2); //FCM 토큰
     } else {
         alert('Must use physical device for Push Notifications');
     }

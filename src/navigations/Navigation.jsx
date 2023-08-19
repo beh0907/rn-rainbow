@@ -74,9 +74,9 @@ const Navigation = () => {
 
                 console.log('아이디', id);
                 console.log('비밀번호', password);
+                console.log('공급', provider);
 
                 let user;
-
                 switch (provider) {
                     case "NATIVE":
                         user = await signIn({ id, password });
@@ -97,8 +97,6 @@ const Navigation = () => {
 
                 setIsReady(true);
             } catch (error) {
-
-                console.log('2');
                 const code = error.code;
                 const status = error.response?.status;
 

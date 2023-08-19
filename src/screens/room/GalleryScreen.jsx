@@ -155,10 +155,9 @@ const GalleryScreen = () => {
                 </View>
                 :
                 <MasonryList
-                    style={{ height: '100%', width: '100%' }}
                     contentContainerStyle={{
                         padding: 5,
-                        alignSelf: 'stretch'
+                        alignSelf: 'stretch',
                     }}
                     data={galleries}
                     keyExtractor={(item) => item.seq}

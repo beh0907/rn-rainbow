@@ -10,8 +10,10 @@ import AutoHeightImage from 'react-native-auto-height-image';
 import Constants from 'expo-constants';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
+
 
 const VerticalListRoomItem = memo(({ room }) => {
     console.log('룸 리스트', room);
@@ -29,8 +31,12 @@ const VerticalListRoomItem = memo(({ room }) => {
                 <View style={{ flexDirection: 'row' }}>
 
                     <View style={{ flex: 1 }}>
-                        <Card.Cover style={styles.image}
-                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                        <Image
+                            style={styles.image}
+                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+
+                        {/*<Card.Cover style={styles.image}*/}
+                        {/*            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />*/}
                         <View style={styles.overlayTitle}>
                             <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
                         </View>
@@ -51,7 +57,7 @@ const VerticalListRoomItem = memo(({ room }) => {
                         </View>
 
                         {/*반려동물 이름 및 나이*/}
-                        <View style={{ flexDirection: 'row', alignItems: 'center'}}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                             <Subheading numberOfLines={1} style={styles.title}>{room.name} </Subheading>
                             <Subheading> ({room.age})</Subheading>
                         </View>
@@ -106,13 +112,14 @@ const styles = StyleSheet.create({
     },
     image: {
         flex: 1,
-        // width: '100%',
-        height: '100%'
+        height: '100%',
+        borderBottomRightRadius: 12,
+        borderTopRightRadius: 12
     },
     titleContainer: {
         flex: 1.5,
         paddingVertical: 5,
-        marginEnd:10
+        marginEnd: 10
     },
     title: {
         fontWeight: 'bold'

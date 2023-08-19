@@ -3,6 +3,7 @@ import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react
 import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import Constants from 'expo-constants';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -26,12 +27,15 @@ const CarouselItem = memo(forwardRef(({ item, index, currentIndex }, ref) => {
             style={styles.item}
             onPress={() => pressItem(item)}>
 
-            <ImageBackground source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}
-                             style={styles.imageBackground}>
-                <View style={styles.rightTextContainer}>
-                    <Text style={styles.rightText}>{item.views}</Text>
-                </View>
-            </ImageBackground>
+            <Image source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}
+                             style={styles.imageBackground}/>
+
+            {/*<ImageBackground source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}*/}
+            {/*                 style={styles.imageBackground}>*/}
+            {/*    <View style={styles.rightTextContainer}>*/}
+            {/*        <Text style={styles.rightText}>{item.views}</Text>*/}
+            {/*    </View>*/}
+            {/*</ImageBackground>*/}
             <View style={styles.lowerContainer}>
                 <Text style={styles.titleText}>{item.name} ({item.age})</Text>
                 <Text style={styles.contentText}>{item.content}</Text>

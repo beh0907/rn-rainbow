@@ -19,7 +19,8 @@
       "supportsTablet": true,
       "infoPlist": {
         "NSPhotoLibraryUsageDDescription": "이미지와 영상을 업로드하기 위한 권한을 요청합니다."
-      }
+      },
+      "bundleIdentifier": "com.skymilk.rainbow"
     },
     "android": {
       "adaptiveIcon": {
@@ -36,7 +37,8 @@
         "android.permission.POST_NOTIFICATIONS"
       ],
       "package": "com.skymilk.rainbow",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "useNextNotificationsApi": true
     },
     "web": {
       "favicon": "./assets/favicon.png"

@@ -1,10 +1,9 @@
 import React, { useRef, useState } from 'react';
-import { Image, Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import {  Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
 import { GENDER, GRAY, WHITE } from '../../Colors';
 import SafeInputView from '../../components/view/SafeInputView';
-import FastImage from '../../components/view/FastImage';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import * as ImagePicker from 'expo-image-picker';
@@ -12,11 +11,11 @@ import Button from '../../components/button/Button';
 import * as Room from '../../api/Room';
 import DatePicker from '../../components/view/DatePicker';
 import { formatDate } from '../../utils/checkInputForm';
-import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import Constants from 'expo-constants';
 import { useRoomState } from '../../contexts/RoomContext';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -30,7 +29,7 @@ const RoomUpdateScreen = () => {
     //추모관 설정 정보
     const [user] = useUserState();
     const [,setRoom] = useRoomState()
-    
+
     const [image, setImage] = useState(null);
     const [updateRoom, setUpdateRoom] = useState(useRoute().params.room);
 
@@ -96,7 +95,7 @@ const RoomUpdateScreen = () => {
                     <View style={[styles.photo, updateRoom.image || { backgroundColor: GRAY.DEFAULT }]}>
                         {
                             image || updateRoom.image
-                                ? <FastImage
+                                ? <Image
                                     source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }}
                                     style={styles.photo} />
                                 : <Image source={require('../../../assets/background/bg_temp.jpg')}

@@ -1,37 +1,38 @@
-import React, {memo} from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
-import {Card, Text, Title} from "react-native-paper";
-import {Image, Pressable, StyleSheet, useWindowDimensions, View} from "react-native";
-import {useNavigation} from "@react-navigation/native";
-import {MainRoutes} from "../../navigations/Routes";
+import { Card, Text, Title } from 'react-native-paper';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { MainRoutes } from '../../navigations/Routes';
 import Constants from 'expo-constants';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const HorizontalRoomItem = memo(({room}) => {
-    const {width} = useWindowDimensions()
+const HorizontalRoomItem = memo(({ room }) => {
+    const { width } = useWindowDimensions();
     const navigation = useNavigation();
 
-    const pressItem = ({roomNum}) => {
+    const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
             roomNum
-        })
-    }
+        });
+    };
 
     return (
         <Pressable onPress={() => pressItem(room)}>
-            <Card key={room.id} style={[styles.container, {width: width / 2, borderRadius: 36}]}>
+            <Card key={room.id} style={[styles.container, { width: width / 2, borderRadius: 36 }]}>
                 {/*<View style={styles.overlayNum}>*/}
                 {/*    <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>*/}
                 {/*</View>*/}
 
                 <Card.Cover style={styles.image}
-                            source={{uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}`}}/>
+                            source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
                 <Card.Content style={styles.overlayTitle}>
                     <Title style={styles.title}>{room.name} ({room.age})</Title>
-                    <View style={{flexDirection: "row", alignItems: "center"}}>
+                    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
                         <Image style={styles.icon}
-                               source={room.gender === 1 ? require("../../../assets/icon/ic_male.png") : require("../../../assets/icon/ic_female.png")}/>
+                               source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />
                         <Text style={styles.description}>{room.date}</Text>
                         {/*<Paragraph style={styles.description}>{room.date}({room.age})</Paragraph>*/}
                     </View>
@@ -43,7 +44,7 @@ const HorizontalRoomItem = memo(({room}) => {
     );
 });
 
-HorizontalRoomItem.displayName = 'HorizontalRoomItem'
+HorizontalRoomItem.displayName = 'HorizontalRoomItem';
 
 HorizontalRoomItem.propTypes = {
     room: PropTypes.object.isRequired
@@ -54,18 +55,18 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 8,
         overflow: 'hidden',
-        elevation: 2,
+        elevation: 2
     },
     image: {
         width: '100%',
-        height: 200,
+        height: 200
     },
     overlayTitle: {
         position: 'absolute',
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        backgroundColor: 'rgba(0, 0, 0, 0.2)'
     },
     overlayNum: {
         position: 'absolute',
@@ -73,17 +74,17 @@ const styles = StyleSheet.create({
         left: 0,
         // backgroundColor: 'rgba(0, 0, 0, 0.2)',
         backgroundColor: 'green',
-        padding: 8,
+        padding: 8
     },
     title: {
         fontSize: 16,
         fontWeight: 'bold',
-        color: 'white',
+        color: 'white'
     },
     description: {
         marginStart: 10,
         fontSize: 14,
-        color: 'white',
+        color: 'white'
     },
     icon: {
         width: 16,

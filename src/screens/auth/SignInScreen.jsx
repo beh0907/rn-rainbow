@@ -1,6 +1,6 @@
 import React, { useCallback, useReducer, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Alert, Keyboard, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Alert, Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { AuthRoutes } from '../../navigations/Routes';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
@@ -13,11 +13,11 @@ import { authFormReducer, AuthFormTypes, initAuthForm } from '../../reducer/Auth
 import { useUserState } from '../../contexts/UserContext';
 import * as Auth from '../../api/Auth';
 import * as SecureStore from '../../utils/PreferenceStore';
-import { signOutSecureStore, STORE_USER_KEYS } from '../../utils/PreferenceStore';
+import { STORE_USER_KEYS } from '../../utils/PreferenceStore';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Text, TextInput } from 'react-native-paper';
-import AutoHeightImage from 'react-native-auto-height-image';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
+import { Image } from 'expo-image';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
@@ -57,7 +57,7 @@ const SignInScreen = () => {
                 setUser(user);
                 console.log(user);
             } catch (e) {
-                Alert.alert('로그인 실패', Auth.getAuthMessages(e.response.status), [{
+                Alert.alert('로그인 실패', '오류 발생', [{
                     text: '확인',
                     onPress: () => dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
                 }]);
@@ -71,10 +71,10 @@ const SignInScreen = () => {
         //프로필 가져오기
         const profile = await KakaoLogins.getProfile();
 
-        console.log("토큰 : ", token)
-        console.log("프로필 : ", profile)
+        console.log('토큰 : ', token);
+        console.log('프로필 : ', profile);
 
-        const user = await Auth.signInKaKao(profile)
+        const user = await Auth.signInKaKao(profile);
 
         await SecureStore.signInSecureStore({
             [STORE_USER_KEYS.ID]: profile.id,
@@ -110,21 +110,12 @@ const SignInScreen = () => {
         <SafeInputView>
             <StatusBar style={'dark'} />
             <View style={[styles.container, { marginTop: top }]}>
-                <View style={{ width: '100%', alignItems: 'center' }}>
-                    <AutoHeightImage
-                        width={width - 40}
-                        source={require('../../../assets/logo.png')}
-                    />
-
-                    {/*<Image source={require('../../../assets/logo.png')} style={{width:300}} resizeMode={"contain"}/>*/}
-                    {/*<Text style={{color:PRIMARY.DEFAULT}} variant="headlineLarge">레인보우브릿지</Text>*/}
-                </View>
 
                 {/*로그인 정보 입력 폼*/}
-                <ScrollView style={[styles.form, { paddingBottom: bottom ? bottom + 10 : 40 }]}
-                            contentContainerStyle={{ alignItems: 'center' }}
-                            bounces={false}
-                            keyboardShouldPersistTaps={'always'}>
+                <View style={[styles.form, { paddingBottom: bottom ? bottom + 10 : 40 }]}
+                      contentContainerStyle={{ alignItems: 'center' }}
+                      bounces={false}
+                      keyboardShouldPersistTaps={'always'}>
 
                     <TextInput
                         mode={'outlined'}
@@ -194,7 +185,7 @@ const SignInScreen = () => {
 
 
                     {/*회원가입*/}
-                    <View style={{ flexDirection: 'row', marginTop: 20 }}>
+                    <View style={styles.signUp}>
                         <Text style={{ color: '#879194' }}>아직 회원이 아니신가요?</Text>
                         <TextButton onPress={() => navigation.navigate(AuthRoutes.SIGN_UP)} title={'회원 가입'}
                                     styles={{
@@ -206,18 +197,24 @@ const SignInScreen = () => {
                                         }
                                     }} />
                     </View>
+                </View>
 
+                <Pressable onPress={onSignInKaKao}>
+                    <Image style={
+                        { width: width - 40, height: 50, alignSelf: 'center', marginBottom: 20 }}
+                           source={require('../../../assets/background/bg_kakao_login.png')} />
+                </Pressable>
 
-                    <Button title={'카카오 로그인'} onPress={onSignInKaKao}
-                            styles={{
-                                container: {
-                                    marginTop: 50,
-                                },
-                                button: {
-                                    borderRadius: 4
-                                }
-                            }} />
-                </ScrollView>
+                {/*<Button title={'카카오 로그인'} onPress={onSignInKaKao}*/}
+                {/*        styles={{*/}
+                {/*            container: {*/}
+                {/*                paddingHorizontal: 20,*/}
+                {/*                marginBottom: 20*/}
+                {/*            },*/}
+                {/*            button: {*/}
+                {/*                borderRadius: 4*/}
+                {/*            }*/}
+                {/*        }} />*/}
             </View>
         </SafeInputView>
     );
@@ -230,12 +227,15 @@ const styles = StyleSheet.create({
         justifyContent: 'center'
     },
     form: {
-        flexGrow: 0,
+        flex: 1,
         backgroundColor: WHITE,
         paddingHorizontal: 20,
-        paddingTop: 40,
-        borderTopLeftRadius: 20,
-        borderTopRightRadius: 20
+        justifyContent: 'center'
+    },
+    signUp: {
+        flexDirection: 'row',
+        marginTop: 20,
+        justifyContent: 'center'
     }
 });
 

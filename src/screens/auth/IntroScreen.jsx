@@ -1,9 +1,10 @@
-import {Image, StyleSheet, useWindowDimensions, View} from "react-native";
+import { StyleSheet, useWindowDimensions, View} from "react-native";
 import AppIntroSlider from "react-native-app-intro-slider";
 import * as SecureStore from "../../utils/PreferenceStore";
 import {AuthRoutes} from "../../navigations/Routes";
 import {useSafeAreaInsets} from "react-native-safe-area-context";
 import {STORE_SETTING_KEYS} from "../../utils/PreferenceStore";
+import { Image } from 'expo-image';
 
 const IntroScreen = ({navigation}) => {
     const {height, width} = useWindowDimensions()

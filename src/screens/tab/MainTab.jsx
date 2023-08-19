@@ -4,13 +4,11 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import TabBarAddButton from "../../components/button/TabBarAddButton";
 import BoardScreen from "../main/BoardScreen";
-import ProfileUpdateScreen from "../main/ProfileUpdateScreen";
 import TestScreen from "../main/TestScreen";
 import HomeScreen from "../main/HomeScreen";
 import {GRAY, PRIMARY} from "../../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import MyPageScreen from "../main/MyPageScreen";
-import RoomRegisterScreen from "../main/RoomRegisterScreen";
 
 const Tab = createBottomTabNavigator()
 
@@ -28,8 +26,9 @@ const MainTab = () => {
                 headerShown: false,
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,
+                lazy:false,
                 // tabBarShowLabel: false
-                // lazyPreloadDistance: 4
+                lazyPreloadDistance: 4
             }}>
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{

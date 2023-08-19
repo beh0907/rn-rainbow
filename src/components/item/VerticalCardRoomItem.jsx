@@ -10,6 +10,7 @@ import { GRAY } from '../../Colors';
 import Constants from 'expo-constants';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -27,9 +28,11 @@ const VerticalCardRoomItem = memo(({ room }) => {
         <Pressable onPress={() => pressItem(room)}>
             <Card key={room.id} style={[styles.container]} elevation={1}>
 
+                <Image style={styles.image}
+                       source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
 
-                <Card.Cover style={styles.image}
-                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                {/*<Card.Cover style={styles.image}*/}
+                {/*            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />*/}
                 <Card.Content style={styles.overlayTitle}>
 
                     {/*반려동물 이름 및 나이*/}
@@ -72,7 +75,7 @@ const VerticalCardRoomItem = memo(({ room }) => {
                             : <AvatarText label={room.userNickName.charAt(0)} Text size={24} />
                     }
                     <Text numberOfLines={1}
-                          style={{ marginLeft: 5, color: 'white', width: 64 }}>{room.userNickName}</Text>
+                          style={{ marginLeft: 5, color: 'white', maxWidth: 64 }}>{room.userNickName}</Text>
                 </View>
 
                 <View style={styles.overlayNum}>
@@ -105,8 +108,8 @@ const styles = StyleSheet.create({
         marginHorizontal: 20
     },
     image: {
-        width: '100%'
-        // height: 200,
+        width: '100%',
+        height: 190,
     },
     overlayTitle: {
         position: 'absolute',
