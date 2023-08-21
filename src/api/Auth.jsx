@@ -49,6 +49,13 @@ export const signUp = async (user) => {
     return response.data === '0' ? null : user;
 };
 
+export const signOut = async (user) => {
+    const response = await axiosApiInstance.post(`/user/logout`, user);
+
+    //리턴 정보가 "0"이면 실패
+    return response.data;
+};
+
 export const modify = async (user, uri) => {
     const formData = new FormData();
 
@@ -78,6 +85,8 @@ export const modify = async (user, uri) => {
 
 export const remove = async ({ id }) => {
     const response = await axios.delete(`/user/remove?id=${id}`);
+
+    return response.data
 };
 
 export const getAuthMessages = (error) => {

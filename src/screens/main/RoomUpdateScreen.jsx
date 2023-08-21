@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import {  Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
 import { GENDER, GRAY, WHITE } from '../../Colors';
@@ -15,7 +15,7 @@ import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import Constants from 'expo-constants';
 import { useRoomState } from '../../contexts/RoomContext';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -28,7 +28,7 @@ const RoomUpdateScreen = () => {
 
     //추모관 설정 정보
     const [user] = useUserState();
-    const [,setRoom] = useRoomState()
+    const [, setRoom] = useRoomState();
 
     const [image, setImage] = useState(null);
     const [updateRoom, setUpdateRoom] = useState(useRoute().params.room);
@@ -66,7 +66,7 @@ const RoomUpdateScreen = () => {
 
         const result = await Room.modifyRoom(paramRoom, image);
         //업데이트가 완료됐을 때 전역 추모관 객체를 갱신한다
-        setRoom(paramRoom)
+        setRoom(paramRoom);
 
         //등록이 완료되었으므로 현재 화면에서 돌아간다
         await navigation.goBack();
@@ -95,11 +95,11 @@ const RoomUpdateScreen = () => {
                     <View style={[styles.photo, updateRoom.image || { backgroundColor: GRAY.DEFAULT }]}>
                         {
                             image || updateRoom.image
-                                ? <Image
-                                    source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }}
-                                    style={styles.photo} />
-                                : <Image source={require('../../../assets/background/bg_temp.jpg')}
-                                         style={styles.photo} />
+                                ? <AvatarImage
+                                    size={100}
+                                    source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
+                                : <AvatarImage
+                                    size={100} source={require('../../../assets/background/bg_temp.jpg')} />
                         }
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
@@ -270,9 +270,9 @@ const RoomUpdateScreen = () => {
                                     }
                                 }} />
                     </View>
-
-
                 </ScrollView>
+
+
             </View>
         </SafeInputView>
     );

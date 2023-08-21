@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
@@ -14,7 +14,7 @@ import { formatDate } from '../../utils/checkInputForm';
 import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const RoomRegisterScreen = () => {
     const navigation = useNavigation();
@@ -50,7 +50,7 @@ const RoomRegisterScreen = () => {
     const [show, setShow] = useState(false);
 
     /**이미지를 선택 */
-    const pickImage = async () => {
+    const pickImage = useCallback(async () => {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
@@ -63,7 +63,7 @@ const RoomRegisterScreen = () => {
         if (result.assets) {
             setImage(result.assets[0].uri);
         }
-    };
+    }, []);
 
     /**추모관 생성*/
     const onRegister = async () => {
@@ -91,8 +91,8 @@ const RoomRegisterScreen = () => {
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
                     <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
-                        <Image source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}
-                               style={styles.photo} />
+                        <AvatarImage source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}
+                                     size={100} />
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>
@@ -175,7 +175,6 @@ const RoomRegisterScreen = () => {
                         </View>
 
                         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-
                             <SegmentedButtons
                                 value={room.gender}
                                 onValueChange={value => setRoom(prevState => ({

@@ -18,6 +18,8 @@ import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import { Text, TextInput } from 'react-native-paper';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import { Image } from 'expo-image';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
@@ -38,7 +40,10 @@ const SignInScreen = () => {
             dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
 
             try {
-                const user = await Auth.signIn(form);
+                const fcmToken = (await Notifications.getDevicePushTokenAsync({
+                    projectId: Constants.expoConfig.extra.eas.projectId
+                })).data;
+                const user = await Auth.signIn(form, fcmToken);
 
                 /**자동 로그인이 체크되어 있다면
                  로그인 정보를 저장한다*/
@@ -74,7 +79,11 @@ const SignInScreen = () => {
         console.log('토큰 : ', token);
         console.log('프로필 : ', profile);
 
-        const user = await Auth.signInKaKao(profile);
+        const fcmToken = (await Notifications.getDevicePushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+        })).data;
+
+        const user = await Auth.signInKaKao(profile, fcmToken);
 
         await SecureStore.signInSecureStore({
             [STORE_USER_KEYS.ID]: profile.id,

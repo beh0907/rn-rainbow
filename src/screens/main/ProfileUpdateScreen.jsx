@@ -16,6 +16,8 @@ import * as ImagePicker from 'expo-image-picker';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import Constants from 'expo-constants';
+import TextButton from '../../components/button/TextButton';
+import { AuthRoutes } from '../../navigations/Routes';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -175,7 +177,19 @@ const ProfileUpdateScreen = props => {
 
                         <View />
                     </ScrollView>
+                </View>
 
+                <View style={{ flexDirection: 'row', justifyContent:'center', alignContent:'center' }}>
+                    <Text style={{ color: '#879194' }}>회원을 탈퇴하고 싶으신가요? </Text>
+                    <TextButton onPress={() => {}} title={'회원 탈퇴'}
+                                styles={{
+                                    button: {
+                                        marginBottom: 10
+                                    },
+                                    title: {
+                                        textDecorationLine: 'underline'
+                                    }
+                                }} />
                 </View>
             </View>
         </SafeInputView>

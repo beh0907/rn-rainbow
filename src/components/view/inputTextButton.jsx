@@ -4,6 +4,8 @@ import { MaterialIcons } from '@expo/vector-icons';
 import { GRAY, PRIMARY } from '../../Colors';
 import { Surface } from 'react-native-paper';
 import Constants from 'expo-constants';
+import PropTypes from 'prop-types';
+import Button, { ButtonTypes } from '../button/Button';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -28,6 +30,22 @@ const inputTextButton = ({ value, onChangeText, placeholder, icon, onSubmit, sty
     );
 };
 
+
+inputTextButton.defaultProps = {
+    value: '',
+    disabled: false,
+}
+
+inputTextButton.propTypes = {
+    value: PropTypes.string.isRequired,
+    onChangeText: PropTypes.func.isRequired,
+    placeholder: PropTypes.string.isRequired,
+    icon: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func,
+    styles: PropTypes.object,
+    disabled: PropTypes.bool,
+};
+
 const defaultStyles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
@@ -43,7 +61,10 @@ const defaultStyles = StyleSheet.create({
         padding: 6,
         marginLeft: 8,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        width:32,
+        height:32,
+        alignSelf:'flex-end'
     }
 });
 

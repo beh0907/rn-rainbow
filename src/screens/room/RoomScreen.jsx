@@ -1,9 +1,11 @@
 import React from 'react';
 import { ScrollView, StyleSheet, View } from 'react-native';
-import { Avatar, Divider, Text } from 'react-native-paper';
+import { Divider, Surface, Text } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
-import { WHITE } from '../../Colors';
+import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import Constants from 'expo-constants';
+import { Image } from 'expo-image';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -13,32 +15,56 @@ const RoomScreen = () => {
     return (
         <View style={styles.container}>
             <ScrollView showsVerticalScrollIndicator={false}>
-                {/* Pet Information */}
-                <View style={styles.petInfoContainer}>
-                    <Avatar.Image
-                        size={100}
-                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}
-                    />
-                    <View style={styles.petInfoTextContainer}>
-                        <Text
-                            style={styles.petName}>{room.name}</Text>
-                        <Text style={styles.petDetails}>{room.age} years
-                            old, {room.gender === 1 ? 'Male' : 'Female'}</Text>
+
+                <View style={styles.petInfoTextContainer}>
+                    <MaterialCommunityIcons name={'dog'} size={36} color={PRIMARY.DEFAULT} />
+                    <Text variant={'headlineMedium'} style={styles.petName}>{room.name}</Text>
+                </View>
+
+                {/*메인 이미지*/}
+                <Surface elevation={3} style={{ marginTop: 16, marginBottom: 32 }}>
+                    <Image style={styles.petImage}
+                           source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                </Surface>
+
+                {/*정보*/}
+                <View>
+                    {/*나이*/}
+                    <View style={styles.petDataContainer}>
+                        <Text style={styles.petDataTitle} variant={'titleLarge'}>Age</Text>
+                        <Text style={styles.petDataText} variant={'bodyLarge'}>{room.age}</Text>
+                    </View>
+
+                    {/*성별*/}
+                    <View style={styles.petDataContainer}>
+                        <Text style={styles.petDataTitle} variant={'titleLarge'}>Sex</Text>
+                        <Text style={styles.petDataText}
+                              variant={'bodyLarge'}>{room.age === 1 ? 'Male' : 'Female'}</Text>
+
+                    </View>
+
+                    {/*떠나보낸 날짜*/}
+                    <View style={[styles.petDataContainer, { marginBottom: 0 }]}>
+                        <Text style={styles.petDataTitle} variant={'titleLarge'}>Date</Text>
+                        <Text style={styles.petDataText} variant={'bodyLarge'}>~ {room.date}</Text>
                     </View>
                 </View>
-                <Divider style={styles.divider} />
 
-                {/*날짜*/}
-                <View style={styles.dateContainer}>
-                    <Text style={styles.dateText}>떠나보낸 날짜 : {room.date}</Text>
-                </View>
+                {/*구분선*/}
                 <Divider style={styles.divider} />
 
                 {/*인삿말*/}
                 <View style={styles.messageContainer}>
-                    <Text style={styles.messageTitle}>인사말</Text>
+                    <Text variant={'headlineMedium'} style={styles.messageTitle}>인사말</Text>
                     <Text style={styles.messageText}>
-                        {room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
+                        {room.content}{room.content}{room.content}{room.content}{room.content}{room.content}{room.content}
                     </Text>
                 </View>
             </ScrollView>
@@ -52,18 +78,18 @@ const styles = StyleSheet.create({
         padding: 16,
         backgroundColor: WHITE
     },
-    petInfoContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 16
+    petImage: {
+        width: '100%',
+        height: 250
     },
     petInfoTextContainer: {
-        marginLeft: 16,
-        flex: 1
+        flex: 1,
+        flexDirection: 'row',
+        alignItems: 'center'
     },
     petName: {
-        fontSize: 24,
-        fontWeight: 'bold'
+        fontWeight: 'bold',
+        marginStart: 10
     },
     petDetails: {
         fontSize: 16,
@@ -71,19 +97,24 @@ const styles = StyleSheet.create({
     },
     divider: {
         height: 1,
-        backgroundColor: 'gray',
-        marginVertical: 16
+        backgroundColor: GRAY.LIGHT,
+        marginVertical: 32
     },
-    dateContainer: {
-        marginBottom: 16
+    petDataContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        marginBottom: 10
     },
-    dateText: {
-        fontSize: 18,
-        fontWeight: 'bold'
+    petDataTitle: {
+        fontWeight: 'bold',
+        color: GRAY.DARK,
+        width: 75
+    },
+    petDataText: {
+        color: GRAY.DEFAULT
     },
     messageContainer: {},
     messageTitle: {
-        fontSize: 20,
         fontWeight: 'bold',
         marginBottom: 8
     },

@@ -14,7 +14,6 @@ import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 
 const RoomTab = () => {

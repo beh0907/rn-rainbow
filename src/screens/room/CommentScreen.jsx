@@ -120,7 +120,7 @@ const CommentScreen = () => {
                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={comment === ''}
                 styles={{
                     input: {
-                        marginTop: 10
+                        marginTop: 10,
                     }
                 }} />
         </View>
@@ -135,7 +135,7 @@ const styles = StyleSheet.create({
         padding: 16,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor:WHITE
+        backgroundColor: WHITE
     },
     commentList: {
         flex: 1,
@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
     emptyComment: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center',
+        alignItems: 'center'
     }
 });
 

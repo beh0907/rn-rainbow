@@ -7,7 +7,7 @@ import { useUserState } from '../contexts/UserContext';
 import * as SecureStore from '../utils/PreferenceStore';
 import { STORE_SETTING_KEYS, STORE_USER_KEYS } from '../utils/PreferenceStore';
 import MainStack from './MainStack';
-import { getAuthMessages, signIn } from '../api/Auth';
+import { signIn } from '../api/Auth';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Notifications from 'expo-notifications';
@@ -15,6 +15,7 @@ import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import * as Auth from '../api/Auth';
+import Constants from 'expo-constants';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -49,7 +50,6 @@ const Navigation = () => {
                 //스플래시 화면을 표시한다
                 await SplashScreen.preventAutoHideAsync();
 
-
                 //미디어 및 카메라 접근 권한을 요청한다
                 await requestMediaPermission();
                 await requestCameraPermission();
@@ -57,12 +57,10 @@ const Navigation = () => {
                 // const {granted} = await requestMediaPermission()
                 // const {granted} = await requestCameraPermission()
 
-
                 // 백그라운드 이미지 캐싱
                 await Promise.all(
                     ImageAssets.map(image => Asset.fromModule(image).downloadAsync())
                 );
-
 
                 //인트로 체크 여부를 가져와 설정한다
                 setCheckIntro(await SecureStore.getValueFor(STORE_SETTING_KEYS.CHECK_INTRO));
@@ -76,18 +74,23 @@ const Navigation = () => {
                 console.log('비밀번호', password);
                 console.log('공급', provider);
 
+                //저장된 정보에 따라 로그인을 시도한다
                 let user;
+                const fcmToken = (await Notifications.getDevicePushTokenAsync({
+                    projectId: Constants.expoConfig.extra.eas.projectId
+                })).data;
+
                 switch (provider) {
                     case "NATIVE":
-                        user = await signIn({ id, password });
+                        user = await signIn({ id, password }, fcmToken);
                         break
                     case "KAKAO":
                         const token = await KakaoLogins.login();
                         const profile = await KakaoLogins.getProfile();
 
-                        user = await Auth.signInKaKao(profile)
+                        user = await Auth.signInKaKao(profile, fcmToken)
                         break
-                    default:
+                    default: //아무것도 없을 경우 무시한다
                         break;
                 }
 
@@ -95,6 +98,7 @@ const Navigation = () => {
                 //유저 정보를 저장한다
                 if (user) setUser(user);
 
+                //로딩 화면을 완료한다
                 setIsReady(true);
             } catch (error) {
                 const code = error.code;
@@ -107,7 +111,7 @@ const Navigation = () => {
                         onPress: () => setIsReady(true)
                     }]);
                 } else {
-                    Alert.alert('로그인 실패', getAuthMessages(e.response.status), [{
+                    Alert.alert('로그인 실패', '서버와의 통신에 실패하였습니다', [{
                         text: '확인',
                         onPress: () => setIsReady(true)
                     }]);

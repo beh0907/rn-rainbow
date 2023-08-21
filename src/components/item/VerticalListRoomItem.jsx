@@ -57,13 +57,13 @@ const VerticalListRoomItem = memo(({ room }) => {
                         </View>
 
                         {/*반려동물 이름 및 나이*/}
-                        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop:5 }}>
                             <Subheading numberOfLines={1} style={styles.title}>{room.name} </Subheading>
-                            <Subheading> ({room.age})</Subheading>
+                            {/*<Subheading> ({room.age})</Subheading>*/}
                         </View>
 
                         {/*떠나보낸 날짜*/}
-                        <Text style={styles.description}>{room.date}</Text>
+                        {/*<Text style={styles.description}>{room.date}</Text>*/}
 
 
                         {/*성별, 조회/댓글 수*/}

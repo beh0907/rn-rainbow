@@ -10,10 +10,16 @@ export const PRIMARY = {
     // DARK:'#0075a3'
 }
 
+// export const GRAY = {
+//     LIGHT:'#dedede',
+//     DEFAULT: '#9ca1a2',
+//     DARK: '#6B7280'
+// }
+
 export const GRAY = {
-    LIGHT:'#dedede',
-    DEFAULT: '#9ca1a2',
-    DARK: '#6B7280'
+    LIGHT:'#999999',
+    DEFAULT: '#767676',
+    DARK: '#191919'
 }
 
 export const DANGER = {

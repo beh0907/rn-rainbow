@@ -14,6 +14,8 @@ import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { useDialogState } from '../../contexts/DialogContext';
 import ImageCarousel from '../../components/list/ImageCarousel';
 import Constants from 'expo-constants';
+import * as Auth from '../../api/Auth';
+import { signOut } from '../../api/Auth';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -45,6 +47,7 @@ const MyPageScreen = () => {
             title: '로그아웃',
             message: '정말로 로그아웃 하시겠습니까?',
             onPress: async () => {
+                await Auth.signOut(user)
                 await SecureStore.signOutSecureStore();
                 setUser({});
             },

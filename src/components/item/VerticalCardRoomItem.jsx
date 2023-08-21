@@ -44,7 +44,7 @@ const VerticalCardRoomItem = memo(({ room }) => {
                     <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                         {/*<AutoHeightImage width={room.gender === 1 ? 20 : 14}*/}
                         {/*                 source={room.gender === 1 ? require('../../../assets/icon/ic_male.png') : require('../../../assets/icon/ic_female.png')} />*/}
-                        <Text style={styles.description}>{room.date}</Text>
+                        {/*<Text style={styles.description}>{room.date}</Text>*/}
 
                         <View style={styles.imageContainer}>
                             <AutoHeightImage width={room.gender === 1 ? 16 : 12}
