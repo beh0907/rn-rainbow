@@ -21,8 +21,6 @@ const GallerySwiperScreen = () => {
 
 
     useLayoutEffect(() => {
-        console.log("스와입 이미지 position", position)
-        console.log("스와입 이미지 swipedImage", swipedImage)
     }, [position, swipedImage, setSwipedImage])
 
     // useLayoutEffect(() => {

@@ -2,8 +2,6 @@ export const checkMail = (mail) => {
     // 이메일 형식 검사 정규식
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
-    console.log("이메일 체크", emailRegex.test(mail))
-
     // 정규식을 사용하여 이메일 형식 검사
     return emailRegex.test(mail);
 }

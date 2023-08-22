@@ -7,6 +7,7 @@ import { useUserState } from '../contexts/UserContext';
 import * as SecureStore from '../utils/PreferenceStore';
 import { STORE_SETTING_KEYS, STORE_USER_KEYS } from '../utils/PreferenceStore';
 import MainStack from './MainStack';
+import * as Auth from '../api/Auth';
 import { signIn } from '../api/Auth';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
@@ -14,7 +15,6 @@ import * as Notifications from 'expo-notifications';
 import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
-import * as Auth from '../api/Auth';
 import Constants from 'expo-constants';
 
 const ImageAssets = [
@@ -50,6 +50,7 @@ const Navigation = () => {
                 //스플래시 화면을 표시한다
                 await SplashScreen.preventAutoHideAsync();
 
+
                 //미디어 및 카메라 접근 권한을 요청한다
                 await requestMediaPermission();
                 await requestCameraPermission();
@@ -70,10 +71,6 @@ const Navigation = () => {
                 const password = await SecureStore.getValueFor(STORE_USER_KEYS.PASSWORD);
                 const provider = await SecureStore.getValueFor(STORE_USER_KEYS.PROVIDER);
 
-                console.log('아이디', id);
-                console.log('비밀번호', password);
-                console.log('공급', provider);
-
                 //저장된 정보에 따라 로그인을 시도한다
                 let user;
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
@@ -81,15 +78,15 @@ const Navigation = () => {
                 })).data;
 
                 switch (provider) {
-                    case "NATIVE":
+                    case 'NATIVE':
                         user = await signIn({ id, password }, fcmToken);
-                        break
-                    case "KAKAO":
+                        break;
+                    case 'KAKAO':
                         const token = await KakaoLogins.login();
                         const profile = await KakaoLogins.getProfile();
 
-                        user = await Auth.signInKaKao(profile, fcmToken)
-                        break
+                        user = await Auth.signInKaKao(profile, fcmToken);
+                        break;
                     default: //아무것도 없을 경우 무시한다
                         break;
                 }

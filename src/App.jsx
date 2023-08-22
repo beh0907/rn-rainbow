@@ -2,8 +2,8 @@ import { StatusBar } from 'expo-status-bar';
 import Navigation from './navigations/Navigation';
 import { UserProvider } from './contexts/UserContext';
 import * as React from 'react';
-import { useEffect, useRef, useState } from 'react';
-import { configureFonts, DefaultTheme, PaperProvider } from 'react-native-paper';
+import { useLayoutEffect, useRef, useState } from 'react';
+import { DefaultTheme, PaperProvider } from 'react-native-paper';
 import { SnackBarProvider } from './contexts/SnackBarContext';
 import CustomSnackBar from './components/message/CustomSnackBar';
 import { PRIMARY } from './Colors';
@@ -13,6 +13,9 @@ import * as Notifications from 'expo-notifications';
 import { Platform } from 'react-native';
 import * as Device from 'expo-device';
 import Constants from 'expo-constants';
+import { enableScreens } from 'react-native-screens';
+
+enableScreens();
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -21,31 +24,6 @@ Notifications.setNotificationHandler({
         shouldSetBadge: true
     })
 });
-
-const fontConfig = {
-    default: {
-        regular: {
-            fontFamily: require('../assets/font/NotoSansKR-Regular.ttf'),
-            fontWeight: '400'
-        },
-        medium: {
-            fontFamily: require('../assets/font/NotoSansKR-Medium.ttf'),
-            fontWeight: '500'
-        },
-        light: {
-            fontFamily: require('../assets/font/NotoSansKR-Light.ttf'),
-            fontWeight: '300'
-        },
-        thin: {
-            fontFamily: require('../assets/font/NotoSansKR-Thin.ttf'),
-            fontWeight: '100'
-        },
-        bold: {
-            fontFamily: require('../assets/font/NotoSansKR-Bold.ttf'),
-            fontWeight: '700'
-        },
-    }
-};
 
 const theme = {
     ...DefaultTheme,
@@ -56,28 +34,27 @@ const theme = {
         accent: PRIMARY.DARK,
         text: PRIMARY.DEFAULT,
         disabled: PRIMARY.LIGHT
-    },
-    fonts: configureFonts(fontConfig)
+    }
 };
 
 export default function App() {
     const [fcmPushToken, setFCMPushToken] = useState('');
-    const [notification, setNotification] = useState(false);
+    const [notification, setNotification] = useState();
     const notificationListener = useRef();
     const responseListener = useRef();
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         registerForPushNotificationsAsync().then(token => setFCMPushToken(token));
-
         //알림을 받았을 때 이벤트
-        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-            setNotification(notification);
-            console.log('알림', notification);
+        notificationListener.current = Notifications.addNotificationReceivedListener(event => {
+            setNotification(event);
         });
 
         //알림을 선택했을 때 이벤트
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            console.log('응답', response);
+            const data = response.notification.request.trigger.remoteMessage;
+            console.log('푸시 아이디', data.data.id);
+            console.log('푸시 타입', data.data.type);
         });
 
         return () => {
@@ -109,11 +86,11 @@ const registerForPushNotificationsAsync = async () => {
     let token1, token2;
 
     if (Platform.OS === 'android') {
-        await Notifications.setNotificationChannelAsync('default', {
+        const channel = await Notifications.setNotificationChannelAsync('default', {
             name: 'default',
             importance: Notifications.AndroidImportance.MAX,
             vibrationPattern: [0, 250, 250, 250],
-            lightColor: '#FF231F7C'
+            lightColor: PRIMARY.LIGHT
         });
     }
 

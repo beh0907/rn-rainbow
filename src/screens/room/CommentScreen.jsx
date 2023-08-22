@@ -34,7 +34,7 @@ const CommentScreen = () => {
     const readCommentList = useCallback(async () => {
         setIsLoading(true);
 
-        const list = await Comment.readCommentList(room.roomNum);
+        const list = await Comment.readCommentList(room.roomNum, { page: '', amount: '', type: '' });
 
         navigation.setOptions({
             tabBarLabel: `추모의 말 ${list.length}`
@@ -104,7 +104,7 @@ const CommentScreen = () => {
                     // style={styles.commentList}
                     // contentContainerStyle={styles.commentList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                    keyExtractor={(item) => item.seq}
+                    keyExtractor={(item, index) => index}
                     data={comments}
                     renderItem={({ item }) =>
                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
@@ -120,7 +120,7 @@ const CommentScreen = () => {
                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={comment === ''}
                 styles={{
                     input: {
-                        marginTop: 10,
+                        marginTop: 10
                     }
                 }} />
         </View>

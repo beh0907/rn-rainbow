@@ -32,14 +32,10 @@ export const getListFor = async (key) => {
 
 /**로그인 시 유저 정보를 저장한다*/
 export const signInSecureStore = async (user) => {
-    console.log('유저정보 : ', user);
     const keys = Object.keys(user);
 
     // Loop through all the keys in STORE_USER_KEYS and set them to empty strings
     for (const key of keys) {
-        console.log('키 : ', key);
-        console.log('값 : ', user[key]);
-
         //빈 값은 공백으로 추가한다
         await save(key, user[key] ? user[key] : '');
     }
@@ -62,8 +58,6 @@ export const isBookMark = async (roomNum) => {
 
     // favoriteRooms 리스트에 roomNum과 일치하는 아이템 찾기
     const isBookmarked = favoriteRooms.includes(roomNum);
-
-    console.log('즐겨찾기 여부', isBookmarked);
 
     return isBookmarked;
 };

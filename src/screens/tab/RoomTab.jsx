@@ -9,12 +9,12 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Alert, Dimensions, StyleSheet, View } from 'react-native';
 import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
-
+import ThreeDimensionScreen from '../room/ThreeDimensionScreen';
 
 const RoomTab = () => {
     const Tab = createMaterialTopTabNavigator();
@@ -37,20 +37,18 @@ const RoomTab = () => {
 
     useLayoutEffect(() => {
         (async () => {
-            /**RoomNum 기반 방 정보 가져오기*/
-            await readRoom(roomNum)
-                .then(value => {
-                    setRoom(value);
-                    setIsReady(true);
-                })
-                .catch(e => {
-                    Alert.alert('통신 에러', '추모관 정보를 읽어 오는데 실패하였습니다', [{
-                        text: '확인',
-                        onPress: () => {
-                            navigation.goBack();
-                        }
-                    }]);
-                });
+            try {
+                //추모관에 필요한 정보들을 한꺼번에 불러온다
+                setRoom(await readRoom(roomNum));
+                setIsReady(true);
+            } catch (e) {
+                Alert.alert('통신 에러', '추모관 정보를 읽어 오는데 실패하였습니다', [{
+                    text: '확인',
+                    onPress: () => {
+                        navigation.goBack();
+                    }
+                }]);
+            }
         })();
     }, [roomNum]);
 
@@ -66,10 +64,9 @@ const RoomTab = () => {
                         user.id === room.id
                             ? // 내가 개설한 추모관이라면 방 설정
                             <HeaderRight name={'cog'} onPress={() => {
-                                console.log('방 설정');
                                 navigation.navigate(MainRoutes.ROOM_UPDATE, {
                                     room
-                                })
+                                });
                             }} />
                             : // 아니라면 즐겨찾기
                             <HeaderRight color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
@@ -99,15 +96,19 @@ const RoomTab = () => {
 
     return (
         isReady ?
-            <Tab.Navigator screenOptions={{
-                // tabBarStyle: { elevation: 0, shadowOpacity: 0 },
-                tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
-                swipeEnabled: false
-            }}>
-                <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen}/>
+            <Tab.Navigator
+                initialLayout={{ width: Dimensions.get('window').width }}
+                screenOptions={{
+                    // tabBarStyle: { elevation: 0, shadowOpacity: 0 },
+                    lazy: false,
+                    tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
+                    swipeEnabled: false,
+                }}>
+                <Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} />
                 <Tab.Screen name={RoomRoutes.GALLERY} component={GalleryScreen} />
                 <Tab.Screen name={RoomRoutes.MEMORY} component={MemoryScreen} />
                 <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />
+                {/*<Tab.Screen name={RoomRoutes.THREE_DIMENSION} component={ThreeDimensionScreen} />*/}
             </Tab.Navigator>
             :
             <View style={[styles.container, styles.horizontal]}>

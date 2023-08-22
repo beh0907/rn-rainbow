@@ -16,7 +16,6 @@ const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 
 const VerticalListRoomItem = memo(({ room }) => {
-    console.log('룸 리스트', room);
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {

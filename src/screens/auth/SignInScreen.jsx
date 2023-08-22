@@ -60,7 +60,6 @@ const SignInScreen = () => {
                 }
 
                 setUser(user);
-                console.log(user);
             } catch (e) {
                 Alert.alert('로그인 실패', '오류 발생', [{
                     text: '확인',
@@ -94,7 +93,6 @@ const SignInScreen = () => {
         });
 
         setUser(user);
-        console.log(user);
     };
 
     const updateForm = payload => {

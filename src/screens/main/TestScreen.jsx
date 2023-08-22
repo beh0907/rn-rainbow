@@ -43,7 +43,6 @@ const CameraExample = () => {
 
         } catch (e) {
             if (e.message.includes('Call to function \'ExponentImagePicker.launchCameraAsync\' has been rejected')) {
-                console.log(e);
             } else {
                 throw e;
             }

@@ -15,7 +15,6 @@ import { Image } from 'expo-image';
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const VerticalCardRoomItem = memo(({ room }) => {
-    console.log('룸 카드뷰', room);
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {

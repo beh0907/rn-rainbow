@@ -57,11 +57,8 @@ const ProfileUpdateScreen = props => {
 
             const result = await modify({ ...user, ...profile }, image);
 
-            console.log('결과', result);
-
             //1이 들어오면 성공 0이면 실패
             if (result === 1) {
-                console.log('결과', '체크체크');
                 setUser(paramUser);
                 setSnackbar(prev => ({
                     message: '유저 정보가 수정되었습니다.',

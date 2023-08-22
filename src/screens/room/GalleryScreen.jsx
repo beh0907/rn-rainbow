@@ -1,14 +1,14 @@
 import React, { useCallback, useLayoutEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
 import GalleryItem from '../../components/item/GalleryItem';
-import MasonryList from '@react-native-seoul/masonry-list';
 import { useRoomState } from '../../contexts/RoomContext';
 import { useUserState } from '../../contexts/UserContext';
 import * as ImagePicker from 'expo-image-picker';
 import * as Gallery from '../../api/Gallery';
-import { Button } from 'react-native-paper';
+import MasonryList from '@react-native-seoul/masonry-list';
+import { IconButton } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { PRIMARY, WHITE } from '../../Colors';
 
@@ -26,6 +26,7 @@ const GalleryScreen = () => {
     const [selectGalleries, setSelectGalleries] = useState([]);
 
     const navigation = useNavigation();
+    const { width, height } = useWindowDimensions();
 
     useLayoutEffect(() => {
         (async () => {
@@ -56,11 +57,9 @@ const GalleryScreen = () => {
             galleries,
             position: index
         });
-    }, [galleries]);
+    }, [galleries, setIsDeleteMode, navigation]);
 
     const onToggleImage = useCallback((gallery) => {
-        console.log('gallery', gallery);
-        console.log('isDeleteMode', isDeleteMode);
         // const gallery = galleries[index];
         const isSelected = isSelectedGallery(gallery);
         setSelectGalleries((prev) => {
@@ -81,7 +80,7 @@ const GalleryScreen = () => {
 
             return prev;
         });
-    }, [selectGalleries, isDeleteMode]);
+    }, [isSelectedGallery, setSelectGalleries, setSnackbar]);
 
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
@@ -93,8 +92,6 @@ const GalleryScreen = () => {
 
         //선택된 이미지가 있다면
         if (result.assets) {
-            console.log(result.assets)
-
             //선택된 이미지들을 서버로 전송한다
             await Gallery.registerGallery(room, result.assets);
 
@@ -128,7 +125,7 @@ const GalleryScreen = () => {
             visible: true
         });
 
-        setIsDeleteMode(prev => !prev);
+        setIsDeleteMode(!isDeleteMode);
     };
 
     if (isLoading)
@@ -139,28 +136,19 @@ const GalleryScreen = () => {
         );
     return (
         <View style={styles.container}>
-            {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
-                user.id === room.id &&
-                <View style={styles.listHeader}>
-                    <Button style={{ flex: 1, marginHorizontal: 10 }} icon='camera' mode='contained'
-                            onPress={pickImage}>추가</Button>
-                    <Button style={{ flex: 1, marginHorizontal: 10 }} icon={isDeleteMode ? 'check' : 'delete'}
-                            mode='contained' onPress={deleteImage}>{isDeleteMode ? '선택' : '삭제'}</Button>
-                </View>
-            }
-
             {galleries.length === 0 ?
                 <View style={styles.text}>
                     <Text>등록된 이미지가 없습니다</Text>
                 </View>
                 :
                 <MasonryList
+                    style={{ height: '100%', width: '100%' }}
                     contentContainerStyle={{
                         padding: 5,
-                        alignSelf: 'stretch',
+                        alignSelf: 'stretch'
                     }}
                     data={galleries}
-                    keyExtractor={(item) => item.seq}
+                    keyExtractor={(item, index) => index}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, i }) => <GalleryItem item={item}
@@ -172,6 +160,34 @@ const GalleryScreen = () => {
                     // onEndReachedThreshold={0.1}
                     // onEndReached={() => loadNext(ITEM_CNT)}
                 />
+
+                // <MasonryFlashList
+                //     estimatedItemSize={100}
+                //     data={galleries}
+                //     keyExtractor={(item) => item.seq}
+                //     numColumns={3}
+                //     showsVerticalScrollIndicator={false}
+                //     renderItem={({ item, i }) => <GalleryItem item={item}
+                //                                               onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(i)}
+                //                                               isSelected={isSelectedGallery(item)}
+                //                                               isDeleteMode={isDeleteMode} />}
+                //     // style={{ width:'100%', height:'100%' }}
+                //     estimatedListSize={{ width, height }}
+                //     // refreshing={isLoadingNext}
+                //     // onRefresh={() => refetch({first: ITEM_CNT})}
+                //     // onEndReachedThreshold={0.1}
+                //     // onEndReached={() => loadNext(ITEM_CNT)}
+                // />
+            }
+
+            {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
+                user.id === room.id &&
+                <View style={styles.buttonContainer}>
+                    <IconButton style={{ marginHorizontal: 10 }} icon={isDeleteMode ? 'check' : 'delete'}
+                                mode='contained' onPress={deleteImage} containerColor={PRIMARY.DEFAULT} iconColor={WHITE} />
+                    <IconButton style={{ marginHorizontal: 10 }} icon='plus' mode='contained'
+                                onPress={pickImage} containerColor={PRIMARY.DEFAULT} iconColor={WHITE} />
+                </View>
             }
         </View>
     );
@@ -186,10 +202,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: WHITE
     },
-    listHeader: {
-        flexDirection: 'row',
-        justifyContent: 'center',
-        marginVertical: 10
+    buttonContainer: {
+        position: 'absolute',
+        bottom: 10,
+        right: 10
     },
     text: {
         flex: 1,

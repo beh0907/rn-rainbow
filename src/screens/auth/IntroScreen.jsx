@@ -23,7 +23,7 @@ const IntroScreen = ({navigation}) => {
     const RenderItem = ({item}) => {
         return (
             <View style={[styles.hw100, {backgroundColor: item.background}]}>
-                <Image style={styles.hw100} source={item.image} resizeMode={"cover"}/>
+                <Image style={styles.hw100} source={item.image} contentFit={"cover"}/>
             </View>
         );
     };

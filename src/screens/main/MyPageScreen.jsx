@@ -12,10 +12,11 @@ import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { useDialogState } from '../../contexts/DialogContext';
-import ImageCarousel from '../../components/list/ImageCarousel';
 import Constants from 'expo-constants';
 import * as Auth from '../../api/Auth';
-import { signOut } from '../../api/Auth';
+
+import Carousel from 'react-native-reanimated-carousel';
+import CarouselItem2 from '../../components/item/CarouselItem2';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -32,10 +33,11 @@ const MyPageScreen = () => {
     const [myRooms, setMyRooms] = useState([]);
     const [favoriteRooms, setFavoriteRooms] = useState();
 
+    const { width, height } = useWindowDimensions();
+
     useEffect(() => {
         (async () => {
             const favorites = await SecureStore.getListFor(STORE_SETTING_KEYS.FAVORITE_ROOMS);
-            console.log('즐겨찾는 방', favorites);
 
             setMyRooms(await readMyRoomList(user.id));
             setFavoriteRooms(await readBookmarkRoomList(favorites));
@@ -47,15 +49,13 @@ const MyPageScreen = () => {
             title: '로그아웃',
             message: '정말로 로그아웃 하시겠습니까?',
             onPress: async () => {
-                await Auth.signOut(user)
+                await Auth.signOut(user);
                 await SecureStore.signOutSecureStore();
                 setUser({});
             },
             visible: true
         });
     };
-
-    const { width } = useWindowDimensions();
 
     return (
         <View style={{
@@ -196,7 +196,21 @@ const MyPageScreen = () => {
             {/*    ItemSeparatorComponent={() => <View style={styles.separator}></View>}*/}
             {/*/>*/}
 
-            <ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms} />
+            <Carousel
+                panGestureHandlerProps={{
+                    activeOffsetX: [-10, 10]
+                }}
+                loop={true}
+                width={width * 0.8}
+                height={height * 0.3}
+                style={{ width: '100%', alignSelf: 'center' }}
+                data={myRoomSelected ? myRooms : favoriteRooms}
+                renderItem={({ item }) => {
+                    console.log('아이템', item);
+                    return <CarouselItem2 item={item} />;
+                }} />
+
+            {/*<ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms} />*/}
         </View>
     );
 };

@@ -3,18 +3,16 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useNavigation } from '@react-navigation/native';
 import { PRIMARY, WHITE } from '../../Colors';
 import { MainRoutes } from '../../navigations/Routes';
+import { IconButton } from 'react-native-paper';
+import React from 'react';
 
 const TabBarAddButton = () => {
     const navigation = useNavigation();
 
     return (
         <View style={styles.container}>
-            <Pressable
-                style={styles.button}
-                onPress={() => navigation.navigate(MainRoutes.ROOM_REGISTER)}
-            >
-                <MaterialCommunityIcons name="plus" size={25} color={WHITE} />
-            </Pressable>
+            <IconButton icon={'plus'} containerColor={PRIMARY.DEFAULT} iconColor={WHITE}
+                        mode='contained' onPress={() => navigation.navigate(MainRoutes.ROOM_REGISTER)} />
         </View>
     );
 };

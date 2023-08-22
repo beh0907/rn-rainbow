@@ -2,7 +2,7 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, ToggleButton } from 'react-native-paper';
+import { ToggleButton, Text } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
@@ -93,7 +93,7 @@ const HomeScreen = props => {
             <View style={{
                 flexDirection: 'row', marginTop: 20, marginBottom:10, alignItems: 'center', paddingHorizontal: 16
             }}>
-                <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
+                <Text variant='titleLarge' style={{ color: BLACK, flex: 1}}>전체 추모관</Text>
 
                 <ToggleButton.Group
                     onValueChange={value => setToggleVal(value)}
