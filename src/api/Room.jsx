@@ -1,4 +1,4 @@
-import { uriToFile } from '../utils/imageUtil';
+import { uriToImageFile } from '../utils/imageUtil';
 import { axiosApiInstance } from './AxiosInstance';
 
 export const readRoom = async (roomNum) => {
@@ -60,7 +60,7 @@ const setFormData = (room, uri) => {
 
     if (uri !== null) {
         //file 객체 셋팅
-        const file = uriToFile(room.id, uri);
+        const file = uriToImageFile(room.id, uri);
         room.image = file.name;
         formData.append('file', file);
     }

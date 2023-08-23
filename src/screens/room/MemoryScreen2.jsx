@@ -6,10 +6,9 @@ import { useRoomState } from '../../contexts/RoomContext';
 import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
+import { Tabs } from 'react-native-collapsible-tab-view'
 import MemoryItem from '../../components/item/MemoryItem';
 import { useUserState } from '../../contexts/UserContext';
-import { FlashList } from '@shopify/flash-list';
-import { RoomRoutes } from '../../navigations/Routes';
 
 
 const MemoryScreen = () => {
@@ -51,13 +50,34 @@ const MemoryScreen = () => {
         });
 
         if (result.assets) {
-            console.log("result : ", result)
-            navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
-                uri:result.assets[0].uri,
-                room
-            })
+            // setImage(result.assets[0].uri);
         }
     }, []);
+
+    const test = async () => {
+        setMemories(prev => [
+            {
+                seq:6,
+                id: 'beh0907',
+                roomNum: 4,
+                comment: `테스트 ${prev.length} : ${room.roomNum}`,
+                type: 2,
+                name: '1683460997263_dc601a476ef9ca225dcb4aacf493008e.mp4'
+            },
+            ...memories
+        ]);
+
+        // This must be called before `LayoutAnimation.configureNext` in order for the animation to run properly.
+        listRef.current?.prepareForLayoutAnimationRender();
+        // After removing the item, we can start the animation.
+        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+
+
+        //최상단으로 강제 이동
+        listRef.current.scrollToOffset({ animated: true, offset: 0 });
+    };
+
+
 
     if (isLoading)
         return (
@@ -70,7 +90,7 @@ const MemoryScreen = () => {
             {memories.length === 0 ?
                 <Text>등록된 추억이 없습니다</Text>
                 :
-                <FlashList
+                <Tabs.FlashList
                     ref={listRef}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
@@ -90,9 +110,12 @@ const MemoryScreen = () => {
             {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
                 user.id === room.id &&
                 <View style={styles.buttonContainer}>
+                    <IconButton style={{ marginHorizontal: 10 }} icon={'cancel'} containerColor={PRIMARY.DEFAULT}
+                                iconColor={WHITE}
+                                mode='contained' onPress={test} />
                     <IconButton style={{ marginHorizontal: 10 }} icon={'plus'} containerColor={PRIMARY.DEFAULT}
                                 iconColor={WHITE}
-                                mode='contained' onPress={pickVideo} />
+                                mode='contained' onPress={test} />
                 </View>
             }
         </View>

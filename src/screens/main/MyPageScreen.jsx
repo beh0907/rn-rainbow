@@ -16,7 +16,9 @@ import Constants from 'expo-constants';
 import * as Auth from '../../api/Auth';
 
 import Carousel from 'react-native-reanimated-carousel';
-import CarouselItem2 from '../../components/item/CarouselItem2';
+import CarouselItem from '../../components/item/CarouselItem';
+import { useSharedValue } from 'react-native-reanimated';
+import PaginationItem from '../../components/item/PaginationItem';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -33,6 +35,9 @@ const MyPageScreen = () => {
     const [myRooms, setMyRooms] = useState([]);
     const [favoriteRooms, setFavoriteRooms] = useState();
 
+    //페이지 index값
+    const progressValue = useSharedValue(0);
+
     const { width, height } = useWindowDimensions();
 
     useEffect(() => {
@@ -41,8 +46,10 @@ const MyPageScreen = () => {
 
             setMyRooms(await readMyRoomList(user.id));
             setFavoriteRooms(await readBookmarkRoomList(favorites));
+
         })();
     }, []);
+
 
     const onSignOut = () => {
         setDialog({
@@ -167,7 +174,7 @@ const MyPageScreen = () => {
                 >
                     <Text style={{
                         fontWeight: 'bold',
-                        color: myRoomSelected ? WHITE : GRAY.DEFAULT
+                        color: myRoomSelected ? WHITE : GRAY.LIGHT
                     }}>나의 추모관</Text>
                 </TouchableOpacity>
 
@@ -181,7 +188,7 @@ const MyPageScreen = () => {
                     }}>
                     <Text style={{
                         fontWeight: 'bold',
-                        color: myRoomSelected ? GRAY.DEFAULT : WHITE
+                        color: myRoomSelected ? GRAY.LIGHT : WHITE
                     }}>즐겨찾는 추모관</Text>
                 </TouchableOpacity>
             </View>
@@ -197,18 +204,41 @@ const MyPageScreen = () => {
             {/*/>*/}
 
             <Carousel
+                onProgressChange={(_, absoluteProgress) =>
+                    (progressValue.value = absoluteProgress)
+                }
+                mode={'parallax'}
+                modeConfig={{
+                    parallaxScrollingScale: 0.9,
+                    parallaxScrollingOffset: 50
+                }}
                 panGestureHandlerProps={{
                     activeOffsetX: [-10, 10]
                 }}
                 loop={true}
-                width={width * 0.8}
-                height={height * 0.3}
+                width={width}
+                height={height * 0.35}
                 style={{ width: '100%', alignSelf: 'center' }}
                 data={myRoomSelected ? myRooms : favoriteRooms}
-                renderItem={({ item }) => {
-                    console.log('아이템', item);
-                    return <CarouselItem2 item={item} />;
-                }} />
+                renderItem={({ item }) => <CarouselItem item={item} />}>
+            </Carousel>
+
+            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                {
+                    (myRoomSelected ? myRooms : favoriteRooms).map((backgroundColor, index) => {
+                        return (
+                            <PaginationItem
+                                backgroundColor={backgroundColor}
+                                animValue={progressValue}
+                                index={index}
+                                key={index}
+                                isRotate={false}
+                                length={(myRoomSelected ? myRooms : favoriteRooms).length}
+                            />
+                        );
+                    })}
+
+            </View>
 
             {/*<ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms} />*/}
         </View>

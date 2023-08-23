@@ -143,20 +143,37 @@ const GalleryScreen = () => {
                     <Text>등록된 이미지가 없습니다</Text>
                 </View>
                 :
-                <MasonryList
-                    style={{ height: '100%', width: '100%' }}
-                    contentContainerStyle={{
-                        padding: 5,
-                        alignSelf: 'stretch'
-                    }}
+                // <MasonryList
+                //     style={{ height: '100%', width: '100%' }}
+                //     contentContainerStyle={{
+                //         padding: 5,
+                //         alignSelf: 'stretch'
+                //     }}
+                //     data={galleries}
+                //     keyExtractor={(item, index) => index}
+                //     numColumns={3}
+                //     showsVerticalScrollIndicator={false}
+                //     renderItem={({ item, i }) => <GalleryItem item={item}
+                //                                               onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(i)}
+                //                                               isSelected={isSelectedGallery(item)}
+                //                                               isDeleteMode={isDeleteMode} />}
+                //     // refreshing={isLoadingNext}
+                //     // onRefresh={() => refetch({first: ITEM_CNT})}
+                //     // onEndReachedThreshold={0.1}
+                //     // onEndReached={() => loadNext(ITEM_CNT)}
+                // />
+                <Tabs.MasonryFlashList
+                    estimatedItemSize={100}
                     data={galleries}
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item) => item.seq}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, i }) => <GalleryItem item={item}
                                                               onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(i)}
                                                               isSelected={isSelectedGallery(item)}
                                                               isDeleteMode={isDeleteMode} />}
+                    // style={{ width:'100%', height:'100%' }}
+                    estimatedListSize={{ width, height }}
                     // refreshing={isLoadingNext}
                     // onRefresh={() => refetch({first: ITEM_CNT})}
                     // onEndReachedThreshold={0.1}

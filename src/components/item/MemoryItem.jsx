@@ -2,8 +2,8 @@ import React, { memo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import Constants from 'expo-constants';
-import { Surface, Text } from 'react-native-paper';
-import { GRAY, WHITE } from '../../Colors';
+import { IconButton, Surface, Text } from 'react-native-paper';
+import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import ViewMoreText from 'react-native-view-more-text';
 
@@ -14,11 +14,15 @@ const MemoryItem = memo(({ memory }) => {
     const video = useRef(null);
     const [status, setStatus] = useState({});
 
-
-    console.log("메모리", memory)
+    console.log('메모리', memory);
 
     return (
         <Surface style={styles.container} elevation={5}>
+            <View style={{ alignItems: 'flex-end', marginVertical: 5 }}>
+                <IconButton icon={'delete'} iconColor={PRIMARY.DEFAULT} size={24}
+                            onPress={() => {}} />
+            </View>
+
             <View style={{ flexDirection: 'row' }}>
                 <Video
                     ref={video}
@@ -63,12 +67,12 @@ const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: WHITE,
-            padding: 16,
+            padding: 16
         },
         video: {
             alignSelf: 'center',
             height: 200,
-            flex: 1,
+            flex: 1
             // borderRadius: 20
         },
         containerCollapse: {

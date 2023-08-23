@@ -1,48 +1,26 @@
-import React, { forwardRef, memo } from 'react';
-import { ImageBackground, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { MainRoutes } from '../../navigations/Routes';
-import { useNavigation } from '@react-navigation/native';
+import React, { memo } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
 import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const CarouselItem = memo(forwardRef(({ item, index, currentIndex }, ref) => {
-    const navigation = useNavigation();
-
-    const pressItem = ({ roomNum }) => {
-        //현재 선택중인 아이템을 터치했을 때
-        if (index === currentIndex) {
-            navigation.navigate(MainRoutes.ROOM_TAB, {
-                roomNum
-            });
-        } else { //아니라면 해당 위치로 스크롤 이동
-            ref.current.scrollToIndex(index);
-        }
-    };
+const CarouselItem = memo(({ item }) => {
 
     return (
-        <TouchableOpacity
-            activeOpacity={1}
-            style={styles.item}
-            onPress={() => pressItem(item)}>
+        <View
+            style={styles.item}>
 
-            <Image source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}
-                             style={styles.imageBackground}/>
-
-            {/*<ImageBackground source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}*/}
-            {/*                 style={styles.imageBackground}>*/}
-            {/*    <View style={styles.rightTextContainer}>*/}
-            {/*        <Text style={styles.rightText}>{item.views}</Text>*/}
-            {/*    </View>*/}
-            {/*</ImageBackground>*/}
+            <Image
+                source={item.image ? { uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/profile/${item.image}` } : require('../../../assets/background/bg_temp.jpg')}
+                style={styles.imageBackground} />
             <View style={styles.lowerContainer}>
                 <Text style={styles.titleText}>{item.name} ({item.age})</Text>
                 <Text style={styles.contentText}>{item.content}</Text>
             </View>
-        </TouchableOpacity>
+        </View>
     );
-}));
+});
 
 
 const styles = StyleSheet.create({

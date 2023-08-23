@@ -7,6 +7,7 @@ import { GRAY, PRIMARY } from '../../Colors';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import Constants from 'expo-constants';
 import ViewMoreText from 'react-native-view-more-text';
+import { IconButton } from 'react-native-paper';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -74,9 +75,10 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
 
             </View>
             {isCanDelete && (
-                <TouchableOpacity style={styles.deleteButton} onPress={() => removeComment(comment)}>
-                    <MaterialIcons name='delete' size={24} color={PRIMARY.DEFAULT} />
-                </TouchableOpacity>
+                <IconButton style={styles.deleteButton} icon={'delete'} iconColor={PRIMARY.DEFAULT} size={24} onPress={() => removeComment(comment)}/>
+                // <TouchableOpacity style={styles.deleteButton} onPress={() => removeComment(comment)}>
+                //     <MaterialIcons name='delete' size={24} color={PRIMARY.DEFAULT} />
+                // </TouchableOpacity>
             )}
         </View>
     );
