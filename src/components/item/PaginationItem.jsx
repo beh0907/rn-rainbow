@@ -1,7 +1,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import Animated, { Extrapolate, interpolate, useAnimatedStyle } from 'react-native-reanimated';
-import { GRAY, PRIMARY } from '../../Colors';
+import { GRAY, PRIMARY, WHITE } from '../../Colors';
 
 const PaginationItem = ({ index, backgroundColor, length, animValue, isRotate }) => {
     const width = 10;
@@ -32,7 +32,7 @@ const PaginationItem = ({ index, backgroundColor, length, animValue, isRotate })
     return (
         <View
             style={{
-                backgroundColor: 'white',
+                backgroundColor: GRAY.LIGHT,
                 width,
                 height: width,
                 borderRadius: 50,
@@ -49,7 +49,7 @@ const PaginationItem = ({ index, backgroundColor, length, animValue, isRotate })
                 style={[
                     {
                         borderRadius: 50,
-                        backgroundColor: GRAY.DEFAULT,
+                        backgroundColor: WHITE,
                         flex: 1
                     },
                     animStyle

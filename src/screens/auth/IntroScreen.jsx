@@ -1,38 +1,37 @@
-import { StyleSheet, useWindowDimensions, View} from "react-native";
-import AppIntroSlider from "react-native-app-intro-slider";
-import * as SecureStore from "../../utils/PreferenceStore";
-import {AuthRoutes} from "../../navigations/Routes";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import {STORE_SETTING_KEYS} from "../../utils/PreferenceStore";
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import AppIntroSlider from 'react-native-app-intro-slider';
+import * as SecureStore from '../../utils/PreferenceStore';
+import { STORE_SETTING_KEYS } from '../../utils/PreferenceStore';
+import { AuthRoutes } from '../../navigations/Routes';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Image } from 'expo-image';
+import { useCallback } from 'react';
 
-const IntroScreen = ({navigation}) => {
-    const {height, width} = useWindowDimensions()
-    const {top, bottom} = useSafeAreaInsets()
+const IntroScreen = ({ navigation }) => {
+    const { height, width } = useWindowDimensions();
+    const { top, bottom } = useSafeAreaInsets();
 
-    const onDone = async () => {
-        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, "1")
-        navigation.replace(AuthRoutes.SIGN_IN)
-    };
+    const onDone = useCallback(async () => {
+        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, '1');
+        navigation.replace(AuthRoutes.SIGN_IN);
+    }, [navigation, SecureStore]);
 
-    const onSkip = async () => {
-        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, "1")
-        navigation.replace(AuthRoutes.SIGN_IN)
-    };
-
-    const RenderItem = ({item}) => {
-        return (
-            <View style={[styles.hw100, {backgroundColor: item.background}]}>
-                <Image style={styles.hw100} source={item.image} contentFit={"cover"}/>
-            </View>
-        );
-    };
+    const onSkip = useCallback(async () => {
+        await SecureStore.save(STORE_SETTING_KEYS.CHECK_INTRO, '1');
+        navigation.replace(AuthRoutes.SIGN_IN);
+    }, [navigation, SecureStore]);
 
     return (
         <>
             <AppIntroSlider
                 data={slides}
-                renderItem={RenderItem}
+                renderItem={({ item }) => {
+                    return (
+                        <View style={[styles.hw100, { backgroundColor: item.background }]}>
+                            <Image style={styles.hw100} source={item.image} contentFit={'cover'} />
+                        </View>
+                    );
+                }}
                 onDone={onDone}
                 onSkip={onSkip}
                 showSkipButton={true}

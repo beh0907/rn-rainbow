@@ -9,7 +9,7 @@ import { ReturnKeyTypes } from '../../components/view/Input';
 import * as ImagePicker from 'expo-image-picker';
 import Button from '../../components/button/Button';
 import * as Room from '../../api/Room';
-import DatePicker from '../../components/view/DatePicker';
+import DatePicker from '../../components/message/DatePicker';
 import { formatDate } from '../../utils/checkInputForm';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';

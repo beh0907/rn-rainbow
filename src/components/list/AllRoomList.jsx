@@ -16,16 +16,6 @@ const AllRoomList = ({ value }) => {
         isLoading
     } = useRooms();
 
-    const renderItem = useCallback(({ item }) => {
-        return value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />;
-    }, [value]);
-
-    const ItemSeparatorComponent = useCallback(() => {
-        return <View style={styles.separator} />;
-    }, []);
-
-    const keyExtractor = useCallback((item, index) => index.toString(),[])
-
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
     return (
         <FlashList
@@ -33,9 +23,11 @@ const AllRoomList = ({ value }) => {
             key={value}
             showsVerticalScrollIndicator={false}
             data={rooms}
-            renderItem={renderItem}
-            keyExtractor={keyExtractor}
-            ItemSeparatorComponent={ItemSeparatorComponent}
+            renderItem={({item}) => {
+                return value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />
+            }}
+            keyExtractor={(item, index) => index.toString()}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
             onEndReached={fetchNextPage}
             refreshing={refetching}
             onRefresh={refetch}

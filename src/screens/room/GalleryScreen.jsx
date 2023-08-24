@@ -143,18 +143,19 @@ const GalleryScreen = () => {
                     <Text>등록된 이미지가 없습니다</Text>
                 </View>
                 :
-                <MasonryList
+                <Tabs.MasonryFlashList
+                    estimatedListSize={{ width, height }}
+                    estimatedItemSize={height}
                     style={{ height: '100%', width: '100%' }}
                     contentContainerStyle={{
                         padding: 5,
-                        alignSelf: 'stretch'
                     }}
                     data={galleries}
                     keyExtractor={(item, index) => index}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({ item, i }) => <GalleryItem item={item}
-                                                              onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(i)}
+                    renderItem={({ item, index }) => <GalleryItem item={item}
+                                                              onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(index)}
                                                               isSelected={isSelectedGallery(item)}
                                                               isDeleteMode={isDeleteMode} />}
                     // refreshing={isLoadingNext}

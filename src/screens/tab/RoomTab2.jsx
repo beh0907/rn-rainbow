@@ -1,6 +1,6 @@
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { GRAY, PRIMARY } from '../../Colors';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
@@ -12,16 +12,17 @@ import * as PreferenceStore from '../../utils/PreferenceStore';
 import { Text } from 'react-native-paper';
 import Constants from 'expo-constants';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
-import { Tabs } from 'react-native-collapsible-tab-view';
-import GalleryScreen2 from '../room/GalleryScreen2';
-import MemoryScreen2 from '../room/MemoryScreen2';
-import CommentScreen2 from '../room/CommentScreen2';
+import { MaterialTabBar, Tabs } from 'react-native-collapsible-tab-view';
+import GalleryScreen from '../room/GalleryScreen';
+import MemoryScreen from '../room/MemoryScreen';
+import CommentScreen from '../room/CommentScreen';
+import { MaterialCommunityIcons } from '@expo/vector-icons';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const HEADER_HEIGHT = 250
+const HEADER_HEIGHT = 250;
 
-const RoomTab = () => {
+const RoomTab2 = () => {
     const navigation = useNavigation();
 
     //컨텍스트 데이터
@@ -38,6 +39,11 @@ const RoomTab = () => {
 
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
+
+    const [galleryIcon, setGalleryIcon] = useState('view-grid')
+    const [memoryIcon, setMemoryIcon] = useState('video-outline')
+    const [commentIcon, setCommentIcon] = useState('comment-text-outline')
+
 
     useLayoutEffect(() => {
         (async () => {
@@ -139,18 +145,33 @@ const RoomTab = () => {
     return (
         isReady ?
             <Tabs.Container
-                headerHeight={HEADER_HEIGHT}
+                onIndexChange={(index) => {
+                    setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline')
+                    setMemoryIcon(index === 1 ? 'video' : 'video-outline')
+                    setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline')
+                }}
+                allowHeaderOverscroll
+                // headerHeight={HEADER_HEIGHT}
                 pointerEvents={'box-none'}
                 renderHeader={roomHeader}
-                minHeaderHeight={50}>
-                <Tabs.Tab name={RoomRoutes.GALLERY} label={RoomRoutes.GALLERY}>
-                    <GalleryScreen2 />
+                renderTabBar={props =>
+                    <MaterialTabBar {...props}
+                                    activeColor={PRIMARY.DEFAULT}
+                                    inactiveColor={GRAY.DEFAULT}
+                                    style={{ backgroundColor: 'white', color: PRIMARY.DEFAULT }}
+                                    indicatorStyle={{ backgroundColor: PRIMARY.DEFAULT }} />}
+            >
+                <Tabs.Tab name={RoomRoutes.GALLERY}
+                          label={(props) => <MaterialCommunityIcons name={galleryIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                    <GalleryScreen />
                 </Tabs.Tab>
-                <Tabs.Tab name={RoomRoutes.MEMORY} label={RoomRoutes.MEMORY}>
-                    <MemoryScreen2 />
+                <Tabs.Tab name={RoomRoutes.MEMORY}
+                          label={(props) => <MaterialCommunityIcons name={memoryIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                    <MemoryScreen />
                 </Tabs.Tab>
-                <Tabs.Tab name={RoomRoutes.COMMENT} label={RoomRoutes.COMMENT}>
-                    <CommentScreen2 />
+                <Tabs.Tab name={RoomRoutes.COMMENT}
+                          label={(props) => <MaterialCommunityIcons name={commentIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                    <CommentScreen />
                 </Tabs.Tab>
             </Tabs.Container>
 
@@ -239,10 +260,10 @@ const styles = StyleSheet.create({
         color: GRAY.DEFAULT
     },
     header: {
-        height: HEADER_HEIGHT,
+        // height: HEADER_HEIGHT,
         width: '100%',
-        padding:16
-    },
+        padding: 16
+    }
 });
 
-export default RoomTab;
+export default RoomTab2;

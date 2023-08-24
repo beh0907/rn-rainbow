@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import Constants from 'expo-constants';
@@ -9,22 +9,21 @@ import ViewMoreText from 'react-native-view-more-text';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const MemoryItem = memo(({ memory }) => {
+const MemoryItem = memo(({ memory, removeMemory }) => {
     //비디오 객체
     const video = useRef(null);
-    const [status, setStatus] = useState({});
-
     console.log('메모리', memory);
 
     return (
-        <Surface style={styles.container} elevation={5}>
-            <View style={{ alignItems: 'flex-end', marginVertical: 5 }}>
+        <Surface style={styles.container} elevation={3}>
+            <View style={{ alignItems: 'flex-end' }}>
                 <IconButton icon={'delete'} iconColor={PRIMARY.DEFAULT} size={24}
-                            onPress={() => {}} />
+                            onPress={() => removeMemory(memory)} />
             </View>
 
             <View style={{ flexDirection: 'row' }}>
                 <Video
+                    isLooping={true}
                     ref={video}
                     style={styles.video}
                     source={{
@@ -67,7 +66,10 @@ const styles = StyleSheet.create({
         container: {
             flex: 1,
             backgroundColor: WHITE,
-            padding: 16
+            marginHorizontal: 10,
+            borderRadius: 16,
+            paddingHorizontal: 16,
+            paddingBottom: 16
         },
         video: {
             alignSelf: 'center',

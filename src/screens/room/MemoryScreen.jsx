@@ -1,7 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, LayoutAnimation, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { IconButton, Text } from 'react-native-paper';
-import * as Memory from '../../api/Memory';
 import { useRoomState } from '../../contexts/RoomContext';
 import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
@@ -10,11 +9,17 @@ import MemoryItem from '../../components/item/MemoryItem';
 import { useUserState } from '../../contexts/UserContext';
 import { FlashList } from '@shopify/flash-list';
 import { RoomRoutes } from '../../navigations/Routes';
+import { Tabs } from 'react-native-collapsible-tab-view';
+import * as Memory from '../../api/Memory';
+import { useSnackBarState } from '../../contexts/SnackBarContext';
+import { useDialogState } from '../../contexts/DialogContext';
 
 
 const MemoryScreen = () => {
     const [user] = useUserState();
     const [room] = useRoomState();
+    const [, setSnackbar] = useSnackBarState();
+    const [, setDialog] = useDialogState();
 
     const [memories, setMemories] = useState([]);
     const [isLoading, setIsLoading] = useState(true);
@@ -23,8 +28,6 @@ const MemoryScreen = () => {
     const { width, height } = useWindowDimensions();
 
     const listRef = useRef(null)
-
-    // Create a clock for animation
 
     useLayoutEffect(() => {
         (async () => {
@@ -59,6 +62,22 @@ const MemoryScreen = () => {
         }
     }, []);
 
+    const removeMemory = useCallback(async (memory) => {
+        setDialog({
+            title: '추억의 영상 삭제',
+            message: '정말 추억의 영상을 삭제하시겠습니까?',
+            onPress: async () => {
+                const result = await Memory.removeMemory(memory);
+                setSnackbar({
+                    message: (result !== null ? '추억의 영상이 삭제되었습니다.' : '통신 오류로 인해 추억의 영상 삭제를 실패하였습니다.'),
+                    visible: true
+                });
+                await readMemoryList();
+            },
+            visible: true
+        });
+    }, []);
+
     if (isLoading)
         return (
             <View style={[styles.container]}>
@@ -70,19 +89,19 @@ const MemoryScreen = () => {
             {memories.length === 0 ?
                 <Text>등록된 추억이 없습니다</Text>
                 :
-                <FlashList
+                <Tabs.FlashList
                     ref={listRef}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
                     // style={styles.commentList}
-                    // contentContainerStyle={styles.commentList}
+                    contentContainerStyle={styles.commentList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
                     keyExtractor={(item, index) => index}
                     data={memories}
                     renderItem={({ item }) =>
                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
-                        <MemoryItem memory={item} />
+                        <MemoryItem memory={item} removeMemory={removeMemory} />
                     }
                 />
             }
@@ -105,7 +124,8 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'center',
-        alignItems: 'center'
+        alignItems: 'center',
+        marginTop:16
         // backgroundColor: WHITE
     },
     buttonContainer: {
@@ -115,6 +135,9 @@ const styles = StyleSheet.create({
     },
     separator: {
         marginVertical:5
+    },
+    commentList: {
+        paddingVertical:10
     }
 });
 

@@ -43,19 +43,6 @@ const CommentsList = forwardRef(({ user, num, room }, ref) => {
         });
     }, []);
 
-
-    const renderItem = useCallback(({ item }) => {
-        //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
-        return <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
-                            removeComment={removeComment} />;
-    }, [removeComment, user, room]);
-
-    const ItemSeparatorComponent = useCallback(() => {
-        return <View style={styles.separator} />;
-    }, []);
-
-    const keyExtractor = useCallback((item, index) => index.toString(), []);
-
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
     return (
         <FlashList
@@ -64,10 +51,14 @@ const CommentsList = forwardRef(({ user, num, room }, ref) => {
             showsVerticalScrollIndicator={false}
             // style={styles.commentList}
             // contentContainerStyle={styles.commentList}
-            ItemSeparatorComponent={ItemSeparatorComponent}
-            keyExtractor={keyExtractor}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+            keyExtractor={(item, index) => index.toString()}
             data={comments}
-            renderItem={renderItem}
+            renderItem={({ item }) => {
+                //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                return <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
+                                    removeComment={removeComment} />;
+            }}
             onEndReached={fetchNextPage}
             refreshing={refetching}
             onRefresh={refetch}

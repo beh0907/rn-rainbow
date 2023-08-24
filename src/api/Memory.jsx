@@ -39,9 +39,7 @@ export const modifyMemory = async (memory) => {
 
 
 export const removeMemory = async (memory) => {
-    const response = await axios.delete(`${BASE_URL_API}/memory/remove`, {
-        data: memory
-    });
+    const response = await axios.delete(`${BASE_URL_API}/memory/remove`, memory);
     return response.data
 }
 

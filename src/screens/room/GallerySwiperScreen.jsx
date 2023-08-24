@@ -1,61 +1,106 @@
-import React, { useCallback } from 'react';
-import { useFocusEffect, useNavigation, useRoute } from '@react-navigation/native';
+import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import { useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { ImageGallery } from '@georstat/react-native-image-gallery';
-import { IconButton } from 'react-native-paper';
-import { WHITE } from '../../Colors';
-import { BackHandler } from 'react-native';
+import { FlatList, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Image } from 'expo-image';
+import { PRIMARY } from '../../Colors';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { FlashList } from '@shopify/flash-list';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
+const THUMB_SIZE = 80;
+const SPACING = 10;
 
 const GallerySwiperScreen = () => {
     const { params } = useRoute();
     const { galleries, position } = params;
-    const navigation = useNavigation();
 
-    const images = galleries.map((gallery) => {
-        const id = gallery.seq;
-        const name = gallery.name;
-        const url = `${BASE_URL_FILE}${gallery.id}/${gallery.roomNum}/gallery/${name}`;
-        const thumbUrl = `${BASE_URL_FILE}${gallery.id}/${gallery.roomNum}/gallery/s_${name}`;
+    const galleryRef = useRef(null);
+    const thumbRef = useRef(null);
 
-        // 새로운 객체 생성하여 반환
-        return { id, name, url, thumbUrl };
-    });
+    const [activityIndex, setActivityIndex] = useState(0);
 
-    const closeGallery = () =>  {
-        navigation.goBack();
-    }
+    const { width, height } = useWindowDimensions();
+    const { top, bottom } = useSafeAreaInsets();
 
-    useFocusEffect(
-        useCallback(() => {
-            BackHandler.addEventListener('hardwareBackPress', closeGallery);
-            return () => {
-                BackHandler.removeEventListener('hardwareBackPress', closeGallery);
-            };
-        }, [])
-    );
+    useEffect(() => {
+        scrollToActivityIndex(position);
+    }, []);
+
+    const scrollToActivityIndex = useCallback((index) => {
+        setActivityIndex(index);
+        galleryRef?.current?.scrollToOffset({
+            offset: index * width,
+            animated: true
+        });
+
+        if (index * (THUMB_SIZE + SPACING) - THUMB_SIZE / 2 > width / 2) {
+            thumbRef?.current?.scrollToOffset({
+                offset: index * (THUMB_SIZE + SPACING) - width / 2 + THUMB_SIZE / 2,
+                animated: true
+            });
+        } else {
+            thumbRef?.current?.scrollToOffset({
+                offset: 0,
+                animated: true
+            });
+        }
+    }, [setActivityIndex, galleryRef, thumbRef]);
 
     return (
-        <ImageGallery close={closeGallery} isOpen={true} images={images} initialIndex={position}
-                      renderHeaderComponent={() => <IconButton icon={'arrow-left'} size={30} iconColor={WHITE} onPress={closeGallery} />} />
+        <View style={{ marginTop: top, marginBottom: bottom }}>
+            <FlashList
+                ref={galleryRef}
+                estimatedListSize={{ width, height }}
+                estimatedItemSize={height}
+                pagingEnabled
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                data={galleries}
+                keyExtractor={(item, index) => index.toString()}
+                onMomentumScrollEnd={event => {
+                    scrollToActivityIndex(Math.round(event.nativeEvent.contentOffset.x / width));
+                }}
+                renderItem={({ item }) => {
+                    return (
+                        // <GallerySwiperItem
+                        //     uri={`${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`} />
 
+                        <View style={{ width, height }}>
+                            <Image style={[StyleSheet.absoluteFillObject]}
+                                   contentFit={'cover'}
+                                   source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }} />
+                        </View>
+                    );
+                }} />
 
-        // <ImageGallerySwiper
-        //     images={images}
-        //     swipeUp={() => console.log('up')}
-        //     swipeDown={() => console.log('down')}
-        //     showThumbs
-        //     getSwipedImage={setSwipedImage}
-        //     activeImage={position}
-        //     // setHandlePressRight={handlePressRight}
-        //     // textStyles={{ fontSize: 20, color: 'white', backgroundColor: 'green' }}
-        //     // imageStyles={{ height: 300 }}
-        // >
-        //     {/*<View>*/}
-        //     {/*    <Text> Children will show here </Text>*/}
-        //     {/*</View>*/}
-        // </ImageGallerySwiper>
+            <View style={{ position: 'absolute', bottom: THUMB_SIZE / 2 }}>
+                <FlatList
+                    ref={thumbRef}
+                    estimatedListSize={{ width: width, height: THUMB_SIZE }}
+                    estimatedItemSize={THUMB_SIZE}
+                    horizontal
+                    showsHorizontalScrollIndicator={false}
+                    data={galleries}
+                    keyExtractor={(item, index) => index.toString()}
+                    contentContainerStyle={{ paddingHorizontal: SPACING }}
+                    renderItem={({ item, index }) => {
+                        return (
+                            <TouchableOpacity activeOpacity={0.5} onPress={() => scrollToActivityIndex(index)}>
+                                <Image style={{
+                                    width: THUMB_SIZE,
+                                    height: THUMB_SIZE,
+                                    borderRadius: 12,
+                                    marginRight: SPACING,
+                                    borderWidth: 2,
+                                    borderColor: activityIndex === index ? PRIMARY.DEFAULT : 'transparent'
+                                }}
+                                       source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/s_${item.name}` }} />
+                            </TouchableOpacity>
+                        );
+                    }} />
+            </View>
+        </View>
     );
 };
 

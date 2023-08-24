@@ -12,6 +12,8 @@ import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
 import { FlashList } from '@shopify/flash-list';
 
+import { Tabs } from 'react-native-collapsible-tab-view';
+
 const CommentScreen = () => {
     const [user] = useUserState();
     const [room] = useRoomState();
@@ -94,7 +96,7 @@ const CommentScreen = () => {
                 </View>
                 :
 
-                <FlashList
+                <Tabs.FlashList
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={92}
                     showsVerticalScrollIndicator={false}
