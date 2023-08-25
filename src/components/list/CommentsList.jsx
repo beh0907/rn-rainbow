@@ -39,7 +39,8 @@ const CommentsList = forwardRef(({ user, num, room }, ref) => {
                 });
                 await refetch();
             },
-            visible: true
+            visible: true,
+            isConfirm: true
         });
     }, []);
 

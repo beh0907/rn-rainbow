@@ -20,6 +20,7 @@ import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import { useDialogState } from '../../contexts/DialogContext';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
@@ -27,6 +28,7 @@ const SignInScreen = () => {
     const { width } = useWindowDimensions();
 
     const passwordRef = useRef();
+    const [, setDialog] = useDialogState()
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState();
@@ -61,10 +63,15 @@ const SignInScreen = () => {
 
                 setUser(user);
             } catch (e) {
-                Alert.alert('로그인 실패', '오류 발생', [{
-                    text: '확인',
-                    onPress: () => dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
-                }]);
+                setDialog({
+                    title: '로그인 실패',
+                    message: '오류 발생',
+                    onPress: async () => {
+                        dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
+                    },
+                    visible: true,
+                    isConfirm: false
+                });
             }
         }
     };

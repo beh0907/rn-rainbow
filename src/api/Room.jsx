@@ -17,12 +17,15 @@ export const readMyRoomList = async (id) => {
 };
 
 export const readBookmarkRoomList = async (listRoomNum) => {
+    //즐겨찾는 추모관이 없을 경우 API를 호출하지 않고 빈 배열을 리턴한다
+    if (listRoomNum.length === 0) return [];
+
     const response = await axiosApiInstance.post(`/room/readBookmarkList`, listRoomNum);
     return response.data;
 };
 
 export const registerRoom = async (room, uri) => {
-    const formData = setFormData(room, uri)
+    const formData = setFormData(room, uri);
 
     const response = await axiosApiInstance.postForm(`/room/register`, formData)
         .catch(e => {
@@ -35,7 +38,7 @@ export const registerRoom = async (room, uri) => {
 };
 
 export const modifyRoom = async (room, uri) => {
-    const formData = setFormData(room, uri)
+    const formData = setFormData(room, uri);
 
     const response = await axiosApiInstance.postForm(`/room/modify`, formData)
         .catch(e => {
@@ -72,5 +75,5 @@ const setFormData = (room, uri) => {
     });
     formData.append('room', json);
 
-    return formData
-}
+    return formData;
+};

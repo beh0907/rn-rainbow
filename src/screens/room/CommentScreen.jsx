@@ -77,7 +77,8 @@ const CommentScreen = () => {
                 });
                 await readCommentList();
             },
-            visible: true
+            visible: true,
+            isConfirm: true
         });
     }, []);
 

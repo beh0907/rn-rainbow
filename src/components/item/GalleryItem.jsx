@@ -5,26 +5,22 @@ import { Card } from 'react-native-paper';
 import { PRIMARY, WHITE } from '../../Colors';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import Constants from 'expo-constants';
+import AutoHeightImage from 'react-native-auto-height-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
     const imageUrl = `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`;
     const { width } = useWindowDimensions();
-    const [height, setHeight] = useState(0);
-
-    Image.getSize(imageUrl, (w, h) => {
-        setHeight(h * ((width / 3 - 10) / w));
-    });
 
     return (
-        <Pressable onPress={onPress}>
+        <Pressable onPress={onPress} style={({ pressed }) => [{opacity:pressed ? 0.5 : 1}]}>
             <Card style={styles.container} elevation={0}>
-                <Card.Cover style={{ height: height }} resizeMode={'contain'} resizeMethod={'resize'}
-                            source={{ uri: imageUrl }} />
+                <AutoHeightImage style={styles.image} width={width / 3 - 14}
+                                 source={{ uri: imageUrl }} />
 
                 {isDeleteMode && isSelected &&
-                    <View style={styles.selectItem}>
+                    <View style={[styles.selectItem]}>
                         <MaterialCommunityIcons name={'check'} size={48} color={PRIMARY.DEFAULT} />
                     </View>
                 }
@@ -41,7 +37,11 @@ GalleryItem.propTypes = {
 const styles = StyleSheet.create({
     container: {
         margin: 5,
-        backgroundColor: WHITE
+        backgroundColor: WHITE,
+        flex:1
+    },
+    image: {
+      borderRadius:12
     },
     selectItem: {
         backgroundColor: 'rgba(107,114,128,0.7)',
@@ -52,8 +52,7 @@ const styles = StyleSheet.create({
         right: 0,
         top: 0,
         bottom: 0,
-        borderRadius: 12
-
+        borderRadius: 12,
     }
 });
 

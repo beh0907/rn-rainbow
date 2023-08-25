@@ -5,7 +5,7 @@ import { useDialogState } from '../../contexts/DialogContext';
 
 const CustomDialog = () => {
     const [dialog, setDialog] = useDialogState();
-    const { title, message, onPress, visible } = dialog;
+    const { title, message, onPress, visible, isConfirm } = dialog;
 
     const onConfirmDialog = async () => {
         await onPress()
@@ -26,7 +26,7 @@ const CustomDialog = () => {
 
                     <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
                         <Dialog.Actions>
-                            <Button onPress={onDismissDialog}>닫기</Button>
+                            {isConfirm && <Button onPress={onDismissDialog}>닫기</Button>}
                             {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
                         </Dialog.Actions>
                     </View>

@@ -17,8 +17,8 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
     return (
         <Surface style={styles.container} elevation={3}>
             <View style={{ alignItems: 'flex-end' }}>
-                <IconButton icon={'delete'} iconColor={PRIMARY.DEFAULT} size={24}
-                            onPress={() => removeMemory(memory)} />
+                <IconButton mode={'outlined'} icon={'delete'} iconColor={PRIMARY.DEFAULT}
+                            size={24} onPress={() => removeMemory(memory)} />
             </View>
 
             <View style={{ flexDirection: 'row' }}>

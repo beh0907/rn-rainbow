@@ -74,7 +74,8 @@ const MemoryScreen = () => {
                 });
                 await readMemoryList();
             },
-            visible: true
+            visible: true,
+            isConfirm: true
         });
     }, []);
 

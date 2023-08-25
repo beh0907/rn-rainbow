@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -144,9 +144,9 @@ const GalleryScreen = () => {
                 </View>
                 :
                 <Tabs.MasonryFlashList
+                    extraData={[isDeleteMode, isSelectedGallery]}
                     estimatedListSize={{ width, height }}
-                    estimatedItemSize={height}
-                    style={{ height: '100%', width: '100%' }}
+                    estimatedItemSize={100}
                     contentContainerStyle={{
                         padding: 5,
                     }}
@@ -155,7 +155,7 @@ const GalleryScreen = () => {
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => <GalleryItem item={item}
-                                                              onPress={() => isDeleteMode ? onToggleImage(item) : onPressImage(index)}
+                                                              onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
                                                               isSelected={isSelectedGallery(item)}
                                                               isDeleteMode={isDeleteMode} />}
                     // refreshing={isLoadingNext}

@@ -16,6 +16,7 @@ import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import Constants from 'expo-constants';
+import * as Comment from '../api/Comment';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -101,18 +102,17 @@ const Navigation = () => {
                 const code = error.code;
                 const status = error.response?.status;
 
-                //타임아웃
-                if (code === 'ECONNABORTED' || status === 408) {
-                    Alert.alert('통신 에러', '서버와의 통신에 실패하였습니다', [{
-                        text: '확인',
-                        onPress: () => setIsReady(true)
-                    }]);
-                } else {
-                    Alert.alert('로그인 실패', '서버와의 통신에 실패하였습니다', [{
-                        text: '확인',
-                        onPress: () => setIsReady(true)
-                    }]);
-                }
+                let title = (code === 'ECONNABORTED' || status === 408) ? '통신 에러' : '로그인 실패'
+
+                setDialog({
+                    title: title,
+                    message: '서버와의 통신에 실패하였습니다.',
+                    onPress: async () => {
+                        setIsReady(true)
+                    },
+                    visible: true,
+                    isConfirm: false
+                });
             }
         })();
     }, [setUser, setIsReady, setCheckIntro, requestMediaPermission, requestCameraPermission]);

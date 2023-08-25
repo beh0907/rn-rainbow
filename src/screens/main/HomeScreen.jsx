@@ -2,15 +2,15 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { ToggleButton, Text } from 'react-native-paper';
+import { Text, ToggleButton } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { BLACK, PRIMARY, WHITE } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import InputTextButton from '../../components/view/inputTextButton';
 import Constants from 'expo-constants';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -21,7 +21,6 @@ const HomeScreen = props => {
     const [, setSnackbar] = useSnackBarState();
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
-    const [toggleVal, setToggleVal] = useState('list');
 
 
     let exitApp;
@@ -66,7 +65,9 @@ const HomeScreen = props => {
 
                 {
                     user.image ?
-                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={48} />
+                        <Image style={{ width: 48, height: 48, borderRadius: 24 }} cachePolicy={'none'}
+                               source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
+                        // <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={48} />
                         : <AvatarText label={user.nickName.charAt(0)} Text size={48} />
                 }
 
@@ -91,19 +92,12 @@ const HomeScreen = props => {
                 }} />
 
             <View style={{
-                flexDirection: 'row', marginTop: 20, marginBottom:10, alignItems: 'center', paddingHorizontal: 16
+                flexDirection: 'row', marginTop: 20, marginBottom: 10, alignItems: 'center', paddingHorizontal: 16
             }}>
-                <Text variant='titleLarge' style={{ color: BLACK, flex: 1}}>전체 추모관</Text>
-
-                <ToggleButton.Group
-                    onValueChange={value => setToggleVal(value)}
-                    value={toggleVal}>
-                    <ToggleButton icon='view-list' value='list' iconColor={PRIMARY.DEFAULT} />
-                    <ToggleButton icon='view-stream' value='card' iconColor={PRIMARY.DEFAULT} />
-                </ToggleButton.Group>
+                <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
             </View>
 
-            <AllRoomList value={toggleVal} />
+            <AllRoomList />
         </View>
     );
 };

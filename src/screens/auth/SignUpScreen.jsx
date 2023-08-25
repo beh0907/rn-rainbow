@@ -13,6 +13,7 @@ import {useUserState} from "../../contexts/UserContext";
 import {TextInput} from "react-native-paper";
 import {signUp} from "../../api/Auth";
 import {useSnackBarState} from "../../contexts/SnackBarContext";
+import { useDialogState } from '../../contexts/DialogContext';
 
 const SignUpScreen = () => {
     const navigation = useNavigation()
@@ -26,6 +27,7 @@ const SignUpScreen = () => {
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState() // 글로벌 유저 상태정보
     const [, setSnackbar] = useSnackBarState() // 글로벌 알림 메시지 상태정보
+    const [, setDialog] = useDialogState()
 
     const [isHidePassword, setHidePassword] = useState(true)
     const [isHidePasswordConfirm, setHidePasswordConfirm] = useState(true)
@@ -65,10 +67,15 @@ const SignUpScreen = () => {
                 if (user.id !== null)
                     navigation.goBack()
             } catch (e) {
-                Alert.alert('회원가입 실패', e.code, [{
-                    text: '확인',
-                    onPress: () => dispatch({type: AuthFormTypes.TOGGLE_LOADING})
-                }])
+                setDialog({
+                    title: '로그인 실패',
+                    message: '오류 발생',
+                    onPress: async () => {
+                        dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
+                    },
+                    visible: true,
+                    isConfirm: false
+                });
             }
         }
     }

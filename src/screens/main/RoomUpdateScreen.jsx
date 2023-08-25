@@ -16,6 +16,7 @@ import { useUserState } from '../../contexts/UserContext';
 import Constants from 'expo-constants';
 import { useRoomState } from '../../contexts/RoomContext';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -95,11 +96,18 @@ const RoomUpdateScreen = () => {
                     <View style={[styles.photo, updateRoom.image || { backgroundColor: GRAY.DEFAULT }]}>
                         {
                             image || updateRoom.image
-                                ? <AvatarImage
-                                    size={100}
-                                    source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
-                                : <AvatarImage
-                                    size={100} source={require('../../../assets/background/bg_temp.jpg')} />
+                                ?
+                                // <AvatarImage
+                                //     size={100}
+                                //     source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
+                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
+                                       cachePolicy={'memory'}
+                                       source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
+                                :
+                                // <AvatarImage
+                                //     size={100} source={require('../../../assets/background/bg_temp.jpg')} />
+                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
+                                       source={require('../../../assets/background/bg_temp.jpg')} />
                         }
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />

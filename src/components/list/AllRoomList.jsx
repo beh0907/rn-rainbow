@@ -1,13 +1,11 @@
-import React, { useCallback } from 'react';
-import { FlatList, StyleSheet, View } from 'react-native';
-import VerticalCardRoomItem from '../item/VerticalCardRoomItem';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import useRooms from '../../hooks/UseRooms';
-import PropTypes from 'prop-types';
-import VerticalListRoomItem from '../item/VerticalListRoomItem';
+import ListRoomItem from '../item/ListRoomItem';
 import { Text } from 'react-native-paper';
 import { FlashList } from '@shopify/flash-list';
 
-const AllRoomList = ({ value }) => {
+const AllRoomList = () => {
     const {
         rooms,
         fetchNextPage,
@@ -19,13 +17,10 @@ const AllRoomList = ({ value }) => {
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
     return (
         <FlashList
-            estimatedItemSize={ value === 'card' ? 205 : 124} // 카드뷰라면 205, 리스트라면 124로 예상사이즈 설정
-            key={value}
+            estimatedItemSize={124} // 카드뷰라면 205, 리스트라면 124로 예상사이즈 설정
             showsVerticalScrollIndicator={false}
             data={rooms}
-            renderItem={({item}) => {
-                return value === 'card' ? <VerticalCardRoomItem room={item} /> : <VerticalListRoomItem room={item} />
-            }}
+            renderItem={({ item }) => <ListRoomItem room={item} />}
             keyExtractor={(item, index) => index.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
             onEndReached={fetchNextPage}
@@ -35,14 +30,6 @@ const AllRoomList = ({ value }) => {
             ListFooterComponentStyle={styles.listFooter}
         />
     );
-};
-
-AllRoomList.defaultProps = {
-    value: 'list'
-};
-
-AllRoomList.propTypes = {
-    value: PropTypes.string.isRequired
 };
 
 const styles = StyleSheet.create({

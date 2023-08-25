@@ -1,24 +1,23 @@
 import React, { useEffect, useState } from 'react';
-import { Pressable, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
-import { Text } from 'react-native-paper';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Button, Divider, Text } from 'react-native-paper';
 import * as SecureStore from '../../utils/PreferenceStore';
 import { STORE_SETTING_KEYS } from '../../utils/PreferenceStore';
 import { useNavigation } from '@react-navigation/native';
 import { MainRoutes } from '../../navigations/Routes';
 import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { useDialogState } from '../../contexts/DialogContext';
 import Constants from 'expo-constants';
 import * as Auth from '../../api/Auth';
-
 import Carousel from 'react-native-reanimated-carousel';
 import CarouselItem from '../../components/item/CarouselItem';
 import { useSharedValue } from 'react-native-reanimated';
 import PaginationItem from '../../components/item/PaginationItem';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -39,6 +38,9 @@ const MyPageScreen = () => {
     const progressValue = useSharedValue(0);
 
     const { width, height } = useWindowDimensions();
+    const { top, bottom } = useSafeAreaInsets();
+
+    const IMAGE_SIZE = 100;
 
     useEffect(() => {
         (async () => {
@@ -46,7 +48,6 @@ const MyPageScreen = () => {
 
             setMyRooms(await readMyRoomList(user.id));
             setFavoriteRooms(await readBookmarkRoomList(favorites));
-
         })();
     }, []);
 
@@ -60,19 +61,21 @@ const MyPageScreen = () => {
                 await SecureStore.signOutSecureStore();
                 setUser({});
             },
-            visible: true
+            visible: true,
+            isConfirm: true
         });
     };
 
     return (
         <View style={{
+            marginBottom: bottom,
             backgroundColor: PRIMARY.DEFAULT,
-            height: '100%'
+            flex: 1
         }}>
             <View style={{
+                paddingBottom: 36,
                 paddingHorizontal: 36,
                 backgroundColor: WHITE,
-                height: '50%',
                 borderBottomLeftRadius: 50,
                 borderBottomRightRadius: 50
             }}>
@@ -81,37 +84,20 @@ const MyPageScreen = () => {
                     width: '100%',
                     marginTop: 36
                 }}>
-                    <Pressable onPress={() => {
-                        navigation.navigate(MainRoutes.PROFILE_UPDATE);
-                    }} style={{
-                        width: '50%',
-                        alignItems: 'flex-start'
-                    }}>
-                        <MaterialCommunityIcons
-                            name='account-edit-outline'
-                            size={24}
-                            color={PRIMARY.DARK}
-                        />
-                    </Pressable>
 
-                    <Pressable onPress={onSignOut} style={{
-                        width: '50%',
-                        alignItems: 'flex-end'
-                    }}>
-                        <MaterialCommunityIcons
-                            name='logout-variant'
-                            size={24}
-                            color={PRIMARY.DARK}
-                        />
-                    </Pressable>
                 </View>
-
                 {
                     user.image ?
-                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={100}
-                                     style={{ marginVertical: 20, alignSelf: 'center' }} />
+                        <Image cachePolicy={'none'} style={[styles.image, {
+                            width: IMAGE_SIZE,
+                            height: IMAGE_SIZE,
+                            borderRadius: IMAGE_SIZE / 2
+                        }]}
+                               source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
+                        // <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={IMAGE_SIZE}
+                        //              style={styles.image} />
                         : <AvatarText label={user.nickName.charAt(0)} Text size={100}
-                                      style={{ marginVertical: 20, alignSelf: 'center' }} />
+                                      style={styles.image} />
                 }
 
                 <Text variant={'titleLarge'} style={{
@@ -130,30 +116,30 @@ const MyPageScreen = () => {
                     alignSelf: 'center',
                     marginTop: 20
                 }}>
-                    <View>
-                        <Text variant={'bodyLarge'} style={styles.boldDarkText}>280</Text>
+                    <Button
+                        mode='outlined'
+                        size={24}
+                        containerColor={PRIMARY.DEFAULT}
+                        iconColor={PRIMARY.DEFAULT}
+                        icon={'account-edit-outline'}
+                        onPress={() => {
+                            navigation.navigate(MainRoutes.PROFILE_UPDATE);
+                        }}
+                    >
+                        정보 수정
+                    </Button>
 
-                        <Text variant={'titleMedium'} style={styles.grayText}>
-                            photos
-                        </Text>
-                    </View>
+                    <View style={{marginHorizontal:10}}   />
 
-                    <View style={{ marginHorizontal: 40 }}>
-                        <Text variant={'bodyLarge'} style={styles.boldDarkText}>2,107</Text>
-
-                        <Text variant={'titleMedium'} style={styles.grayText}>
-                            followers
-                        </Text>
-                    </View>
-
-
-                    <View>
-                        <Text variant={'bodyLarge'} style={styles.boldDarkText}>104</Text>
-
-                        <Text variant={'titleMedium'} style={styles.grayText}>
-                            follows
-                        </Text>
-                    </View>
+                    <Button
+                        mode='outlined'
+                        size={24}
+                        iconColor={PRIMARY.DEFAULT}
+                        icon={'logout-variant'}
+                        onPress={onSignOut}
+                    >
+                        로그아웃
+                    </Button>
                 </View>
             </View>
 
@@ -164,83 +150,78 @@ const MyPageScreen = () => {
                 paddingTop: 20
             }}>
 
-                <TouchableOpacity
+                <Pressable
                     onPress={() => setMyRoomSelected(true)}
-                    style={{
+                    style={({ pressed }) => [{
                         borderBottomColor: myRoomSelected ? WHITE : PRIMARY.DEFAULT,
                         borderBottomWidth: 4,
                         paddingVertical: 6
-                    }}
+                    },
+                        { opacity: pressed ? 0.5 : 1 }]}
                 >
                     <Text style={{
                         fontWeight: 'bold',
                         color: myRoomSelected ? WHITE : GRAY.LIGHT
                     }}>나의 추모관</Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity
+
+                <Pressable
                     onPress={() => setMyRoomSelected(false)}
-                    style={{
+                    style={({ pressed }) => [{
                         borderBottomColor: myRoomSelected ? PRIMARY.DEFAULT : WHITE,
                         borderBottomWidth: 4,
                         paddingVertical: 6,
                         marginLeft: 30
-                    }}>
+                    },
+                        { opacity: pressed ? 0.5 : 1 }]}
+                >
                     <Text style={{
                         fontWeight: 'bold',
                         color: myRoomSelected ? GRAY.LIGHT : WHITE
                     }}>즐겨찾는 추모관</Text>
-                </TouchableOpacity>
+                </Pressable>
             </View>
 
-            {/*<FlatList*/}
-            {/*    showsHorizontalScrollIndicator={false}*/}
-            {/*    horizontal*/}
-            {/*    style={styles.container}*/}
-            {/*    data={myRoomSelected ? myRooms : favoriteRooms} // 탭 메뉴 상태에 따라 수정*/}
-            {/*    renderItem={({item}) => <HorizontalRoomItem room={item}/>}*/}
-            {/*    keyExtractor={(item, index) => index}*/}
-            {/*    ItemSeparatorComponent={() => <View style={styles.separator}></View>}*/}
-            {/*/>*/}
+            <View style={{flex:1, justifyContent:'center'}}>
+                <Carousel
+                    onProgressChange={(_, absoluteProgress) =>
+                        (progressValue.value = absoluteProgress)
+                    }
+                    mode={'parallax'}
+                    modeConfig={{
+                        parallaxScrollingScale: 0.9,
+                        parallaxScrollingOffset: 50
+                    }}
+                    panGestureHandlerProps={{
+                        activeOffsetX: [-10, 10]
+                    }}
+                    loop={true}
+                    width={width}
+                    height={height * 0.4}
+                    data={myRoomSelected ? myRooms : favoriteRooms}
+                    renderItem={({ item }) => <CarouselItem room={item} />}>
+                </Carousel>
 
-            <Carousel
-                onProgressChange={(_, absoluteProgress) =>
-                    (progressValue.value = absoluteProgress)
-                }
-                mode={'parallax'}
-                modeConfig={{
-                    parallaxScrollingScale: 0.9,
-                    parallaxScrollingOffset: 50
-                }}
-                panGestureHandlerProps={{
-                    activeOffsetX: [-10, 10]
-                }}
-                loop={true}
-                width={width}
-                height={height * 0.35}
-                style={{ width: '100%', alignSelf: 'center' }}
-                data={myRoomSelected ? myRooms : favoriteRooms}
-                renderItem={({ item }) => <CarouselItem item={item} />}>
-            </Carousel>
+                <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+                    {
+                        (myRoomSelected ? myRooms : favoriteRooms).map((backgroundColor, index) => {
+                            return (
+                                <PaginationItem
+                                    backgroundColor={backgroundColor}
+                                    animValue={progressValue}
+                                    index={index}
+                                    key={index}
+                                    isRotate={false}
+                                    length={(myRoomSelected ? myRooms : favoriteRooms).length}
+                                />
+                            );
+                        })}
 
-            <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-                {
-                    (myRoomSelected ? myRooms : favoriteRooms).map((backgroundColor, index) => {
-                        return (
-                            <PaginationItem
-                                backgroundColor={backgroundColor}
-                                animValue={progressValue}
-                                index={index}
-                                key={index}
-                                isRotate={false}
-                                length={(myRoomSelected ? myRooms : favoriteRooms).length}
-                            />
-                        );
-                    })}
-
+                </View>
             </View>
 
-            {/*<ImageCarousel rooms={myRoomSelected ? myRooms : favoriteRooms} />*/}
+
         </View>
     );
 };
@@ -263,6 +244,10 @@ const styles = StyleSheet.create({
         marginHorizontal: 40,
         borderRadius: 30,
         marginTop: 30
+    },
+    image: {
+        marginVertical: 20,
+        alignSelf: 'center'
     }
 });
 

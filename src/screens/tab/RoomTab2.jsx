@@ -1,22 +1,23 @@
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { GRAY, PRIMARY } from '../../Colors';
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
-import { ActivityIndicator, Alert, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
 import { Text } from 'react-native-paper';
 import Constants from 'expo-constants';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import { MaterialTabBar, Tabs } from 'react-native-collapsible-tab-view';
 import GalleryScreen from '../room/GalleryScreen';
 import MemoryScreen from '../room/MemoryScreen';
 import CommentScreen from '../room/CommentScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Image } from 'expo-image';
+import { useDialogState } from '../../contexts/DialogContext';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -28,7 +29,9 @@ const RoomTab2 = () => {
     //컨텍스트 데이터
     const [room, setRoom] = useRoomState();
     const [user] = useUserState();
+
     const [, setSnackbar] = useSnackBarState();
+    const [, setDialog] = useDialogState();
 
     //라우터 파라미터
     const { params } = useRoute();
@@ -40,9 +43,9 @@ const RoomTab2 = () => {
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
 
-    const [galleryIcon, setGalleryIcon] = useState('view-grid')
-    const [memoryIcon, setMemoryIcon] = useState('video-outline')
-    const [commentIcon, setCommentIcon] = useState('comment-text-outline')
+    const [galleryIcon, setGalleryIcon] = useState('view-grid');
+    const [memoryIcon, setMemoryIcon] = useState('video-outline');
+    const [commentIcon, setCommentIcon] = useState('comment-text-outline');
 
 
     useLayoutEffect(() => {
@@ -52,12 +55,15 @@ const RoomTab2 = () => {
                 setRoom(await readRoom(roomNum));
                 setIsReady(true);
             } catch (e) {
-                Alert.alert('통신 에러', '추모관 정보를 읽어 오는데 실패하였습니다', [{
-                    text: '확인',
-                    onPress: () => {
+                setDialog({
+                    title: '통신 에러',
+                    message: '추모관 정보를 읽어 오는데 실패하였습니다.',
+                    onPress: async () => {
                         navigation.goBack();
-                    }
-                }]);
+                    },
+                    visible: true,
+                    isConfirm: false
+                });
             }
         })();
     }, [roomNum]);
@@ -108,21 +114,26 @@ const RoomTab2 = () => {
         return (
             <View style={styles.header}>
                 <View style={styles.petInfoTextContainer}>
-                    <AvatarImage
-                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}
-                        size={48} />
+                    <Image style={[{ width: 48, height: 48, borderRadius: 24 }]}
+                           cachePolicy={'memory'}
+                           source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+
+                    {/*<AvatarImage*/}
+                    {/*    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')}*/}
+                    {/*    size={48} />*/}
                     <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
                 </View>
 
                 <Text style={[styles.petDataText, { marginVertical: 20 }]} variant={'bodyLarge'}>{room.content}</Text>
 
                 {/*정보*/}
-                <View>
+                <View style={{ flexDirection: 'row' }}>
                     {/*나이*/}
                     <View style={styles.petDataContainer}>
                         <Text style={styles.petDataTitle} variant={'titleMedium'}>Age</Text>
                         <Text style={styles.petDataText} variant={'bodyLarge'}>{room.age}</Text>
                     </View>
+
 
                     {/*성별*/}
                     <View style={styles.petDataContainer}>
@@ -135,7 +146,7 @@ const RoomTab2 = () => {
                     {/*떠나보낸 날짜*/}
                     <View style={[styles.petDataContainer, { marginBottom: 0 }]}>
                         <Text style={styles.petDataTitle} variant={'titleMedium'}>Date</Text>
-                        <Text style={styles.petDataText} variant={'bodyLarge'}>~ {room.date}</Text>
+                        <Text style={styles.petDataText} variant={'bodyLarge'}>~{room.date}</Text>
                     </View>
                 </View>
             </View>
@@ -146,9 +157,9 @@ const RoomTab2 = () => {
         isReady ?
             <Tabs.Container
                 onIndexChange={(index) => {
-                    setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline')
-                    setMemoryIcon(index === 1 ? 'video' : 'video-outline')
-                    setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline')
+                    setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline');
+                    setMemoryIcon(index === 1 ? 'video' : 'video-outline');
+                    setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline');
                 }}
                 allowHeaderOverscroll
                 // headerHeight={HEADER_HEIGHT}
@@ -162,15 +173,18 @@ const RoomTab2 = () => {
                                     indicatorStyle={{ backgroundColor: PRIMARY.DEFAULT }} />}
             >
                 <Tabs.Tab name={RoomRoutes.GALLERY}
-                          label={(props) => <MaterialCommunityIcons name={galleryIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                          label={(props) => <MaterialCommunityIcons name={galleryIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
                     <GalleryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.MEMORY}
-                          label={(props) => <MaterialCommunityIcons name={memoryIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                          label={(props) => <MaterialCommunityIcons name={memoryIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
                     <MemoryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.COMMENT}
-                          label={(props) => <MaterialCommunityIcons name={commentIcon} size={24} color={PRIMARY.DEFAULT} />}>
+                          label={(props) => <MaterialCommunityIcons name={commentIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
                     <CommentScreen />
                 </Tabs.Tab>
             </Tabs.Container>
@@ -247,14 +261,14 @@ const styles = StyleSheet.create({
         marginStart: 10
     },
     petDataContainer: {
-        flexDirection: 'row',
+        // flexDirection: 'row',
+        flex: 1,
         alignItems: 'center',
         marginBottom: 10
     },
     petDataTitle: {
         fontWeight: 'bold',
-        color: PRIMARY.DARK,
-        width: 75
+        color: PRIMARY.DEFAULT
     },
     petDataText: {
         color: GRAY.DEFAULT

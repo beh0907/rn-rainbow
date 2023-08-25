@@ -1,10 +1,9 @@
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import CommentScreen from '../room/CommentScreen';
-import RoomScreen from '../room/RoomScreen';
 import GalleryScreen from '../room/GalleryScreen';
 import MemoryScreen from '../room/MemoryScreen';
-import { GRAY, PRIMARY, WHITE } from '../../Colors';
+import { GRAY, PRIMARY } from '../../Colors';
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
@@ -15,10 +14,10 @@ import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Surface, Text } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { Image } from 'expo-image';
 import Constants from 'expo-constants';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { useDialogState } from '../../contexts/DialogContext';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -29,7 +28,9 @@ const RoomTab = () => {
     //컨텍스트 데이터
     const [room, setRoom] = useRoomState();
     const [user] = useUserState();
+
     const [, setSnackbar] = useSnackBarState();
+    const [, setDialog] = useDialogState()
 
     //라우터 파라미터
     const { params } = useRoute();
@@ -48,12 +49,15 @@ const RoomTab = () => {
                 setRoom(await readRoom(roomNum));
                 setIsReady(true);
             } catch (e) {
-                Alert.alert('통신 에러', '추모관 정보를 읽어 오는데 실패하였습니다', [{
-                    text: '확인',
-                    onPress: () => {
+                setDialog({
+                    title: '통신 에러',
+                    message: '추모관 정보를 읽어 오는데 실패하였습니다.',
+                    onPress: async () => {
                         navigation.goBack();
-                    }
-                }]);
+                    },
+                    visible: true,
+                    isConfirm: false
+                });
             }
         })();
     }, [roomNum]);
@@ -106,14 +110,18 @@ const RoomTab = () => {
 
                 {/*상단 메인 정보*/}
                 <View style={{
-                    padding: 16,
+                    padding: 16
                 }}>
                     <View style={styles.petInfoTextContainer}>
-                        <AvatarImage source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} size={48}/>
+
+                        <Image style={{ width: 48, height: 48, borderRadius: 24 }} cachePolicy={'memory'}
+                               source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                        {/*<AvatarImage source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} size={48}/>*/}
                         <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
                     </View>
 
-                    <Text style={[styles.petDataText, {marginVertical: 20}]} variant={'bodyLarge'}>{room.content}</Text>
+                    <Text style={[styles.petDataText, { marginVertical: 20 }]}
+                          variant={'bodyLarge'}>{room.content}</Text>
 
                     {/*정보*/}
                     <View>
@@ -224,7 +232,7 @@ const styles = StyleSheet.create({
     },
     petDataText: {
         color: GRAY.DEFAULT
-    },
+    }
 });
 
 export default RoomTab;

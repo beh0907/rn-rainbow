@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -10,20 +10,26 @@ import SafeInputView from '../../components/view/SafeInputView';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
 import { addHyphen } from '../../utils/checkInputForm';
-import { modify } from '../../api/Auth';
+import { modify, remove } from '../../api/Auth';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import Constants from 'expo-constants';
 import TextButton from '../../components/button/TextButton';
-import { AuthRoutes } from '../../navigations/Routes';
+import { Image } from 'expo-image';
+import { useDialogState } from '../../contexts/DialogContext';
+import * as Auth from '../../api/Auth';
+import * as SecureStore from '../../utils/PreferenceStore';
+import { AuthFormTypes } from '../../reducer/AuthFormReducer';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();
+
     const [, setSnackbar] = useSnackBarState();
+    const [, setDialog] = useDialogState()
+
     const { top, bottom } = useSafeAreaInsets();
     const navigation = useNavigation();
 
@@ -35,6 +41,7 @@ const ProfileUpdateScreen = props => {
     const nickNameRef = useRef();
     const mailRef = useRef();
     const phoneRef = useRef();
+
 
     const pickImage = useCallback(async () => {
         // No permissions request is necessary for launching the image library
@@ -59,7 +66,7 @@ const ProfileUpdateScreen = props => {
 
             //1이 들어오면 성공 0이면 실패
             if (result === 1) {
-                setUser(paramUser);
+                setUser({ ...user, ...profile });
                 setSnackbar(prev => ({
                     message: '유저 정보가 수정되었습니다.',
                     visible: true
@@ -70,6 +77,20 @@ const ProfileUpdateScreen = props => {
         }
     };
 
+    const onLeave = async () => {
+        setDialog({
+            title: '회원 탈퇴',
+            message: '탈퇴한 회원 정보는 복구가 불가능합니다.\n그래서 정말로 탈퇴하시겠습니까?',
+            onPress: async () => {
+                await Auth.remove(user)
+                await SecureStore.signOutSecureStore();
+                setUser({});
+            },
+            visible: true,
+            isConfirm: true
+        });
+    }
+
     return (
         <SafeInputView>
             <View style={[styles.container, { paddingTop: top }]}>
@@ -79,9 +100,13 @@ const ProfileUpdateScreen = props => {
                             //새로 선택했거나 이미 저장된 프로필 사진이 있다면 적용
                             //이미 저장된 프로필 사진이 있더라도 새로 선택한 사진이 있다면 그것을 표시한다
                             image || user.image ?
-                                <AvatarImage source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }}
-                                             size={100}
-                                             style={styles.photo} />
+                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }, styles.photo]}
+                                       cachePolicy={'memory'}
+                                       source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
+
+                                // <AvatarImage source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }}
+                                //              size={100}
+                                //              style={styles.photo} />
                                 : <AvatarText label={user.nickName.charAt(0)} Text size={100}
                                               style={styles.photo} />
                         }
@@ -176,12 +201,12 @@ const ProfileUpdateScreen = props => {
                     </ScrollView>
                 </View>
 
-                <View style={{ flexDirection: 'row', justifyContent:'center', alignContent:'center' }}>
+                <View style={{ flexDirection: 'row', justifyContent: 'center', alignContent: 'center' }}>
                     <Text style={{ color: '#879194' }}>회원을 탈퇴하고 싶으신가요? </Text>
-                    <TextButton onPress={() => {}} title={'회원 탈퇴'}
+                    <TextButton onPress={onLeave} title={'회원 탈퇴'}
                                 styles={{
                                     button: {
-                                        marginBottom: 10
+                                        marginBottom: 20
                                     },
                                     title: {
                                         textDecorationLine: 'underline'

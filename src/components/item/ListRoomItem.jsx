@@ -8,14 +8,13 @@ import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { GRAY, PRIMARY } from '../../Colors';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Constants from 'expo-constants';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 
-const VerticalListRoomItem = memo(({ room }) => {
+const ListRoomItem = memo(({ room }) => {
     const navigation = useNavigation();
 
     const pressItem = ({ roomNum }) => {
@@ -30,12 +29,8 @@ const VerticalListRoomItem = memo(({ room }) => {
                 <View style={{ flexDirection: 'row' }}>
 
                     <View style={{ flex: 1 }}>
-                        <Image
-                            style={styles.image}
-                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
-
-                        {/*<Card.Cover style={styles.image}*/}
-                        {/*            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />*/}
+                        <Card.Cover style={styles.image}
+                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
                         <View style={styles.overlayTitle}>
                             <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
                         </View>
@@ -48,7 +43,12 @@ const VerticalListRoomItem = memo(({ room }) => {
                         <View style={styles.userContainer}>
                             {
                                 room.userImage ?
-                                    <AvatarImage source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} size={24} />
+
+                                    <Image style={[{ width: 24, height: 24, borderRadius: 12 }, styles.profileImage]}
+                                           cachePolicy={'memory'}
+                                           source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} />
+
+                                    // <AvatarImage source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} size={24} />
                                     : <AvatarText label={room.userNickName.charAt(0)} Text size={24} />
                             }
                             <Text numberOfLines={1}
@@ -56,7 +56,7 @@ const VerticalListRoomItem = memo(({ room }) => {
                         </View>
 
                         {/*반려동물 이름 및 나이*/}
-                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop:5 }}>
+                        <View style={{ flexDirection: 'row', alignItems: 'center', marginTop: 5 }}>
                             <Subheading numberOfLines={1} style={styles.title}>{room.name} </Subheading>
                             {/*<Subheading> ({room.age})</Subheading>*/}
                         </View>
@@ -94,9 +94,9 @@ const VerticalListRoomItem = memo(({ room }) => {
     );
 });
 
-VerticalListRoomItem.displayName = 'VerticalListRoomItem';
+ListRoomItem.displayName = 'ListRoomItem';
 
-VerticalListRoomItem.propTypes = {
+ListRoomItem.propTypes = {
     room: PropTypes.object.isRequired
 };
 
@@ -157,4 +157,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default VerticalListRoomItem;
+export default ListRoomItem;

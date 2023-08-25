@@ -1,13 +1,14 @@
 import React, { memo, useCallback } from 'react';
-import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import PropTypes from 'prop-types';
-import {  MaterialIcons } from '@expo/vector-icons';
+import { MaterialIcons } from '@expo/vector-icons';
 import { GRAY, PRIMARY } from '../../Colors';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import Constants from 'expo-constants';
 import ViewMoreText from 'react-native-view-more-text';
 import { IconButton } from 'react-native-paper';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -39,17 +40,29 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
         <View style={styles.container}>
             {
                 comment.image ?
-                    <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} size={48}
-                                 style={styles.profileImage} />
+                    <Image style={[{ width: 48, height: 48, borderRadius: 24 }, styles.profileImage]} cachePolicy={'memory'}
+                           source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} />
+                    // <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} size={48}
+                    //              style={styles.profileImage} />
                     : <AvatarText label={comment.nickName.charAt(0)} Text size={48}
                                   style={styles.profileImage} />
             }
 
             {/*<AvatarText style={styles.profileImage} label={comment.nickName.charAt(0)} Text size={36} />*/}
             <View style={styles.commentInfo}>
-                <Text style={styles.nickName}>{comment.nickName}</Text>
-                <Text style={styles.commentDate}>{calculateTimeDifference(comment.date)}</Text>
-                {/*<Text style={styles.commentContent}>{comment.content}</Text>*/}
+                <View style={{flexDirection:"row", alignItems:'center', justifyContent:"space-between"}}>
+                    <View>
+                        <Text style={styles.nickName} numberOfLines={1}>{comment.nickName}</Text>
+                        <Text style={styles.commentDate}>{calculateTimeDifference(comment.date)}</Text>
+                        {/*<Text style={styles.commentContent}>{comment.content}</Text>*/}
+                    </View>
+
+                    {isCanDelete && (
+                        <IconButton mode={'outlined'} icon={'delete'} iconColor={PRIMARY.DEFAULT}
+                                    size={24} onPress={() => removeComment(comment)} />
+                    )}
+                </View>
+
 
                 <ViewMoreText
                     numberOfLines={3}
@@ -74,12 +87,6 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
                 </ViewMoreText>
 
             </View>
-            {isCanDelete && (
-                <IconButton style={styles.deleteButton} icon={'delete'} iconColor={PRIMARY.DEFAULT} size={24} onPress={() => removeComment(comment)}/>
-                // <TouchableOpacity style={styles.deleteButton} onPress={() => removeComment(comment)}>
-                //     <MaterialIcons name='delete' size={24} color={PRIMARY.DEFAULT} />
-                // </TouchableOpacity>
-            )}
         </View>
     );
 });
@@ -118,7 +125,7 @@ const styles = StyleSheet.create({
     },
     commentContent: {
         fontSize: 14,
-        flexWrap: 'wrap',
+        flexWrap: 'wrap'
     },
     containerCollapse: {
         flexDirection: 'row',
@@ -129,12 +136,6 @@ const styles = StyleSheet.create({
     commentCollapse: {
         color: GRAY.DEFAULT
     },
-    deleteButton: {
-        position: 'absolute',
-        top: 0,
-        right: 0,
-        paddingHorizontal: 8
-    }
 });
 
 export default CommentItem;

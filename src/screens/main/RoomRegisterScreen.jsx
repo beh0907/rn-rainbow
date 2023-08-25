@@ -15,6 +15,7 @@ import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { Image } from 'expo-image';
 
 const RoomRegisterScreen = () => {
     const navigation = useNavigation();
@@ -91,8 +92,13 @@ const RoomRegisterScreen = () => {
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
                     <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
-                        <AvatarImage source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}
-                                     size={100} />
+
+                        <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
+                               cachePolicy={'memory'}
+                               source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}/>
+
+                        {/*<AvatarImage source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}*/}
+                        {/*             size={100} />*/}
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>

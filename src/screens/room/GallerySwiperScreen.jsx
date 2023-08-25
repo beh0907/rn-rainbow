@@ -1,7 +1,7 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { FlatList, StyleSheet, TouchableOpacity, useWindowDimensions, View } from 'react-native';
+import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Image } from 'expo-image';
 import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -68,7 +68,7 @@ const GallerySwiperScreen = () => {
 
                         <View style={{ width, height }}>
                             <Image style={[StyleSheet.absoluteFillObject]}
-                                   contentFit={'cover'}
+                                   contentFit={'contain'}
                                    source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }} />
                         </View>
                     );
@@ -86,17 +86,18 @@ const GallerySwiperScreen = () => {
                     contentContainerStyle={{ paddingHorizontal: SPACING }}
                     renderItem={({ item, index }) => {
                         return (
-                            <TouchableOpacity activeOpacity={0.5} onPress={() => scrollToActivityIndex(index)}>
+                            <Pressable onPress={() => scrollToActivityIndex(index)}
+                                       style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
                                 <Image style={{
                                     width: THUMB_SIZE,
                                     height: THUMB_SIZE,
                                     borderRadius: 12,
                                     marginRight: SPACING,
-                                    borderWidth: 2,
-                                    borderColor: activityIndex === index ? PRIMARY.DEFAULT : 'transparent'
+                                    borderWidth: 4,
+                                    borderColor: activityIndex === index ? PRIMARY.LIGHT : 'transparent'
                                 }}
                                        source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/s_${item.name}` }} />
-                            </TouchableOpacity>
+                            </Pressable>
                         );
                     }} />
             </View>

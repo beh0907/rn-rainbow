@@ -32,12 +32,12 @@ const MainTab = () => {
             }}>
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{
-                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'home'}),
+                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'home', color:PRIMARY.DEFAULT}),
                                 tabBarLabel: '추모관'
                             }}/>
                 <Tab.Screen name={ContentRoutes.BOARD} component={BoardScreen}
                             options={{
-                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'post'}),
+                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'post', color:PRIMARY.DEFAULT}),
                                 tabBarLabel: '게시글'
                             }}/>
 
@@ -46,12 +46,12 @@ const MainTab = () => {
 
                 <Tab.Screen name={ContentRoutes.TEST} component={TestScreen}
                             options={{
-                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'clipboard-list'}),
+                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'clipboard-list', color:PRIMARY.DEFAULT}),
                                 tabBarLabel: '자가진단'
                             }}/>
                 <Tab.Screen name={ContentRoutes.MY_PAGE} component={MyPageScreen}
                             options={{
-                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'account'}),
+                                tabBarIcon: (props) => getTabBarIcon({...props, name: 'account', color:PRIMARY.DEFAULT}),
                                 tabBarLabel: '마이 페이지'
                             }}/>
             </Tab.Navigator>
