@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Button from '../../components/button/Button';
 import * as Room from '../../api/Room';
 import DatePicker from '../../components/message/DatePicker';
-import { formatDate } from '../../utils/checkInputForm';
+import { formatDate } from '../../utils/DateUtil';
 import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
@@ -92,13 +92,8 @@ const RoomRegisterScreen = () => {
             <View style={[styles.container, { paddingTop: top }]}>
                 <View style={styles.profile}>
                     <View style={[styles.photo, room.image || { backgroundColor: GRAY.DEFAULT }]}>
-
-                        <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
-                               cachePolicy={'memory'}
-                               source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}/>
-
-                        {/*<AvatarImage source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}*/}
-                        {/*             size={100} />*/}
+                        <AvatarImage source={image ? { uri: image } : require('../../../assets/background/bg_temp.jpg')}
+                                     size={100} />
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />
                         </Pressable>

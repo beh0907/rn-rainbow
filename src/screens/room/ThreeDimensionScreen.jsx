@@ -1,86 +1,102 @@
-import React, { useRef } from 'react';
-import { View } from 'react-native';
-// import { GLView } from 'expo-gl';
-// import * as THREE from 'three';
-// import ExpoTHREE from 'expo-three';
-// import { Asset } from 'expo-asset';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, View } from 'react-native';
+import { GLView } from 'expo-gl';
+import { Asset } from 'expo-asset';
+import { Renderer } from 'expo-three';
 
-// global.THREE = global.THREE || THREE; // 전역 객체로 설정
+global.THREE = global.THREE || THREE; // 전역 객체로 설정
+
+
+const loadModelAsync = async (objUri, mtlUri) => {
+    const mtlLoader = new THREE.MTLLoader();
+    const materials = await new Promise((resolve, reject) => {
+        mtlLoader.load(mtlUri, resolve, null, reject);
+    });
+
+    materials.preload();
+
+    const objLoader = new THREE.OBJLoader();
+    objLoader.setMaterials(materials);
+    const obj = await new Promise((resolve, reject) => {
+        objLoader.load(objUri, resolve, null, reject);
+    });
+
+    return obj;
+};
 
 const ThreeDimensionScreen = () => {
-    // const glViewRef = useRef(null);
-    //
-    // const onContextCreate = async (gl) => {
-    //     const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
-    //
-    //     const scene = new THREE.Scene();
-    //     const camera = new THREE.PerspectiveCamera(75, width / height, 0.1, 1000);
-    //     camera.position.z = 5;
-    //
-    //     const renderer = new ExpoTHREE.Renderer({ gl });
-    //     renderer.setSize(width, height);
-    //
-    //     const australianCattleDogBump = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_bump.jpg'));
-    //     const australianCattleDogDif = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_dif.jpg'));
-    //     const australianCattleDogObj = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_v3.obj'));
-    //     const australianCattleDogMtl = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_v3.mtl'));
-    //
-    //     await Promise.all([
-    //         australianCattleDogBump.downloadAsync(),
-    //         australianCattleDogDif.downloadAsync(),
-    //         australianCattleDogObj.downloadAsync(),
-    //         australianCattleDogMtl.downloadAsync(),
-    //     ]);
-    //
-    //     const resources = {
-    //         'australian_cattle_dog_bump.jpg': australianCattleDogBump.uri,
-    //         'australian_cattle_dog_dif.jpg': australianCattleDogDif.uri,
-    //         'australian_cattle_dog_v3.obj': australianCattleDogObj.uri,
-    //         'assets/3d/australian_cattle_dog_v3.mtl': australianCattleDogMtl.uri,
-    //     };
-    //
-    //     // Load textures asynchronously
-    //     const bumpTexture = await ExpoTHREE.loadAsync({
-    //         asset: resources['australian_cattle_dog_bump.jpg'],
-    //     });
-    //
-    //     const difTexture = await ExpoTHREE.loadAsync({
-    //         asset: resources['australian_cattle_dog_dif.jpg'],
-    //     });
-    //
-    //     // Load OBJ and MTL asynchronously
-    //     const obj = await ExpoTHREE.loadAsync(
-    //         [resources['australian_cattle_dog_v3.obj'], resources['assets/3d/australian_cattle_dog_v3.mtl']],
-    //         null,
-    //         imageName => resources[imageName]
-    //     );
-    //
-    //     obj.traverse(child => {
-    //         if (child instanceof THREE.Mesh) {
-    //             child.material.map = difTexture; // Diffuse texture
-    //             child.material.bumpMap = bumpTexture; // Bump texture
-    //             child.material.bumpScale = 0.2; // Adjust the bump effect
-    //         }
-    //     });
-    //
-    //     scene.add(obj);
-    //
-    //     const animate = () => {
-    //         requestAnimationFrame(animate);
-    //         renderer.render(scene, camera);
-    //     };
-    //     animate();
-    // };
+    const glViewRef = useRef(null);
+    const [modelLoaded, setModelLoaded] = useState(false);
+
+    const onContextCreate = async (gl) => {
+        console.log('시작2');
+        const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
+        const sceneColor = '#FFFFFF';
+
+        // Scene
+        const scene = new THREE.Scene();
+
+        // Camera
+        const camera = new THREE.PerspectiveCamera(75, width / height, 0.01, 1000);
+        camera.position.set(2, 5, 5);
+
+        // Renderer
+        const renderer = new Renderer({ gl, width, height });
+        renderer.setClearColor(sceneColor);
+
+        // Model
+        const objAsset = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_v3.obj'));
+        await objAsset.downloadAsync();
+        const mtlAsset = Asset.fromModule(require('../../../assets/3d/australian_cattle_dog_v3.mtl'));
+        await mtlAsset.downloadAsync();
+        const objUri = objAsset.localUri;
+        const mtlUri = mtlAsset.localUri;
+
+        const model = await loadModelAsync(objUri, mtlUri);
+        scene.add(model);
+
+        // Light
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 10, 5);
+        scene.add(dirLight);
+
+        // Render loop
+        const render = () => {
+            requestAnimationFrame(render);
+            model.rotation.y += 0.01;
+            camera.lookAt(scene.position);
+            renderer.render(scene, camera);
+
+            console.log(model.rotation.y);
+
+            gl.endFrameEXP();
+        };
+
+        setModelLoaded(true);
+        render();
+    };
 
     return (
-        <View style={{ flex: 1 }}>
-            {/*<GLView*/}
-            {/*    ref={glViewRef}*/}
-            {/*    style={{ flex: 1 }}*/}
-            {/*    onContextCreate={onContextCreate}*/}
-            {/*/>*/}
+        <View style={styles.container}>
+            <GLView
+                ref={glViewRef}
+                style={{ flexGrow: 1 }}
+                onContextCreate={onContextCreate}
+            />
         </View>
     );
 };
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF'
+    }
+});
 
 export default ThreeDimensionScreen;

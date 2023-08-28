@@ -8,14 +8,14 @@ import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
-import { ActivityIndicator, Alert, Dimensions, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
 import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { Text } from 'react-native-paper';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import Constants from 'expo-constants';
 import { useDialogState } from '../../contexts/DialogContext';
 
@@ -30,7 +30,7 @@ const RoomTab = () => {
     const [user] = useUserState();
 
     const [, setSnackbar] = useSnackBarState();
-    const [, setDialog] = useDialogState()
+    const [, setDialog] = useDialogState();
 
     //라우터 파라미터
     const { params } = useRoute();
@@ -113,10 +113,9 @@ const RoomTab = () => {
                     padding: 16
                 }}>
                     <View style={styles.petInfoTextContainer}>
-
-                        <Image style={{ width: 48, height: 48, borderRadius: 24 }} cachePolicy={'memory'}
-                               source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
-                        {/*<AvatarImage source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} size={48}/>*/}
+                        <AvatarImage
+                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
+                            size={48} />
                         <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
                     </View>
 

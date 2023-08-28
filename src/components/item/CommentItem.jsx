@@ -9,41 +9,18 @@ import Constants from 'expo-constants';
 import ViewMoreText from 'react-native-view-more-text';
 import { IconButton } from 'react-native-paper';
 import { Image } from 'expo-image';
+import { calculateTimeDifference } from '../../utils/DateUtil';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
 
-    const calculateTimeDifference = useCallback((dateTime) => {
-        const currentDateTime = new Date();
-        const targetDateTime = new Date(dateTime);
-
-        const yearDiff = currentDateTime.getFullYear() - targetDateTime.getFullYear();
-        if (yearDiff > 0) return yearDiff + '년 전';
-
-        const monthDiff = currentDateTime.getMonth() - targetDateTime.getMonth();
-        if (monthDiff > 0) return monthDiff + '개월 전';
-
-        const dayDiff = currentDateTime.getDate() - targetDateTime.getDate();
-        if (dayDiff > 0) return dayDiff + '일 전';
-
-        const hourDiff = currentDateTime.getHours() - targetDateTime.getHours();
-        if (hourDiff > 0) return hourDiff + '시간 전';
-
-        const minuteDiff = currentDateTime.getMinutes() - targetDateTime.getMinutes();
-        if (minuteDiff > 0) return minuteDiff + '분 전';
-
-        return '방금';
-    }, []);
-
     return (
         <View style={styles.container}>
             {
                 comment.image ?
-                    <Image style={[{ width: 48, height: 48, borderRadius: 24 }, styles.profileImage]} cachePolicy={'memory'}
-                           source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} />
-                    // <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/profile.jpg` }} size={48}
-                    //              style={styles.profileImage} />
+                    <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/${comment.image}?version=${comment.userUpdateDate}` }} size={48}
+                                 style={styles.profileImage} />
                     : <AvatarText label={comment.nickName.charAt(0)} Text size={48}
                                   style={styles.profileImage} />
             }

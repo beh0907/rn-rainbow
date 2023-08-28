@@ -10,7 +10,6 @@ import InputTextButton from '../../components/view/inputTextButton';
 import { Text } from 'react-native-paper';
 import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
-import { FlashList } from '@shopify/flash-list';
 
 import { Tabs } from 'react-native-collapsible-tab-view';
 
@@ -92,26 +91,30 @@ const CommentScreen = () => {
         <View style={[styles.container]}>
             {/*로딩 중일때는 인디케이터 표시*/}
             {comments.length === 0 ?
-                <View style={styles.emptyComment}>
-                    <Text>등록된 댓글이 없습니다</Text>
-                </View>
+                <Tabs.ScrollView
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    showsVerticalScrollIndicator={false}>
+                    <Text style={{position:'absolute',  top: '50%'}}>등록된 댓글이 없습니다</Text>
+                </Tabs.ScrollView>
                 :
-
-                <Tabs.FlashList
-                    estimatedListSize={{ width, height }}
-                    estimatedItemSize={92}
-                    showsVerticalScrollIndicator={false}
-                    // style={styles.commentList}
-                    // contentContainerStyle={styles.commentList}
-                    ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                    keyExtractor={(item, index) => index}
-                    data={comments}
-                    renderItem={({ item }) =>
-                        //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
-                        <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
-                                     removeComment={removeComment} />
-                    }
-                />
+                <View style={{ flex: 1, marginTop: 16 }} contentContainerStyle={{justifyContent:'flex-start'}}>
+                    <Tabs.FlashList
+                        estimatedListSize={{ width, height }}
+                        estimatedItemSize={92}
+                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={styles.commentList}
+                        ItemSeparatorComponent={() => <View style={styles.separator}></View>}
+                        keyExtractor={(item, index) => index.toString()}
+                        data={comments}
+                        renderItem={({ item }) =>
+                            //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                            <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
+                                         removeComment={removeComment} />
+                        }
+                        refreshing={isLoading}
+                        onRefresh={readCommentList}
+                    />
+                </View>
             }
 
             {/*댓글 작성 입력창*/}
@@ -120,7 +123,7 @@ const CommentScreen = () => {
                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={comment === ''}
                 styles={{
                     input: {
-                        marginTop: 10
+                        margin: 16
                     }
                 }} />
         </View>
@@ -132,26 +135,13 @@ CommentScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        padding: 16,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: WHITE
-    },
-    commentList: {
-        flex: 1,
-        width: '100%'
     },
     separator: {
         marginVertical: 16
     },
-    postButton: {
-        marginTop: 12,
-        marginStart: 10
-    },
-    emptyComment: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+    commentList: {
+        paddingHorizontal: 16,
     }
 });
 

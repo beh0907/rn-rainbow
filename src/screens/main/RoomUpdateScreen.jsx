@@ -10,7 +10,7 @@ import * as ImagePicker from 'expo-image-picker';
 import Button from '../../components/button/Button';
 import * as Room from '../../api/Room';
 import DatePicker from '../../components/message/DatePicker';
-import { formatDate } from '../../utils/checkInputForm';
+import { formatDate, formatDateTime } from '../../utils/DateUtil';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import Constants from 'expo-constants';
@@ -63,9 +63,10 @@ const RoomUpdateScreen = () => {
 
     /**추모관 생성*/
     const onModify = async () => {
-        const paramRoom = { ...updateRoom, date: formatDate(date) };
+        const paramRoom = { ...updateRoom, date: formatDate(date), updateDate: formatDateTime(new Date)};
 
         const result = await Room.modifyRoom(paramRoom, image);
+
         //업데이트가 완료됐을 때 전역 추모관 객체를 갱신한다
         setRoom(paramRoom);
 
@@ -97,17 +98,12 @@ const RoomUpdateScreen = () => {
                         {
                             image || updateRoom.image
                                 ?
-                                // <AvatarImage
-                                //     size={100}
-                                //     source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
-                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
-                                       cachePolicy={'memory'}
-                                       source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}` }} />
+                                <AvatarImage
+                                    size={100}
+                                    source={{ uri: image ? image : `${BASE_URL_FILE}${updateRoom.id}/${updateRoom.roomNum}/profile/${updateRoom.image}?version=${updateRoom.updateDate}` }} />
                                 :
-                                // <AvatarImage
-                                //     size={100} source={require('../../../assets/background/bg_temp.jpg')} />
-                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }]}
-                                       source={require('../../../assets/background/bg_temp.jpg')} />
+                                <AvatarImage
+                                    size={100} source={require('../../../assets/background/bg_temp.jpg')} />
                         }
                         <Pressable style={styles.editButton} onPress={pickImage}>
                             <MaterialCommunityIcons name='file-image' size={20} color={WHITE} />

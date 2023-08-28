@@ -22,7 +22,7 @@ const CarouselItem = memo(({ room }) => {
     return (
         <Card style={[styles.container]} elevation={1} onPress={() => pressItem(room)}>
             <Card.Cover style={styles.image}
-                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')} />
             <Card.Content style={styles.overlayTitle}>
                 {/*반려동물 이름 및 나이*/}
                 <View style={{ flexDirection: 'row', alignItems: 'center' }}>

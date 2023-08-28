@@ -1,18 +1,17 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { ActivityIndicator, LayoutAnimation, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { IconButton, Text } from 'react-native-paper';
+import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { IconButton } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
 import { PRIMARY, WHITE } from '../../Colors';
 import { useNavigation } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
-import MemoryItem from '../../components/item/MemoryItem';
 import { useUserState } from '../../contexts/UserContext';
-import { FlashList } from '@shopify/flash-list';
 import { RoomRoutes } from '../../navigations/Routes';
 import { Tabs } from 'react-native-collapsible-tab-view';
 import * as Memory from '../../api/Memory';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
+import MemoryItem from '../../components/item/MemoryItem';
 
 
 const MemoryScreen = () => {
@@ -27,7 +26,7 @@ const MemoryScreen = () => {
     const navigation = useNavigation();
     const { width, height } = useWindowDimensions();
 
-    const listRef = useRef(null)
+    const listRef = useRef(null);
 
     useLayoutEffect(() => {
         (async () => {
@@ -54,11 +53,11 @@ const MemoryScreen = () => {
         });
 
         if (result.assets) {
-            console.log("result : ", result)
+            console.log('result : ', result);
             navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
-                uri:result.assets[0].uri,
+                uri: result.assets[0].uri,
                 room
-            })
+            });
         }
     }, []);
 
@@ -88,22 +87,26 @@ const MemoryScreen = () => {
     return (
         <View style={[styles.container]}>
             {memories.length === 0 ?
-                <Text>등록된 추억이 없습니다</Text>
+                <Tabs.ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                                 showsVerticalScrollIndicator={false}>
+                    <Text style={{ position: 'absolute', top: '50%' }}>등록된 추억이 없습니다</Text>
+                </Tabs.ScrollView>
                 :
                 <Tabs.FlashList
                     ref={listRef}
-                    estimatedListSize={{ width, height }}
+                    // estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
-                    // style={styles.commentList}
-                    contentContainerStyle={styles.commentList}
+                    contentContainerStyle={styles.memoryList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item, index) => index.toString()}
                     data={memories}
                     renderItem={({ item }) =>
                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
                         <MemoryItem memory={item} removeMemory={removeMemory} />
                     }
+                    refreshing={isLoading}
+                    onRefresh={readMemoryList}
                 />
             }
 
@@ -124,10 +127,6 @@ MemoryScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        marginTop:16
-        // backgroundColor: WHITE
     },
     buttonContainer: {
         position: 'absolute',
@@ -135,10 +134,10 @@ const styles = StyleSheet.create({
         right: 10
     },
     separator: {
-        marginVertical:5
+        marginVertical: 10
     },
-    commentList: {
-        paddingVertical:10
+    memoryList: {
+        paddingVertical: 20
     }
 });
 

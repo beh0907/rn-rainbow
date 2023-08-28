@@ -80,7 +80,7 @@ const MemoryRegisterScreen = () => {
                 value={comment}
                 multiline={true}
                 numberOfLines={10}
-                style={{ width: '100%', marginBottom: 20, backgroundColor: WHITE, marginHorizontal: 16 }}
+                style={{ width: '100%' }}
                 onSubmitEditing={registerMemory}
                 returnKeyType={ReturnKeyTypes.DONE}
                 onChangeText={setComment}
@@ -96,11 +96,13 @@ const styles = StyleSheet.create({
         flex: 1,
         width: '100%',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        marginHorizontal:16
     },
     video: {
         backgroundColor: 'yellow',
         height: 200,
+        width:'100%',
         flex: 1
         // borderRadius: 20
     },

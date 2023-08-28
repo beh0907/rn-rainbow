@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { FlatList, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { FlatList, Pressable, useWindowDimensions, View } from 'react-native';
 import { Image } from 'expo-image';
 import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -51,8 +51,7 @@ const GallerySwiperScreen = () => {
         <View style={{ marginTop: top, marginBottom: bottom }}>
             <FlashList
                 ref={galleryRef}
-                estimatedListSize={{ width, height }}
-                estimatedItemSize={height}
+                estimatedItemSize={411}
                 pagingEnabled
                 horizontal
                 showsHorizontalScrollIndicator={false}
@@ -66,18 +65,15 @@ const GallerySwiperScreen = () => {
                         // <GallerySwiperItem
                         //     uri={`${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`} />
 
-                        <View style={{ width, height }}>
-                            <Image style={[StyleSheet.absoluteFillObject]}
-                                   contentFit={'contain'}
-                                   source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }} />
-                        </View>
+                        <Image style={{ width, height }}
+                               contentFit={'cover'}
+                               source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }} />
                     );
                 }} />
 
             <View style={{ position: 'absolute', bottom: THUMB_SIZE / 2 }}>
                 <FlatList
                     ref={thumbRef}
-                    estimatedListSize={{ width: width, height: THUMB_SIZE }}
                     estimatedItemSize={THUMB_SIZE}
                     horizontal
                     showsHorizontalScrollIndicator={false}

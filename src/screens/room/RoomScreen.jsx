@@ -24,7 +24,7 @@ const RoomScreen = () => {
                 {/*메인 이미지*/}
                 <Surface elevation={3} style={{ marginTop: 16, marginBottom: 32 }}>
                     <Image style={styles.petImage}
-                           source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                           source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')} />
                 </Surface>
 
                 {/*정보*/}

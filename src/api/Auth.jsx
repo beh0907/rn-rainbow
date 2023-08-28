@@ -1,6 +1,6 @@
 import axios from 'axios';
 import * as SecureStore from '../utils/PreferenceStore';
-import { uriToImageFile } from '../utils/imageUtil';
+import { uriToImageFile } from '../utils/ImageUtil';
 import { axiosApiInstance } from './AxiosInstance';
 
 export const signIn = async ({ id, password }, fcmToken = '') => {
@@ -70,6 +70,7 @@ export const modify = async (user, uri) => {
     if (uri !== null) {
         //file 객체 셋팅
         const file = uriToImageFile(user.id, uri);
+        user.image = "profile.jpg";
         formData.append('file', file);
     }
 

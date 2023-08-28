@@ -1,4 +1,4 @@
-import React, { memo } from 'react';
+import React, { memo, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Subheading, Text, Title } from 'react-native-paper';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -9,13 +9,23 @@ import { GRAY, PRIMARY } from '../../Colors';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Constants from 'expo-constants';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 
+function SkeletonContent(props) {
+    return null;
+}
+
+SkeletonContent.propTypes = {
+    isLoading: PropTypes.bool,
+    layout: PropTypes.any,
+    containerStyle: PropTypes.shape({ flex: PropTypes.number })
+};
 const ListRoomItem = memo(({ room }) => {
     const navigation = useNavigation();
+    const [isLoading, setIsLoading] = useState(false);
 
     const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
@@ -27,28 +37,26 @@ const ListRoomItem = memo(({ room }) => {
         <Pressable onPress={() => pressItem(room)}>
             <Card key={room.id} style={[styles.container]} elevation={1}>
                 <View style={{ flexDirection: 'row' }}>
-
                     <View style={{ flex: 1 }}>
                         <Card.Cover style={styles.image}
-                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` } : require('../../../assets/background/bg_temp.jpg')} />
+                            // defaultSource={} 이미지 로드 중 기본적으로 표시할 이미지
+                                    progressiveRenderingEnabled={true} 안드로이드에서 이미지 로딩 프로그레스 표시 여부
+                                    onLoadStart={() => setIsLoading(true)}
+                                    onLoadEnd={() => setIsLoading(false)}
+                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')} />
                         <View style={styles.overlayTitle}>
                             <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
                         </View>
                     </View>
-
-
                     <Card.Content style={styles.titleContainer}>
 
                         {/*유저 정보*/}
                         <View style={styles.userContainer}>
                             {
                                 room.userImage ?
-
-                                    <Image style={[{ width: 24, height: 24, borderRadius: 12 }, styles.profileImage]}
-                                           cachePolicy={'memory'}
-                                           source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} />
-
-                                    // <AvatarImage source={{ uri: `${BASE_URL_FILE}${room.id}/profile.jpg` }} size={24} />
+                                    <AvatarImage
+                                        source={{ uri: `${BASE_URL_FILE}${room.id}/${room.userImage}?version=${room.userUpdateDate}` }}
+                                        size={24} />
                                     : <AvatarText label={room.userNickName.charAt(0)} Text size={24} />
                             }
                             <Text numberOfLines={1}

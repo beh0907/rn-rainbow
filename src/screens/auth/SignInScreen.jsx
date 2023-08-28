@@ -1,12 +1,12 @@
 import React, { useCallback, useReducer, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Alert, Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { AuthRoutes } from '../../navigations/Routes';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
+import TextButton from '../../components/button/TextButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeInputView from '../../components/view/SafeInputView';
-import TextButton from '../../components/button/TextButton';
 import { StatusBar } from 'expo-status-bar';
 import { PRIMARY, WHITE } from '../../Colors';
 import { authFormReducer, AuthFormTypes, initAuthForm } from '../../reducer/AuthFormReducer';
@@ -28,7 +28,7 @@ const SignInScreen = () => {
     const { width } = useWindowDimensions();
 
     const passwordRef = useRef();
-    const [, setDialog] = useDialogState()
+    const [, setDialog] = useDialogState();
 
     const [form, dispatch] = useReducer(authFormReducer, initAuthForm);
     const [, setUser] = useUserState();
@@ -67,7 +67,7 @@ const SignInScreen = () => {
                     title: '로그인 실패',
                     message: '오류 발생',
                     onPress: async () => {
-                        dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
+                        dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
                     },
                     visible: true,
                     isConfirm: false
@@ -218,17 +218,6 @@ const SignInScreen = () => {
                         { width: width - 40, height: 50, alignSelf: 'center', marginBottom: 20 }}
                            source={require('../../../assets/background/bg_kakao_login.png')} />
                 </Pressable>
-
-                {/*<Button title={'카카오 로그인'} onPress={onSignInKaKao}*/}
-                {/*        styles={{*/}
-                {/*            container: {*/}
-                {/*                paddingHorizontal: 20,*/}
-                {/*                marginBottom: 20*/}
-                {/*            },*/}
-                {/*            button: {*/}
-                {/*                borderRadius: 4*/}
-                {/*            }*/}
-                {/*        }} />*/}
             </View>
         </SafeInputView>
     );

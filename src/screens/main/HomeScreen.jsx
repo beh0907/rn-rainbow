@@ -10,7 +10,7 @@ import { BLACK, PRIMARY, WHITE } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import InputTextButton from '../../components/view/inputTextButton';
 import Constants from 'expo-constants';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -65,9 +65,7 @@ const HomeScreen = props => {
 
                 {
                     user.image ?
-                        <Image style={{ width: 48, height: 48, borderRadius: 24 }} cachePolicy={'none'}
-                               source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
-                        // <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={48} />
+                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }} size={48} />
                         : <AvatarText label={user.nickName.charAt(0)} Text size={48} />
                 }
 

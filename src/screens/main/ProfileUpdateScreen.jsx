@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -9,18 +9,18 @@ import { Text, TextInput } from 'react-native-paper';
 import SafeInputView from '../../components/view/SafeInputView';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
-import { addHyphen } from '../../utils/checkInputForm';
-import { modify, remove } from '../../api/Auth';
+import { formatDateTime } from '../../utils/DateUtil';
+import * as Auth from '../../api/Auth';
+import { modify } from '../../api/Auth';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as ImagePicker from 'expo-image-picker';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import Constants from 'expo-constants';
 import TextButton from '../../components/button/TextButton';
-import { Image } from 'expo-image';
 import { useDialogState } from '../../contexts/DialogContext';
-import * as Auth from '../../api/Auth';
 import * as SecureStore from '../../utils/PreferenceStore';
-import { AuthFormTypes } from '../../reducer/AuthFormReducer';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { addHyphen } from '../../utils/CheckInputForm';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -28,7 +28,7 @@ const ProfileUpdateScreen = props => {
     const [user, setUser] = useUserState();
 
     const [, setSnackbar] = useSnackBarState();
-    const [, setDialog] = useDialogState()
+    const [, setDialog] = useDialogState();
 
     const { top, bottom } = useSafeAreaInsets();
     const navigation = useNavigation();
@@ -60,13 +60,13 @@ const ProfileUpdateScreen = props => {
 
     const onModify = async () => {
         try {
-            const paramUser = { ...user, ...profile };
+            const paramUser = { ...user, ...profile, updateDate: formatDateTime(new Date) };
 
-            const result = await modify({ ...user, ...profile }, image);
+            const result = await modify(paramUser, image);
 
             //1이 들어오면 성공 0이면 실패
             if (result === 1) {
-                setUser({ ...user, ...profile });
+                setUser(paramUser);
                 setSnackbar(prev => ({
                     message: '유저 정보가 수정되었습니다.',
                     visible: true
@@ -82,14 +82,14 @@ const ProfileUpdateScreen = props => {
             title: '회원 탈퇴',
             message: '탈퇴한 회원 정보는 복구가 불가능합니다.\n그래서 정말로 탈퇴하시겠습니까?',
             onPress: async () => {
-                await Auth.remove(user)
+                await Auth.remove(user);
                 await SecureStore.signOutSecureStore();
                 setUser({});
             },
             visible: true,
             isConfirm: true
         });
-    }
+    };
 
     return (
         <SafeInputView>
@@ -100,13 +100,10 @@ const ProfileUpdateScreen = props => {
                             //새로 선택했거나 이미 저장된 프로필 사진이 있다면 적용
                             //이미 저장된 프로필 사진이 있더라도 새로 선택한 사진이 있다면 그것을 표시한다
                             image || user.image ?
-                                <Image style={[{ width: 100, height: 100, borderRadius: 50 }, styles.photo]}
-                                       cachePolicy={'memory'}
-                                       source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
-
-                                // <AvatarImage source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/profile.jpg` }}
-                                //              size={100}
-                                //              style={styles.photo} />
+                                <AvatarImage
+                                    source={{ uri: image ? image : `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }}
+                                    size={100}
+                                    style={styles.photo} />
                                 : <AvatarText label={user.nickName.charAt(0)} Text size={100}
                                               style={styles.photo} />
                         }

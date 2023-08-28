@@ -1,26 +1,23 @@
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import Constants from 'expo-constants';
-import { IconButton, Surface, Text } from 'react-native-paper';
+import { IconButton, Paragraph, Surface, Text } from 'react-native-paper';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import { MaterialIcons } from '@expo/vector-icons';
 import ViewMoreText from 'react-native-view-more-text';
+import { calculateTimeDifference } from '../../utils/DateUtil';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const MemoryItem = memo(({ memory, removeMemory }) => {
     //비디오 객체
     const video = useRef(null);
-    console.log('메모리', memory);
+    // const [state, setState] = useState({})
+    const [isFullScreen, setIsFullScreen] = useState(false);
 
     return (
         <Surface style={styles.container} elevation={3}>
-            <View style={{ alignItems: 'flex-end' }}>
-                <IconButton mode={'outlined'} icon={'delete'} iconColor={PRIMARY.DEFAULT}
-                            size={24} onPress={() => removeMemory(memory)} />
-            </View>
-
             <View style={{ flexDirection: 'row' }}>
                 <Video
                     isLooping={true}
@@ -30,31 +27,39 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
                         uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
                     }}
                     useNativeControls
-                    resizeMode={ResizeMode.CONTAIN}
-                    // onPlaybackStatusUpdate={status => setStatus(() => status)}
+                    resizeMode={isFullScreen ? ResizeMode.CONTAIN : ResizeMode.COVER}
+                    // onPlaybackStatusUpdate={status => setState(() => status)}
+                    onFullscreenUpdate={event => setIsFullScreen(() => event.fullscreenUpdate <= 1)}
                 />
+            </View>
+
+            <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginStart:16 }}>
+                <Text style={styles.memoryDate}>{calculateTimeDifference(memory.date)}</Text>
+
+                <IconButton mode={'outlined'} icon={'delete'} iconColor={PRIMARY.DEFAULT}
+                            size={24} onPress={() => removeMemory(memory)} />
             </View>
 
             <ViewMoreText
                 numberOfLines={3}
                 renderViewMore={(onPress) =>
                     <Pressable style={styles.containerCollapse} onPress={onPress}>
-                        <Text style={styles.commentCollapse}>더보기</Text>
+                        <Text style={styles.memoryCollapse}>더보기</Text>
                         <MaterialIcons name={'expand-more'} size={20} color={GRAY.DEFAULT} />
                     </Pressable>
                 }
                 renderViewLess={(onPress) =>
                     <Pressable style={styles.containerCollapse} onPress={onPress}>
-                        <Text style={styles.commentCollapse}>접기</Text>
+                        <Text style={styles.memoryCollapse}>접기</Text>
                         <MaterialIcons name={'expand-less'} size={20} color={GRAY.DEFAULT} />
                     </Pressable>
                 }
-                textStyle={styles.commentContent}>
-                <Text>
+                textStyle={styles.memoryContent}>
+                <Paragraph>
                     {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
                     {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
                     {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
-                </Text>
+                </Paragraph>
             </ViewMoreText>
         </Surface>
     );
@@ -68,13 +73,14 @@ const styles = StyleSheet.create({
             backgroundColor: WHITE,
             marginHorizontal: 10,
             borderRadius: 16,
-            paddingHorizontal: 16,
             paddingBottom: 16
         },
         video: {
             alignSelf: 'center',
             height: 200,
-            flex: 1
+            flex: 1,
+            borderTopRightRadius: 16,
+            borderTopLeftRadius: 16
             // borderRadius: 20
         },
         containerCollapse: {
@@ -83,13 +89,19 @@ const styles = StyleSheet.create({
             marginEnd: 10,
             alignSelf: 'flex-end'
         },
-        commentCollapse: {
+        memoryCollapse: {
             color: GRAY.DEFAULT
         },
-        commentContent: {
+        memoryContent: {
             fontSize: 14,
             flexWrap: 'wrap',
-            paddingVertical: 10
+            marginVertical: 10,
+            marginHorizontal: 16
+        },
+        memoryDate: {
+            fontSize: 12,
+            color: '#000000',
+            marginBottom: 4
         }
     }
 );

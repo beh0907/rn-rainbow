@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -7,12 +7,10 @@ import { useRoomState } from '../../contexts/RoomContext';
 import { useUserState } from '../../contexts/UserContext';
 import * as ImagePicker from 'expo-image-picker';
 import * as Gallery from '../../api/Gallery';
-import MasonryList from '@react-native-seoul/masonry-list';
 import { IconButton } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { PRIMARY, WHITE } from '../../Colors';
-
-import { Tabs } from 'react-native-collapsible-tab-view'
+import { Tabs } from 'react-native-collapsible-tab-view';
 
 const GalleryScreen = () => {
     const MAX_SELECT = 20; // 이미지 추가 시 최대 선택
@@ -139,27 +137,27 @@ const GalleryScreen = () => {
     return (
         <View style={styles.container}>
             {galleries.length === 0 ?
-                <View style={styles.text}>
-                    <Text>등록된 이미지가 없습니다</Text>
-                </View>
+                <Tabs.ScrollView
+                                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                                 showsVerticalScrollIndicator={false}>
+                    <Text style={{position:'absolute',  top: '50%'}}>등록된 이미지가 없습니다</Text>
+                </Tabs.ScrollView>
                 :
                 <Tabs.MasonryFlashList
                     extraData={[isDeleteMode, isSelectedGallery]}
-                    estimatedListSize={{ width, height }}
+                    // estimatedListSize={{ width, height }}
                     estimatedItemSize={100}
-                    contentContainerStyle={{
-                        padding: 5,
-                    }}
+                    contentContainerStyle={styles.galleryList}
                     data={galleries}
-                    keyExtractor={(item, index) => index}
+                    keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => <GalleryItem item={item}
-                                                              onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
-                                                              isSelected={isSelectedGallery(item)}
-                                                              isDeleteMode={isDeleteMode} />}
-                    // refreshing={isLoadingNext}
-                    // onRefresh={() => refetch({first: ITEM_CNT})}
+                                                                  onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
+                                                                  isSelected={isSelectedGallery(item)}
+                                                                  isDeleteMode={isDeleteMode} />}
+                    refreshing={isLoading}
+                    onRefresh={readGalleryList}
                     // onEndReachedThreshold={0.1}
                     // onEndReached={() => loadNext(ITEM_CNT)}
                 />
@@ -169,7 +167,8 @@ const GalleryScreen = () => {
                 user.id === room.id &&
                 <View style={styles.buttonContainer}>
                     <IconButton style={{ marginHorizontal: 10 }} icon={isDeleteMode ? 'check' : 'delete'}
-                                mode='contained' onPress={deleteImage} containerColor={PRIMARY.DEFAULT} iconColor={WHITE} />
+                                mode='contained' onPress={deleteImage} containerColor={PRIMARY.DEFAULT}
+                                iconColor={WHITE} />
                     <IconButton style={{ marginHorizontal: 10 }} icon='plus' mode='contained'
                                 onPress={pickImage} containerColor={PRIMARY.DEFAULT} iconColor={WHITE} />
                 </View>
@@ -183,8 +182,6 @@ GalleryScreen.propTypes = {};
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
         backgroundColor: WHITE
     },
     buttonContainer: {
@@ -192,10 +189,8 @@ const styles = StyleSheet.create({
         bottom: 10,
         right: 10
     },
-    text: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center'
+    galleryList: {
+        padding: 5
     }
 });
 

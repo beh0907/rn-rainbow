@@ -1,7 +1,7 @@
 import axios from "axios";
 import { axiosApiInstance } from './AxiosInstance';
 import Constants from 'expo-constants';
-import { uriToImageFile, uriToVideoFile } from '../utils/imageUtil';
+import { uriToImageFile, uriToVideoFile } from '../utils/ImageUtil';
 
 const { BASE_URL_API} = Constants.expoConfig.extra;
 
@@ -39,7 +39,9 @@ export const modifyMemory = async (memory) => {
 
 
 export const removeMemory = async (memory) => {
-    const response = await axios.delete(`${BASE_URL_API}/memory/remove`, memory);
+    const response = await axios.delete(`${BASE_URL_API}/memory/remove`, {
+        data: memory
+    });
     return response.data
 }
 
@@ -57,7 +59,7 @@ const setFormData = (memory, uri, imageUri) => {
     if (imageUri !== null) {
         //file 객체 셋팅
         const thumbnail = uriToImageFile(memory.id, imageUri);
-        thumbnail.name = "s_" + memory.name;
+        thumbnail.name = "s_" + thumbnail.name;
         formData.append('thumbnail', thumbnail);
     }
 

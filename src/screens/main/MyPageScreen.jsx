@@ -17,7 +17,7 @@ import CarouselItem from '../../components/item/CarouselItem';
 import { useSharedValue } from 'react-native-reanimated';
 import PaginationItem from '../../components/item/PaginationItem';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Image } from 'expo-image';
+import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -66,6 +66,7 @@ const MyPageScreen = () => {
         });
     };
 
+
     return (
         <View style={{
             marginBottom: bottom,
@@ -88,14 +89,8 @@ const MyPageScreen = () => {
                 </View>
                 {
                     user.image ?
-                        <Image cachePolicy={'none'} style={[styles.image, {
-                            width: IMAGE_SIZE,
-                            height: IMAGE_SIZE,
-                            borderRadius: IMAGE_SIZE / 2
-                        }]}
-                               source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} />
-                        // <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/profile.jpg` }} size={IMAGE_SIZE}
-                        //              style={styles.image} />
+                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }} size={IMAGE_SIZE}
+                                     style={styles.image} />
                         : <AvatarText label={user.nickName.charAt(0)} Text size={100}
                                       style={styles.image} />
                 }

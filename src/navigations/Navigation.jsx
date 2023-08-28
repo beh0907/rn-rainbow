@@ -12,15 +12,12 @@ import { signIn } from '../api/Auth';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
 import * as Notifications from 'expo-notifications';
-import { Alert } from 'react-native';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import Constants from 'expo-constants';
-import * as Comment from '../api/Comment';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
-    require('../../assets/cover.png'),
     require('../../assets/background/bg_intro_1.png'),
     require('../../assets/background/bg_intro_2.png'),
     require('../../assets/background/bg_intro_3.png'),
@@ -50,7 +47,6 @@ const Navigation = () => {
             try {
                 //스플래시 화면을 표시한다
                 await SplashScreen.preventAutoHideAsync();
-
 
                 //미디어 및 카메라 접근 권한을 요청한다
                 await requestMediaPermission();
@@ -98,17 +94,18 @@ const Navigation = () => {
 
                 //로딩 화면을 완료한다
                 setIsReady(true);
+
             } catch (error) {
                 const code = error.code;
                 const status = error.response?.status;
 
-                let title = (code === 'ECONNABORTED' || status === 408) ? '통신 에러' : '로그인 실패'
+                let title = (code === 'ECONNABORTED' || status === 408) ? '통신 에러' : '로그인 실패';
 
                 setDialog({
                     title: title,
                     message: '서버와의 통신에 실패하였습니다.',
                     onPress: async () => {
-                        setIsReady(true)
+                        setIsReady(true);
                     },
                     visible: true,
                     isConfirm: false
