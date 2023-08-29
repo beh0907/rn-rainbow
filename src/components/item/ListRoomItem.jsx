@@ -25,7 +25,6 @@ SkeletonContent.propTypes = {
 };
 const ListRoomItem = memo(({ room }) => {
     const navigation = useNavigation();
-    const [isLoading, setIsLoading] = useState(false);
 
     const pressItem = ({ roomNum }) => {
         navigation.navigate(MainRoutes.ROOM_TAB, {
@@ -40,10 +39,8 @@ const ListRoomItem = memo(({ room }) => {
                     <View style={{ flex: 1 }}>
                         <Card.Cover style={styles.image}
                             // defaultSource={} 이미지 로드 중 기본적으로 표시할 이미지
-                                    progressiveRenderingEnabled={true} 안드로이드에서 이미지 로딩 프로그레스 표시 여부
-                                    onLoadStart={() => setIsLoading(true)}
-                                    onLoadEnd={() => setIsLoading(false)}
-                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')} />
+                                    progressiveRenderingEnabled={true}
+                                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/s_${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')} />
                         <View style={styles.overlayTitle}>
                             <Text style={{ color: 'white' }}>No. {String(room.roomNum).padStart(4, '0')}</Text>
                         </View>

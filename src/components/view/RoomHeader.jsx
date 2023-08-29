@@ -17,7 +17,7 @@ const RoomHeader = ({ room }) => {
             <View style={styles.petInfoTextContainer}>
                 <AvatarImage
                     source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
-                    size={48} />
+                    size={72} />
                 <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
             </View>
 

@@ -4,8 +4,13 @@ import Constants from 'expo-constants';
 
 const { BASE_URL_API} = Constants.expoConfig.extra;
 
-export const readGalleryList = async (num) => {
-    const response = await axiosApiInstance.get(`/gallery/readList?num=${num}`);
+// export const readGalleryList = async (num) => {
+//     const response = await axiosApiInstance.get(`/gallery/readList?num=${num}`);
+//     return response.data;
+// };
+
+export const readGalleryList = async (num, { page, amount }) => {
+    const response = await axiosApiInstance.get(`/gallery/readList?num=${num}&page=${page}&amount=${amount}`);
     return response.data;
 };
 

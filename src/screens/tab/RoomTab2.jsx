@@ -119,8 +119,8 @@ const RoomTab2 = () => {
                     setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline');
                 }}
                 allowHeaderOverscroll={true}
-                revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
-                // headerHeight={500}
+                // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
+                headerHeight={150}
                 renderHeader={() => <RoomHeader room={room}/>}
                 lazy
                 cancelLazyFadeIn

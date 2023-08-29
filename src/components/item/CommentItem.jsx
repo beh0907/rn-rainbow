@@ -7,7 +7,7 @@ import { GRAY, PRIMARY } from '../../Colors';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import Constants from 'expo-constants';
 import ViewMoreText from 'react-native-view-more-text';
-import { IconButton } from 'react-native-paper';
+import { IconButton, Paragraph } from 'react-native-paper';
 import { Image } from 'expo-image';
 import { calculateTimeDifference } from '../../utils/DateUtil';
 
@@ -25,7 +25,6 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
                                   style={styles.profileImage} />
             }
 
-            {/*<AvatarText style={styles.profileImage} label={comment.nickName.charAt(0)} Text size={36} />*/}
             <View style={styles.commentInfo}>
                 <View style={{flexDirection:"row", alignItems:'center', justifyContent:"space-between"}}>
                     <View>

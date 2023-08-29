@@ -5,8 +5,13 @@ import { uriToImageFile, uriToVideoFile } from '../utils/ImageUtil';
 
 const { BASE_URL_API} = Constants.expoConfig.extra;
 
-export const readMemoryList = async (num, type) => {
-    const response = await axiosApiInstance.get(`/memory/readList?num=${num}&type=${type}`);
+// export const readMemoryList = async (num, type) => {
+//     const response = await axiosApiInstance.get(`/memory/readList?num=${num}&type=${type}`);
+//     return response.data
+// }
+
+export const readMemoryList = async (num, type, { page, amount}) => {
+    const response = await axiosApiInstance.get(`/memory/readList?num=${num}&type=${type}&page=${page}&amount=${amount}`);
     return response.data
 }
 

@@ -35,8 +35,6 @@ const UseRooms = () => {
                 if (isRefetch === true ) setRooms(list);
                 else setRooms(prev => [...prev, ...list]);
 
-                // setRooms(prev => [...prev, ...list]);
-
                 pageRef.current++;
             }
 

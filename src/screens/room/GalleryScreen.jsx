@@ -1,4 +1,4 @@
-import React, { useCallback, useLayoutEffect, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -33,20 +33,54 @@ const GalleryScreen = () => {
     const navigation = useNavigation();
     const { width, height } = useWindowDimensions();
 
+    //무한 스크롤 페이징 처리 관련 변수들
+    const [refetching, setRefetching] = useState(false);
+    const [amount, setAmount] = useState(50);
+    const isFetch = useRef(true);
+    const pageRef = useRef(1);
+
     useLayoutEffect(() => {
         (async () => {
-            await readGalleryList();
+            await refetch();
+            setIsLoading(false);
         })();
     }, []);
 
-    const readGalleryList = useCallback(async () => {
-        setIsLoading(true);
+    const refetch = useCallback(async () => {
+        setRefetching(true);
 
-        const list = await Gallery.readGalleryList(room.roomNum);
-        setGalleries(list);
+        pageRef.current = 1;
+        isFetch.current = true;
 
-        setIsLoading(false);
-    }, [navigation, isLoading, galleries]);
+        await fetchNextPage(true);
+
+        setRefetching(false);
+    }, []);
+
+
+    const fetchNextPage = useCallback(async (isRefetch) => {
+        if (isFetch.current) {
+            //페이지와 개수 정보를 파라미터로 입력한다
+            // const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
+            const list = await Gallery.readGalleryList(room.roomNum, { page: pageRef.current, amount});
+
+            //페이지당 amount만큼 가져오지만 amount와 개수가 다를 경우 마지막 페이지임을 인식
+            if (list.length !== amount) {
+                isFetch.current = false;
+            }
+
+            //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
+            if (list.length > 0) {
+                // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
+                if (isRefetch === true) setGalleries(list);
+                else setGalleries(prev => [...prev, ...list]);
+
+                pageRef.current++;
+            }
+
+
+        }
+    }, [isFetch.current, pageRef.current, amount, setGalleries]);
 
     const isSelectedGallery = (gallery) => {
         return selectGalleries.findIndex((item) => item.seq === gallery.seq) > -1;
@@ -96,9 +130,8 @@ const GalleryScreen = () => {
             await Gallery.registerGallery(room, result.assets);
 
             //완료되었다면 리스트를 다시 가져온다
-            await readGalleryList();
+            await refetch();
         }
-
     };
 
     const deleteImage = async () => {
@@ -112,7 +145,7 @@ const GalleryScreen = () => {
             } else {
                 await Gallery.removeGallery(selectGalleries);
                 message = '선택한 이미지가 삭제되었습니다.';
-                await readGalleryList();
+                await refetch();
             }
         } else {
             message = `최대 ${MAX_SELECT}개의 삭제할 이미지를 선택해주세요.`;
@@ -138,28 +171,30 @@ const GalleryScreen = () => {
         <View style={styles.container}>
             {galleries.length === 0 ?
                 <Tabs.ScrollView
-                                 contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
-                                 showsVerticalScrollIndicator={false}>
-                    <Text style={{position:'absolute',  top: '50%'}}>등록된 이미지가 없습니다</Text>
+                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    showsVerticalScrollIndicator={false}>
+                    <Text style={{ position: 'absolute', top: '50%' }}>등록된 이미지가 없습니다</Text>
                 </Tabs.ScrollView>
                 :
                 <Tabs.MasonryFlashList
                     extraData={[isDeleteMode, isSelectedGallery]}
-                    // estimatedListSize={{ width, height }}
+                    estimatedListSize={{ width, height }}
                     estimatedItemSize={100}
                     contentContainerStyle={styles.galleryList}
                     data={galleries}
-                    keyExtractor={(item, index) => index.toString()}
+                    // keyExtractor={(item, index) => index.toString()}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => <GalleryItem item={item}
                                                                   onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
                                                                   isSelected={isSelectedGallery(item)}
                                                                   isDeleteMode={isDeleteMode} />}
-                    refreshing={isLoading}
-                    onRefresh={readGalleryList}
-                    // onEndReachedThreshold={0.1}
-                    // onEndReached={() => loadNext(ITEM_CNT)}
+                    onEndReachedThreshold={0.9}
+                    onEndReached={() => fetchNextPage(false)}
+                    refreshing={refetching}
+                    onRefresh={refetch}
+                    ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
+                    ListFooterComponentStyle={styles.listFooter}
                 />
             }
 
@@ -191,6 +226,11 @@ const styles = StyleSheet.create({
     },
     galleryList: {
         padding: 5
+    },
+    listFooter: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

@@ -12,6 +12,7 @@ import * as Memory from '../../api/Memory';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import MemoryItem from '../../components/item/MemoryItem';
+import * as Gallery from '../../api/Gallery';
 
 
 const MemoryScreen = () => {
@@ -26,23 +27,56 @@ const MemoryScreen = () => {
     const navigation = useNavigation();
     const { width, height } = useWindowDimensions();
 
-    const listRef = useRef(null);
+    //무한 스크롤 페이징 처리 관련 변수들
+    const [refetching, setRefetching] = useState(false);
+    const [amount, setAmount] = useState(20);
+    const isFetch = useRef(true);
+    const pageRef = useRef(1);
 
     useLayoutEffect(() => {
         (async () => {
-            await readMemoryList();
+            await refetch();
+            setIsLoading(false);
         })();
     }, []);
 
-    const readMemoryList = useCallback(async () => {
-        setIsLoading(true);
+    const refetch = useCallback(async () => {
+        setRefetching(true);
 
-        const list = await Memory.readMemoryList(room.roomNum, 2); //type 1 = 이미지, 2 = 비디오
+        pageRef.current = 1;
+        isFetch.current = true;
 
-        setMemories(list);
+        await fetchNextPage(true);
 
-        setIsLoading(false);
-    }, [navigation, isLoading, memories]);
+        setRefetching(false);
+    }, []);
+
+
+    const fetchNextPage = useCallback(async (isRefetch) => {
+        
+
+        if (isFetch.current) {
+            //페이지와 개수 정보를 파라미터로 입력한다
+            // const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
+            const list = await Memory.readMemoryList(room.roomNum, 2, { page: pageRef.current, amount }); //type 1 = 이미지, 2 = 비디오
+
+            //페이지당 amount만큼 가져오지만 amount와 개수가 다를 경우 마지막 페이지임을 인식
+            if (list.length !== amount) {
+                isFetch.current = false;
+            }
+
+            //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
+            if (list.length > 0) {
+                // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
+                if (isRefetch === true) setMemories(list);
+                else setMemories(prev => [...prev, ...list]);
+
+                pageRef.current++;
+            }
+
+
+        }
+    }, [isFetch.current, pageRef.current, amount, setMemories]);
 
     const pickVideo = useCallback(async () => {
         // No permissions request is necessary for launching the image library
@@ -93,20 +127,23 @@ const MemoryScreen = () => {
                 </Tabs.ScrollView>
                 :
                 <Tabs.FlashList
-                    ref={listRef}
-                    // estimatedListSize={{ width, height }}
+                    estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={styles.memoryList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                    keyExtractor={(item, index) => index.toString()}
+                    // keyExtractor={(item, index) => index.toString()}
                     data={memories}
                     renderItem={({ item }) =>
                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
                         <MemoryItem memory={item} removeMemory={removeMemory} />
                     }
-                    refreshing={isLoading}
-                    onRefresh={readMemoryList}
+                    onEndReachedThreshold={0.9}
+                    onEndReached={() => fetchNextPage(false)}
+                    refreshing={refetching}
+                    onRefresh={refetch}
+                    ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
+                    ListFooterComponentStyle={styles.listFooter}
                 />
             }
 
@@ -138,6 +175,11 @@ const styles = StyleSheet.create({
     },
     memoryList: {
         paddingVertical: 20
+    },
+    listFooter: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
     }
 });
 

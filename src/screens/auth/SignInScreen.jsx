@@ -1,7 +1,7 @@
 import React, { useCallback, useReducer, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { AuthRoutes } from '../../navigations/Routes';
+import { AuthRoutes, RoomRoutes } from '../../navigations/Routes';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
 import TextButton from '../../components/button/TextButton';
@@ -45,6 +45,7 @@ const SignInScreen = () => {
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
+
                 const user = await Auth.signIn(form, fcmToken);
 
                 /**자동 로그인이 체크되어 있다면

@@ -8,7 +8,8 @@ const { BASE_URL_FILE } = Constants.expoConfig.extra;
 const TestItem = memo(({test}) => {
     return (
         <Card>
-            <Card.Cover source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
+            <Card.Cover
+                progressiveRenderingEnabled source={{ uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}` }} />
             <Card.Content>
                 <Title>{test.name}의 방</Title>
                 <Paragraph>Card content</Paragraph>

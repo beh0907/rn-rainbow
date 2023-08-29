@@ -2,11 +2,11 @@ import React, { useCallback, useState } from 'react';
 import { BackHandler, StyleSheet, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { Text, ToggleButton } from 'react-native-paper';
+import { Button, Menu, Text } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
 import AllRoomList from '../../components/list/AllRoomList';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
-import { BLACK, PRIMARY, WHITE } from '../../Colors';
+import { BLACK, WHITE } from '../../Colors';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import InputTextButton from '../../components/view/inputTextButton';
 import Constants from 'expo-constants';
@@ -22,6 +22,7 @@ const HomeScreen = props => {
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
 
+    const [menuVisible, setMenuVisible] = useState(false);
 
     let exitApp;
     /**백 버튼 이벤트 동작*/
@@ -65,7 +66,9 @@ const HomeScreen = props => {
 
                 {
                     user.image ?
-                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }} size={48} />
+                        <AvatarImage
+                            source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }}
+                            size={48} />
                         : <AvatarText label={user.nickName.charAt(0)} Text size={48} />
                 }
 
@@ -90,9 +93,24 @@ const HomeScreen = props => {
                 }} />
 
             <View style={{
-                flexDirection: 'row', marginTop: 20, marginBottom: 10, alignItems: 'center', paddingHorizontal: 16
+                flexDirection: 'row',
+                marginTop: 20,
+                marginBottom: 10,
+                alignItems: 'center',
+                paddingHorizontal: 16,
+                justifyContent: 'space-between'
             }}>
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
+
+                <Menu
+                    visible={menuVisible}
+                    onDismiss={() => setMenuVisible(false)}
+                    anchor={<Button contentStyle={{ flexDirection: 'row-reverse' }} icon={'menu-down'}
+                                    onPress={() => setMenuVisible(true)}>최신 순</Button>}>
+                    <Menu.Item onPress={() => setMenuVisible(false)} title='최신 순' />
+                    <Menu.Item onPress={() => setMenuVisible(false)} title='오래된 순' />
+                    <Menu.Item onPress={() => setMenuVisible(false)} title='조회 순' />
+                </Menu>
             </View>
 
             <AllRoomList />

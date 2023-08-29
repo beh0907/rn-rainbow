@@ -1,4 +1,4 @@
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import AuthStack from './AuthStack';
@@ -15,6 +15,8 @@ import * as Notifications from 'expo-notifications';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import Constants from 'expo-constants';
+import { MainRoutes } from './Routes';
+import * as TaskManager from 'expo-task-manager';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -26,7 +28,33 @@ const ImageAssets = [
     require('../../assets/background/bg_temp.jpg')
 ];
 
+//포그라운드에서 메시지 표시 핸들러
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: true,
+        shouldSetBadge: false
+    })
+});
+
+// const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
+//
+// TaskManager.defineTask(
+//     BACKGROUND_NOTIFICATION_TASK,
+//     ({ data, error, executionInfo }) => {
+//         if (error) {
+//             console.log('error occurred');
+//         }
+//         if (data) {
+//             console.log('data-----', data);
+//         }
+//     }
+// );
+//
+// Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
+
 const Navigation = () => {
+    const navigationRef = useRef(null);
     const [user, setUser] = useUserState();
 
     //필요 데이터 로드 완료 여부 스플래시 화면을 종료시킨다
@@ -41,6 +69,28 @@ const Navigation = () => {
 
     //다이얼로그 설정
     const [, setDialog] = useDialogState();
+
+    useEffect(() => {
+        const receivedMessage = Notifications.addNotificationResponseReceivedListener(response => {
+            const data = response.notification.request.trigger.remoteMessage;
+            console.log('푸시 아이디', data.data.id);
+            console.log('푸시 타입', data.data.type);
+
+            navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
+                roomNum: data.data.id
+            });
+
+            // Navigate to a specific screen based on the notification data
+            // if (notificationData && notificationData.targetScreen) {
+            //     navigationRef.current?.navigate(RoomRoutes.THREE_DIMENSION);
+            // }
+        });
+
+        return () => {
+            // Make sure to unsubscribe when the component unmounts
+            Notifications.removeNotificationSubscription(receivedMessage);
+        };
+    }, []);
 
     useLayoutEffect(() => {
         (async () => {
@@ -70,6 +120,7 @@ const Navigation = () => {
 
                 //저장된 정보에 따라 로그인을 시도한다
                 let user;
+
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
@@ -94,7 +145,6 @@ const Navigation = () => {
 
                 //로딩 화면을 완료한다
                 setIsReady(true);
-
             } catch (error) {
                 const code = error.code;
                 const status = error.response?.status;
@@ -120,7 +170,7 @@ const Navigation = () => {
 
     if (!isReady) return null;
     return (
-        <NavigationContainer onReady={onReady}>
+        <NavigationContainer onReady={onReady} ref={navigationRef}>
             {user.id ? <MainStack /> : <AuthStack checkIntro={checkIntro} />}
         </NavigationContainer>
     );

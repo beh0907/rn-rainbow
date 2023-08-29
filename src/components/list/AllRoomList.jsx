@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import useRooms from '../../hooks/UseRooms';
 import ListRoomItem from '../item/ListRoomItem';
 import { Text } from 'react-native-paper';
@@ -17,12 +17,13 @@ const AllRoomList = () => {
     // FlatList를 감싸는 새로운 컴포넌트를 만듭니다.
     return (
         <FlashList
-            estimatedItemSize={124} // 카드뷰라면 205, 리스트라면 124로 예상사이즈 설정
+            estimatedItemSize={124}
             showsVerticalScrollIndicator={false}
             data={rooms}
             renderItem={({ item }) => <ListRoomItem room={item} />}
-            keyExtractor={(item, index) => index.toString()}
+            // keyExtractor={(item, index) => index.toString()}
             ItemSeparatorComponent={() => <View style={styles.separator} />}
+            onEndReachedThreshold={0.9}
             onEndReached={fetchNextPage}
             refreshing={refetching}
             onRefresh={refetch}
