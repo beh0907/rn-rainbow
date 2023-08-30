@@ -1,28 +1,23 @@
-import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
-import CommentScreen from '../room/CommentScreen';
-import GalleryScreen from '../room/GalleryScreen';
-import MemoryScreen from '../room/MemoryScreen';
 import { GRAY, PRIMARY } from '../../Colors';
 import React, { useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
-import { ActivityIndicator, Dimensions, StyleSheet, View } from 'react-native';
+import { ActivityIndicator, StyleSheet, View } from 'react-native';
 import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
+import { MaterialTabBar, Tabs } from 'react-native-collapsible-tab-view';
+import GalleryScreen from '../room/GalleryScreen';
+import MemoryScreen from '../room/MemoryScreen';
+import CommentScreen from '../room/CommentScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
-import { Text } from 'react-native-paper';
-import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
-import Constants from 'expo-constants';
 import { useDialogState } from '../../contexts/DialogContext';
-
-const { BASE_URL_FILE } = Constants.expoConfig.extra;
+import RoomHeader from '../../components/view/RoomHeader';
 
 const RoomTab = () => {
-    const Tab = createMaterialTopTabNavigator();
     const navigation = useNavigation();
 
     //컨텍스트 데이터
@@ -41,6 +36,10 @@ const RoomTab = () => {
 
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
+
+    const [galleryIcon, setGalleryIcon] = useState('view-grid');
+    const [memoryIcon, setMemoryIcon] = useState('video-outline');
+    const [commentIcon, setCommentIcon] = useState('comment-text-outline');
 
     useLayoutEffect(() => {
         (async () => {
@@ -104,91 +103,44 @@ const RoomTab = () => {
         })();
     }, []);
 
+
     return (
         isReady ?
-            <View style={{ flex: 1 }}>
-
-                {/*상단 메인 정보*/}
-                <View style={{
-                    padding: 16
-                }}>
-                    <View style={styles.petInfoTextContainer}>
-                        <AvatarImage
-                            source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
-                            size={48} />
-                        <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
-                    </View>
-
-                    <Text style={[styles.petDataText, { marginVertical: 20 }]}
-                          variant={'bodyLarge'}>{room.content}</Text>
-
-                    {/*정보*/}
-                    <View>
-                        {/*나이*/}
-                        <View style={styles.petDataContainer}>
-                            <Text style={styles.petDataTitle} variant={'titleMedium'}>Age</Text>
-                            <Text style={styles.petDataText} variant={'bodyLarge'}>{room.age}</Text>
-                        </View>
-
-                        {/*성별*/}
-                        <View style={styles.petDataContainer}>
-                            <Text style={styles.petDataTitle} variant={'titleMedium'}>Sex</Text>
-                            <Text style={styles.petDataText}
-                                  variant={'bodyLarge'}>{room.age === 1 ? 'Male' : 'Female'}</Text>
-
-                        </View>
-
-                        {/*떠나보낸 날짜*/}
-                        <View style={[styles.petDataContainer, { marginBottom: 0 }]}>
-                            <Text style={styles.petDataTitle} variant={'titleMedium'}>Date</Text>
-                            <Text style={styles.petDataText} variant={'bodyLarge'}>~ {room.date}</Text>
-                        </View>
-                    </View>
-                </View>
-
-
-                <Tab.Navigator
-                    style={{ flex: 1 }}
-                    initialLayout={{ width: Dimensions.get('window').width }}
-                    screenOptions={({ route }) => ({
-                        // tabBarStyle: { elevation: 0, shadowOpacity: 0 },
-                        lazy: false,
-                        tabBarIndicatorStyle: { backgroundColor: PRIMARY.DEFAULT },
-                        swipeEnabled: true,
-                        tabBarShowLabel: false,
-                        tabBarIcon: ({ focused }) => {
-                            let iconName;
-
-                            switch (route.name) {
-                                case RoomRoutes.HOME:
-                                    iconName = 'home';
-                                    break;
-                                case RoomRoutes.GALLERY:
-                                    iconName = 'view-grid';
-                                    break;
-                                case RoomRoutes.MEMORY:
-                                    iconName = 'video';
-                                    break;
-                                case RoomRoutes.COMMENT:
-                                    iconName = 'comment-text';
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                            if (!focused) iconName += '-outline';
-
-                            // You can return any component that you like here!
-                            return <MaterialCommunityIcons name={iconName} size={24} color={PRIMARY.DEFAULT} />;
-                        }
-                    })}>
-                    {/*<Tab.Screen name={RoomRoutes.HOME} component={RoomScreen} />*/}
-                    <Tab.Screen name={RoomRoutes.GALLERY} component={GalleryScreen} />
-                    <Tab.Screen name={RoomRoutes.MEMORY} component={MemoryScreen} />
-                    <Tab.Screen name={RoomRoutes.COMMENT} component={CommentScreen} />
-                    {/*<Tab.Screen name={RoomRoutes.THREE_DIMENSION} component={ThreeDimensionScreen} />*/}
-                </Tab.Navigator>
-            </View>
+            <Tabs.Container
+                onIndexChange={(index) => {
+                    setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline');
+                    setMemoryIcon(index === 1 ? 'video' : 'video-outline');
+                    setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline');
+                }}
+                allowHeaderOverscroll={true}
+                // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
+                headerHeight={150}
+                renderHeader={() => <RoomHeader room={room} />}
+                lazy
+                cancelLazyFadeIn
+                renderTabBar={props =>
+                    <MaterialTabBar {...props}
+                                    activeColor={PRIMARY.DEFAULT}
+                                    inactiveColor={GRAY.DEFAULT}
+                                    style={{ backgroundColor: 'white', color: PRIMARY.DEFAULT }}
+                                    indicatorStyle={{ backgroundColor: PRIMARY.DEFAULT }} />}
+            >
+                <Tabs.Tab name={RoomRoutes.GALLERY}
+                          label={(props) => <MaterialCommunityIcons name={galleryIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
+                    <GalleryScreen />
+                </Tabs.Tab>
+                <Tabs.Tab name={RoomRoutes.MEMORY}
+                          label={(props) => <MaterialCommunityIcons name={memoryIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
+                    <MemoryScreen />
+                </Tabs.Tab>
+                <Tabs.Tab name={RoomRoutes.COMMENT}
+                          label={(props) => <MaterialCommunityIcons name={commentIcon} size={24}
+                                                                    color={PRIMARY.DEFAULT} />}>
+                    <CommentScreen />
+                </Tabs.Tab>
+            </Tabs.Container>
             :
             <View style={[styles.container, styles.horizontal]}>
                 <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
@@ -206,31 +158,6 @@ const styles = StyleSheet.create({
     horizontal: {
         flexDirection: 'row',
         justifyContent: 'space-around'
-    },
-    petImage: {
-        width: '100%',
-        height: 200
-    },
-    petInfoTextContainer: {
-        flexDirection: 'row',
-        alignItems: 'center'
-    },
-    petName: {
-        fontWeight: 'bold',
-        marginStart: 10
-    },
-    petDataContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginBottom: 10
-    },
-    petDataTitle: {
-        fontWeight: 'bold',
-        color: PRIMARY.DARK,
-        width: 75
-    },
-    petDataText: {
-        color: GRAY.DEFAULT
     }
 });
 

@@ -4,13 +4,12 @@ import { MainRoutes, RoomRoutes } from './Routes';
 import { WHITE } from '../Colors';
 import HeaderLeft from '../components/view/HeaderLeft';
 import MainTab from '../screens/tab/MainTab';
-import RoomTab from '../screens/tab/RoomTab';
 import GallerySwiperScreen from '../screens/room/GallerySwiperScreen';
 import RoomRegisterScreen from '../screens/main/RoomRegisterScreen';
 import { RoomProvider } from '../contexts/RoomContext';
 import RoomUpdateScreen from '../screens/main/RoomUpdateScreen';
 import MemoryRegisterScreen from '../screens/room/MemoryRegisterScreen';
-import RoomTab2 from '../screens/tab/RoomTab2';
+import RoomTab from '../screens/tab/RoomTab';
 import ProfileUpdateScreen from '../screens/main/ProfileUpdateScreen';
 import ThreeDimensionScreen from '../screens/room/ThreeDimensionScreen';
 
@@ -28,8 +27,7 @@ const MainStack = () => {
                 <Stack.Screen name={MainRoutes.CONTENT_TAB} component={MainTab}
                               options={{ headerShown: false }} />
 
-                {/*<Stack.Screen name={MainRoutes.ROOM_TAB} component={RoomTab} />*/}
-                <Stack.Screen name={MainRoutes.ROOM_TAB} component={RoomTab2} />
+                <Stack.Screen name={MainRoutes.ROOM_TAB} component={RoomTab} />
                 <Stack.Screen name={MainRoutes.PROFILE_UPDATE} component={ProfileUpdateScreen} />
                 <Stack.Screen name={MainRoutes.ROOM_REGISTER} component={RoomRegisterScreen} />
                 <Stack.Screen name={MainRoutes.ROOM_UPDATE} component={RoomUpdateScreen} />

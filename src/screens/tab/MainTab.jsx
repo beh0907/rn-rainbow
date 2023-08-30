@@ -33,12 +33,12 @@ const MainTab = () => {
                 <Tab.Screen name={ContentRoutes.HOME} component={HomeScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'home', color:PRIMARY.DEFAULT}),
-                                tabBarLabel: '추모관'
+                                tabBarLabel: '추모관', tabBarShowLabel:false
                             }}/>
                 <Tab.Screen name={ContentRoutes.BOARD} component={BoardScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'post', color:PRIMARY.DEFAULT}),
-                                tabBarLabel: '게시글'
+                                tabBarLabel: '게시글', tabBarShowLabel:false
                             }}/>
 
                 <Tab.Screen name={'addButton'} component={AddButtonScreen}
@@ -47,12 +47,12 @@ const MainTab = () => {
                 <Tab.Screen name={ContentRoutes.TEST} component={TestScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'clipboard-list', color:PRIMARY.DEFAULT}),
-                                tabBarLabel: '자가진단'
+                                tabBarLabel: '자가진단', tabBarShowLabel:false
                             }}/>
                 <Tab.Screen name={ContentRoutes.MY_PAGE} component={MyPageScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'account', color:PRIMARY.DEFAULT}),
-                                tabBarLabel: '마이 페이지'
+                                tabBarLabel: '마이 페이지', tabBarShowLabel:false
                             }}/>
             </Tab.Navigator>
         </SafeAreaProvider>

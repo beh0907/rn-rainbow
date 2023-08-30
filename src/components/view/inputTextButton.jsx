@@ -7,8 +7,6 @@ import Constants from 'expo-constants';
 import PropTypes from 'prop-types';
 import Button, { ButtonTypes } from '../button/Button';
 
-const { BASE_URL_FILE } = Constants.expoConfig.extra;
-
 const inputTextButton = ({ value, onChangeText, placeholder, icon, onSubmit, styles, disabled }) => {
 
     return (

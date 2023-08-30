@@ -11,11 +11,12 @@ import * as Auth from '../api/Auth';
 import { signIn } from '../api/Auth';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera } from 'expo-camera';
-import * as Notifications from 'expo-notifications';
 import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import Constants from 'expo-constants';
 import { MainRoutes } from './Routes';
+import { Platform } from 'react-native';
+import * as Notifications from 'expo-notifications';
 import * as TaskManager from 'expo-task-manager';
 
 const ImageAssets = [
@@ -70,27 +71,56 @@ const Navigation = () => {
     //다이얼로그 설정
     const [, setDialog] = useDialogState();
 
-    useEffect(() => {
-        const receivedMessage = Notifications.addNotificationResponseReceivedListener(response => {
-            const data = response.notification.request.trigger.remoteMessage;
-            console.log('푸시 아이디', data.data.id);
-            console.log('푸시 타입', data.data.type);
+    //푸시 메시지 관련 변수
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState();
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
-            navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
-                roomNum: data.data.id
+    useEffect(() => {
+        (async () => {
+            if (Platform.OS === 'android') {
+                await Notifications.setNotificationChannelAsync('default', {
+                    name: 'default',
+                    importance: Notifications.AndroidImportance.MAX,
+                    vibrationPattern: [0, 250, 250, 250],
+                    lightColor: '#FF231F7C'
+                });
+            }
+
+            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+                setNotification(notification);
             });
 
-            // Navigate to a specific screen based on the notification data
-            // if (notificationData && notificationData.targetScreen) {
-            //     navigationRef.current?.navigate(RoomRoutes.THREE_DIMENSION);
-            // }
-        });
+            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+                const data = response.notification.request.trigger.remoteMessage;
+                console.log('푸시 아이디', data.data.id);
+                console.log('푸시 타입', data.data.type);
+
+                navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
+                    roomNum: data.data.id
+                });
+            });
+        })()
 
         return () => {
-            // Make sure to unsubscribe when the component unmounts
-            Notifications.removeNotificationSubscription(receivedMessage);
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
         };
     }, []);
+
+    // const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
+    //
+    // TaskManager.defineTask(
+    //     BACKGROUND_NOTIFICATION_TASK,
+    //     ({ data, error, executionInfo }) =>{
+    //         if(error){
+    //             console.log('error occurred');
+    //         }
+    //         if(data){
+    //             console.log('data-----',data);
+    //         }
+    //     })
 
     useLayoutEffect(() => {
         (async () => {

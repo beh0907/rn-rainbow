@@ -1,70 +1,66 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { useWindowDimensions } from 'react-native';
-import { GestureHandlerRootView, PanGestureHandler, PinchGestureHandler } from 'react-native-gesture-handler';
-import Animated, { useAnimatedGestureHandler, useAnimatedStyle, useSharedValue } from 'react-native-reanimated';
+import { PinchGestureHandler, ScrollView } from 'react-native-gesture-handler';
+import Animated, {
+    runOnJS,
+    useAnimatedGestureHandler,
+    useAnimatedStyle,
+    useSharedValue,
+    withSpring
+} from 'react-native-reanimated';
+import Constants from 'expo-constants';
 
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const GallerySwiperItem = ({ uri }) => {
+const GallerySwiperItem = memo(({ item, setScrollEnable }) => {
     const { width, height } = useWindowDimensions();
+    const imageScale = useSharedValue(1);
+    // const imageX = useSharedValue(0);
+    // const imageY = useSharedValue(0);
 
-    const translateX = useSharedValue(0);
-    const translateY = useSharedValue(0);
-    const scale = useSharedValue(1);
+    let baseScale = 1;
 
-    const panGestureHandler = useAnimatedGestureHandler({
-        onStart: (_, context) => {
-            context.translateX = translateX.value;
-            context.translateY = translateY.value;
+    const minScale = 1;
+    const maxScale = 3;
+
+    const pinchHandler = useAnimatedGestureHandler({
+        onStart: () => {
+            baseScale = imageScale.value;
+            runOnJS(setScrollEnable)(false); // UI 스레드에서 호출
         },
-        onActive: (event, context) => {
-            translateX.value = context.translateX + event.translationX;
-            translateY.value = context.translateY + event.translationY;
+        onActive: (event) => {
+            imageScale.value = baseScale * event.scale;
         },
         onEnd: () => {
-            // Add any snapping behavior or boundary checks here if needed
+            if (imageScale.value < minScale) {
+                imageScale.value = withSpring(minScale);
+            } else if (imageScale.value > maxScale) {
+                imageScale.value = withSpring(maxScale);
+            }
+
+            runOnJS(setScrollEnable)(true); // UI 스레드에서 호출
         }
     });
 
-    const pinchGestureHandler = useAnimatedGestureHandler({
-        onStart: (_, context) => {
-            context.scale = scale.value;
-        },
-        onActive: (event, context) => {
-            scale.value = context.scale * event.scale;
-        },
-        onEnd: () => {
-            // Add any boundary checks for scale here if needed
-        }
-    });
-
-    const imageStyle = useAnimatedStyle(() => {
+    const animatedStyle = useAnimatedStyle(() => {
         return {
-            transform: [
-                { translateX: translateX.value },
-                { translateY: translateY.value },
-                { scale: scale.value }
-            ]
+            transform: [{ scale: imageScale.value }]
         };
     });
 
     return (
-        <GestureHandlerRootView>
-            <PinchGestureHandler onGestureEvent={pinchGestureHandler}>
-                <Animated.View style={{ flex: 1 }}>
-                    <PanGestureHandler onGestureEvent={panGestureHandler}>
-                        <Animated.View style={{ flex: 1 }}>
-                            <Animated.Image
-                                source={{ uri }}
-                                style={[{ width, height }, imageStyle]}
-                                resizeMode='contain'
-                            />
-                        </Animated.View>
-                    </PanGestureHandler>
-                </Animated.View>
-            </PinchGestureHandler>
-        </GestureHandlerRootView>
+        <PinchGestureHandler onGestureEvent={pinchHandler}>
+            <Animated.View style={{ width, height }}>
+                <ScrollView contentContainerStyle={{ flex: 1 }}>
+                    <Animated.Image
+                        source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }}
+                        resizeMode='contain'
+                        style={[{ width, height }, animatedStyle]}
+                    />
+                </ScrollView>
+            </Animated.View>
+        </PinchGestureHandler>
     );
-};
-
+});
 
 export default GallerySwiperItem;
