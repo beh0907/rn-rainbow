@@ -56,9 +56,7 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
                     }
                     textStyle={styles.commentContent}>
                     <Text>
-                        {comment.content}{comment.content}{comment.content}{comment.content}{comment.content}{comment.content}
-                        {comment.content}{comment.content}{comment.content}{comment.content}{comment.content}{comment.content}
-                        {comment.content}{comment.content}{comment.content}{comment.content}{comment.content}{comment.content}
+                        {comment.content}
                     </Text>
                 </ViewMoreText>
 

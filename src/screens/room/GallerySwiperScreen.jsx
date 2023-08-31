@@ -1,13 +1,14 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { Pressable, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { Image } from 'expo-image';
 import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import Carousel from 'react-native-reanimated-carousel';
 import GallerySwiperItem from '../../components/item/GallerySwiperItem';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 const THUMB_SIZE = 80;
@@ -27,11 +28,11 @@ const GallerySwiperScreen = (callback, deps) => {
 
     const scrollToActivityIndex = useCallback((index) => {
         setActivityIndex(index);
-        console.log('인덱스 : ', index);
 
-        galleryRef?.current?.scrollTo({
+        galleryRef?.current?.scrollToIndex({
             index: index,
-            animated: false
+            animated: true,
+            viewPosition: 0.5
         });
 
         thumbRef?.current?.scrollToIndex({
@@ -41,25 +42,38 @@ const GallerySwiperScreen = (callback, deps) => {
         });
     }, [activityIndex, setActivityIndex, galleryRef, thumbRef]);
 
-
     return (
         <View style={{ marginTop: top, marginBottom: bottom }}>
-            <Carousel
-                panGestureHandlerProps={{
-                    activeOffsetX: [-30, 30]
-                }}
-                snapEnabled={scrollEnabled}
-                defaultIndex={position}
-                ref={galleryRef}
-                onSnapToItem={index => scrollToActivityIndex(index)}
-                width={width}
-                height={height}
+
+            <FlashList
+                estimatedListSize={{ width, height }}
+                progressViewOffset={30}
+                scrollEnabled={scrollEnabled}
+                initialScrollIndex={position}
+                extraData={[activityIndex, scrollEnabled]}
                 data={galleries}
-                renderItem={({ item }) => <GallerySwiperItem item={item} setScrollEnable={setScrollEnable} />}>
-            </Carousel>
+                ref={galleryRef}
+                estimatedItemSize={width}
+                pagingEnabled
+                horizontal
+                showsHorizontalScrollIndicator={false}
+                onMomentumScrollEnd={event => {
+                    scrollToActivityIndex(Math.round(event.nativeEvent.contentOffset.x / width));
+                }}
+                renderItem={({ item, index }) => {
+                    return (
+                        <GestureHandlerRootView>
+                            <GallerySwiperItem item={item} setScrollEnable={setScrollEnable} />
+                        </GestureHandlerRootView>
+
+                    );
+                }}
+            />
 
             <View style={{ position: 'absolute', bottom: THUMB_SIZE / 2 }}>
                 <FlashList
+                    disableHorizontalListHeightMeasurement
+                    estimatedListSize={{ width, height:THUMB_SIZE }}
                     initialScrollIndex={position}
                     extraData={activityIndex}
                     ref={thumbRef}
@@ -67,7 +81,7 @@ const GallerySwiperScreen = (callback, deps) => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={galleries}
-                    keyExtractor={(item, index) => index.toString()}
+                    // keyExtractor={(item, index) => index.toString()}
                     contentContainerStyle={{ paddingHorizontal: 10 }}
                     renderItem={({ item, index }) => {
                         return (

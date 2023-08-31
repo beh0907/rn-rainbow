@@ -35,7 +35,7 @@ const GalleryScreen = () => {
 
     //무한 스크롤 페이징 처리 관련 변수들
     const [refetching, setRefetching] = useState(false);
-    const [amount, setAmount] = useState(50);
+    const [amount, setAmount] = useState(20);
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
@@ -59,10 +59,12 @@ const GalleryScreen = () => {
 
 
     const fetchNextPage = useCallback(async (isRefetch) => {
+
         if (isFetch.current) {
             //페이지와 개수 정보를 파라미터로 입력한다
             // const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
-            const list = await Gallery.readGalleryList(room.roomNum, { page: pageRef.current, amount});
+            const list = await Gallery.readGalleryList(room.roomNum, { page: pageRef.current, amount });
+
 
             //페이지당 amount만큼 가져오지만 amount와 개수가 다를 경우 마지막 페이지임을 인식
             if (list.length !== amount) {
@@ -161,6 +163,17 @@ const GalleryScreen = () => {
         setIsDeleteMode(!isDeleteMode);
     };
 
+    const handleScroll = async (event) => {
+        console.log('이벤트 : ', event);
+        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
+        const isBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height;
+
+        console.log('isBottom : ');
+
+        if (isBottom)
+            await fetchNextPage(false);
+    };
+
     if (isLoading)
         return (
             <View style={[styles.container]}>
@@ -171,13 +184,18 @@ const GalleryScreen = () => {
         <View style={styles.container}>
             {galleries.length === 0 ?
                 <Tabs.ScrollView
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    onScroll={({nativeEvent})=>console.log(nativeEvent)}>
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: 0
+                    }}
                     showsVerticalScrollIndicator={false}>
-                    <Text style={{ position: 'absolute', top: '50%' }}>등록된 이미지가 없습니다</Text>
+                    <Text>등록된 이미지가 없습니다</Text>
                 </Tabs.ScrollView>
                 :
                 <Tabs.MasonryFlashList
-                    extraData={[isDeleteMode, isSelectedGallery]}
+                    extraData={[isDeleteMode, isSelectedGallery, refetching]}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={100}
                     contentContainerStyle={styles.galleryList}
@@ -192,7 +210,7 @@ const GalleryScreen = () => {
                     onEndReachedThreshold={0.9}
                     onEndReached={() => fetchNextPage(false)}
                     refreshing={refetching}
-                    onRefresh={refetch}
+                    // onRefresh={refetch}
                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                     ListFooterComponentStyle={styles.listFooter}
                 />

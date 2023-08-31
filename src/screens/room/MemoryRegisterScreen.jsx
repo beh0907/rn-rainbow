@@ -35,9 +35,6 @@ const MemoryRegisterScreen = () => {
             }
         );
 
-        console.log('uri : ', uri);
-        console.log('imageUri : ', imageUri);
-
         await Memory.registerVideo({
             id: room.id,
             roomNum: room.roomNum,

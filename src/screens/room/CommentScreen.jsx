@@ -34,7 +34,7 @@ const CommentScreen = () => {
     useLayoutEffect(() => {
         (async () => {
             await refetch();
-            setIsLoading(false)
+            setIsLoading(false);
         })();
     }, []);
 
@@ -50,6 +50,7 @@ const CommentScreen = () => {
     }, []);
 
     const fetchNextPage = useCallback(async (isRefetch) => {
+
         if (isFetch.current) {
             //페이지와 개수 정보를 파라미터로 입력한다
             const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
@@ -118,17 +119,22 @@ const CommentScreen = () => {
             </View>
         );
     return (
-        <View style={[styles.container]}>
+        <View style={styles.container}>
             {/*로딩 중일때는 인디케이터 표시*/}
             {comments.length === 0 ?
                 <Tabs.ScrollView
-                    contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: 0
+                    }}
                     showsVerticalScrollIndicator={false}>
-                    <Text style={{ position: 'absolute', top: '50%' }}>등록된 댓글이 없습니다</Text>
+                    <Text>등록된 댓글이 없습니다</Text>
                 </Tabs.ScrollView>
                 :
                 <View style={{ flex: 1, marginTop: 16 }} contentContainerStyle={{ justifyContent: 'flex-start' }}>
                     <Tabs.FlashList
+                        extraData={refetching}
                         estimatedListSize={{ width, height }}
                         estimatedItemSize={92}
                         showsVerticalScrollIndicator={false}
@@ -144,12 +150,13 @@ const CommentScreen = () => {
                         onEndReachedThreshold={0.9}
                         onEndReached={() => fetchNextPage(false)}
                         refreshing={refetching}
-                        onRefresh={refetch}
+                        // onRefresh={refetch}
                         ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                         ListFooterComponentStyle={styles.listFooter}
                     />
                 </View>
             }
+
 
             {/*댓글 작성 입력창*/}
             <InputTextButton

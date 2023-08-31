@@ -2,19 +2,20 @@ import * as React from 'react';
 import { GLView } from 'expo-gl';
 import { loadObjAsync, loadTextureAsync, Renderer } from 'expo-three';
 import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
+import { PanGestureHandler, PinchGestureHandler } from 'react-native-gesture-handler';
 
 global.THREE = global.THREE || THREE; // 전역 객체로 설정
 
 
 const ThreeDimensionScreen = () => {
 
-    const loadModel = async function(item) {
+    const loadModel = async (item) => {
         const texturesLength = item.textures?.length || 0;
         console.log(`[loadModel] -> Textures length: ${texturesLength}`);
         const textures = [];
         for (let i = 0; i < texturesLength; i++) {
             const texture = await loadTextureAsync({
-                asset: item.textures[i].image,
+                asset: item.textures[i].image
             });
             if (item.type === 'glb') {
                 texture.flipY = false;
@@ -22,11 +23,10 @@ const ThreeDimensionScreen = () => {
             textures.push({ name: item.textures[i]?.name || '-', map: texture });
         }
         console.log(`[loadModel] -> Textures done loading`);
-        // console.log(textures);
 
         const obj = await loadObjAsync({
             asset: item.model,
-            mtlAsset: item?.material || undefined,
+            mtlAsset: item?.material || undefined
         });
 
         console.log(`[loadModel] -> Model done loading, adding textures now...`);
@@ -60,15 +60,15 @@ const ThreeDimensionScreen = () => {
             obj.rotation.y = item.rotation.y;
             obj.rotation.z = item.rotation.z;
         }
+
+        console.log(`[loadModel] -> Complied`);
         return obj;
     };
 
     const onContextCreate = async (gl) => {
-        // const {setRenderer, setCamera, setScene} = data;
-        // const { selected } = data;
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
         const sceneColor = 0xabd2c3;
-        // Create a WebGLRenderer without a DOM element
+
         const renderer = new Renderer({ gl });
         renderer.setSize(width, height);
         renderer.setClearColor(sceneColor);
@@ -98,11 +98,19 @@ const ThreeDimensionScreen = () => {
             material: require('../../../assets/3d/australian_cattle_dog_v3.mtl'),
             textures: [
                 {
-                    name: 'australian_cattle_dog_dif',
+                    name: 'map_Ka',
                     image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
                 },
                 {
-                    name: 'australian_cattle_dog_bump',
+                    name: 'map_Kd',
+                    image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
+                },
+                {
+                    name: 'map_bump',
+                    image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
+                },
+                {
+                    name: 'bump',
                     image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
                 }
             ],
@@ -126,21 +134,29 @@ const ThreeDimensionScreen = () => {
         const model = await loadModel(australian_cattle_dog_v3);
         scene.add(model);
 
-        function update() {
-            // define your own update here
-            // eg. if (model) model.rotation.y += icebear.animation.rotation.y;
-        }
+        const update = () => {
+            // model.rotation.y += 0.05;
+            // model.rotation.x += 0.025;
+        };
 
         // Setup an animation loop
         const render = () => {
             requestAnimationFrame(render);
             update();
             renderer.render(scene, camera);
+
             gl.endFrameEXP();
         };
 
         render();
     };
+
+    // if (isLoading === true) return (
+    //     <View style={{ flex:1, justifyContent:'center', alignItems:'center', flexDirection:"row" }}>
+    //         <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
+    //         <Text>모델을 읽고 있습니다.</Text>
+    //     </View>
+    // );
 
     return (
         <GLView

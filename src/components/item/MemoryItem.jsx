@@ -56,9 +56,7 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
                 }
                 textStyle={styles.memoryContent}>
                 <Paragraph>
-                    {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
-                    {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
-                    {memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}{memory.comment}
+                    {memory.comment}
                 </Paragraph>
             </ViewMoreText>
         </Surface>
@@ -72,8 +70,9 @@ const styles = StyleSheet.create({
             flex: 1,
             backgroundColor: WHITE,
             marginHorizontal: 10,
+            paddingBottom:10,
+            marginTop:10,
             borderRadius: 16,
-            paddingBottom: 16
         },
         video: {
             alignSelf: 'center',

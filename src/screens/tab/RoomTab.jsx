@@ -112,9 +112,9 @@ const RoomTab = () => {
                     setMemoryIcon(index === 1 ? 'video' : 'video-outline');
                     setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline');
                 }}
-                allowHeaderOverscroll={true}
+                // allowHeaderOverscroll={true}
                 // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
-                headerHeight={150}
+                // headerHeight={250}
                 renderHeader={() => <RoomHeader room={room} />}
                 lazy
                 cancelLazyFadeIn

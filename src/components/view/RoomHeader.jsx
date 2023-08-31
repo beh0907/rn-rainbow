@@ -8,7 +8,6 @@ import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-
 const RoomHeader = ({ room }) => {
     const navigation = useNavigation();
 

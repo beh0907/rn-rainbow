@@ -12,7 +12,6 @@ import * as Memory from '../../api/Memory';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import MemoryItem from '../../components/item/MemoryItem';
-import * as Gallery from '../../api/Gallery';
 
 
 const MemoryScreen = () => {
@@ -53,7 +52,7 @@ const MemoryScreen = () => {
 
 
     const fetchNextPage = useCallback(async (isRefetch) => {
-        
+
 
         if (isFetch.current) {
             //페이지와 개수 정보를 파라미터로 입력한다
@@ -87,7 +86,6 @@ const MemoryScreen = () => {
         });
 
         if (result.assets) {
-            console.log('result : ', result);
             navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
                 uri: result.assets[0].uri,
                 room
@@ -119,14 +117,20 @@ const MemoryScreen = () => {
             </View>
         );
     return (
-        <View style={[styles.container]}>
+        <View style={styles.container}>
             {memories.length === 0 ?
-                <Tabs.ScrollView contentContainerStyle={{ flexGrow: 1, justifyContent: 'center', alignItems: 'center' }}
-                                 showsVerticalScrollIndicator={false}>
-                    <Text style={{ position: 'absolute', top: '50%' }}>등록된 추억이 없습니다</Text>
+                <Tabs.ScrollView
+                    contentContainerStyle={{
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        paddingTop: 0
+                    }}
+                    showsVerticalScrollIndicator={false}>
+                    <Text>등록된 추억이 없습니다</Text>
                 </Tabs.ScrollView>
                 :
                 <Tabs.FlashList
+                    extraData={refetching}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
                     showsVerticalScrollIndicator={false}
@@ -141,7 +145,7 @@ const MemoryScreen = () => {
                     onEndReachedThreshold={0.9}
                     onEndReached={() => fetchNextPage(false)}
                     refreshing={refetching}
-                    onRefresh={refetch}
+                    // onRefresh={refetch}
                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                     ListFooterComponentStyle={styles.listFooter}
                 />
@@ -163,7 +167,7 @@ MemoryScreen.propTypes = {};
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flex: 1
     },
     buttonContainer: {
         position: 'absolute',
@@ -171,10 +175,10 @@ const styles = StyleSheet.create({
         right: 10
     },
     separator: {
-        marginVertical: 10
+        // marginVertical: 10
     },
     memoryList: {
-        paddingVertical: 20
+        paddingBottom: 10
     },
     listFooter: {
         flex: 1,

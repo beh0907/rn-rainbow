@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { BackHandler, Keyboard, StyleSheet, View } from 'react-native';
+import { BackHandler, Keyboard, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Menu, Text } from 'react-native-paper';
@@ -18,6 +18,7 @@ const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const HomeScreen = () => {
     const { top, bottom } = useSafeAreaInsets();
+    const { width, height } = useWindowDimensions();
 
     const [user] = useUserState();
     const [, setSnackbar] = useSnackBarState();
@@ -198,6 +199,7 @@ const HomeScreen = () => {
                     :
                     <FlashList
                         ref={listRef}
+                        estimatedListSize={{ width, height }}
                         estimatedItemSize={124}
                         showsVerticalScrollIndicator={false}
                         data={rooms}

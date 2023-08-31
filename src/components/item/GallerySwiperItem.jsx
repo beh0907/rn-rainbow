@@ -24,21 +24,22 @@ const GallerySwiperItem = memo(({ item, setScrollEnable }) => {
     const maxScale = 3;
 
     const pinchHandler = useAnimatedGestureHandler({
-        onStart: () => {
+        onStart: (event) => {
             baseScale = imageScale.value;
-            runOnJS(setScrollEnable)(false); // UI 스레드에서 호출
+
+            // runOnJS(setScrollEnable)(false); // UI 스레드에서 호출
         },
         onActive: (event) => {
             imageScale.value = baseScale * event.scale;
         },
-        onEnd: () => {
+        onEnd: (event) => {
             if (imageScale.value < minScale) {
                 imageScale.value = withSpring(minScale);
             } else if (imageScale.value > maxScale) {
                 imageScale.value = withSpring(maxScale);
             }
 
-            runOnJS(setScrollEnable)(true); // UI 스레드에서 호출
+            // runOnJS(setScrollEnable)(true); // UI 스레드에서 호출
         }
     });
 
