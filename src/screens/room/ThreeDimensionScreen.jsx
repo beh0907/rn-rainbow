@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { GLView } from 'expo-gl';
 import { loadObjAsync, loadTextureAsync, Renderer } from 'expo-three';
-import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
-import { PanGestureHandler, PinchGestureHandler } from 'react-native-gesture-handler';
+import { AmbientLight, BoxGeometry, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
 
 global.THREE = global.THREE || THREE; // 전역 객체로 설정
 
@@ -122,12 +121,12 @@ const ThreeDimensionScreen = () => {
             position: {
                 x: 0,
                 y: 0,
-                z: 2
+                z: 0
             },
-            animation: {
-                rotation: {
-                    y: 0.01 // to animate horizontally
-                }
+            rotation: {
+                x: 0,
+                y: 0,
+                z: 0
             }
         };
 
@@ -151,19 +150,22 @@ const ThreeDimensionScreen = () => {
         render();
     };
 
-    // if (isLoading === true) return (
-    //     <View style={{ flex:1, justifyContent:'center', alignItems:'center', flexDirection:"row" }}>
-    //         <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
-    //         <Text>모델을 읽고 있습니다.</Text>
-    //     </View>
-    // );
-
     return (
+
         <GLView
             style={{ flex: 1 }}
             onContextCreate={onContextCreate}
+            key={'d'}
         />
     );
 };
+
+class IconMesh extends Mesh {
+    constructor() {
+        super(
+            new BoxGeometry(10.0, 10.0, 1.0)
+        );
+    }
+}
 
 export default ThreeDimensionScreen;

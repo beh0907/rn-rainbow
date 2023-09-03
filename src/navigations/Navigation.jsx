@@ -17,7 +17,6 @@ import Constants from 'expo-constants';
 import { MainRoutes } from './Routes';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
-import * as TaskManager from 'expo-task-manager';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -103,7 +102,7 @@ const Navigation = () => {
                     roomNum: data.data.id
                 });
             });
-        })()
+        })();
 
         return () => {
             Notifications.removeNotificationSubscription(notificationListener.current);

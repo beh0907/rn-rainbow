@@ -12,6 +12,7 @@ import { Text } from 'react-native-paper';
 import { PRIMARY, WHITE } from '../../Colors';
 
 import { Tabs } from 'react-native-collapsible-tab-view';
+import snackbar from 'react-native-paper/src/components/Snackbar';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -61,15 +62,13 @@ const CommentScreen = () => {
             }
 
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
-            if (list.length > 0) {
+            // if (list.length > 0) {
                 // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
                 if (isRefetch === true) setComments(list);
                 else setComments(prev => [...prev, ...list]);
 
                 pageRef.current++;
-            }
-
-
+            // }
         }
     }, [isFetch.current, readCommentList, pageRef.current, amount, setComments]);
 
@@ -110,7 +109,7 @@ const CommentScreen = () => {
             visible: true,
             isConfirm: true
         });
-    }, []);
+    }, [comments, setSnackbar, refetch]);
 
     if (isLoading)
         return (

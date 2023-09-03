@@ -115,7 +115,7 @@ const HomeScreen = () => {
         await fetchNextPage(true);
 
         if (rooms.length !== 0)
-            listRef.current.scrollToOffset({ animated: true, offset: 0 });
+            listRef.current?.scrollToOffset({ animated: true, offset: 0 });
 
         setRefetching(false);
     }, [pageRef, isFetch, fetchNextPage, refetching, rooms]);
@@ -179,7 +179,7 @@ const HomeScreen = () => {
                 <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
 
                 <Menu
-                    theme={{ colors: { primary: 'green' } }}
+                    contentStyle={{ backgroundColor: WHITE }}
                     visible={menuVisible}
                     onDismiss={() => setMenuVisible(false)}
                     anchor={<Button contentStyle={{ flexDirection: 'row-reverse' }} icon={'menu-down'}

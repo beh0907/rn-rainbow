@@ -1,19 +1,18 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { useRoute } from '@react-navigation/native';
+import React, { useCallback, useRef, useState } from 'react';
+import { useFocusEffect, useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
-import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, useWindowDimensions, View } from 'react-native';
 import { Image } from 'expo-image';
 import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
-import Carousel from 'react-native-reanimated-carousel';
 import GallerySwiperItem from '../../components/item/GallerySwiperItem';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 const THUMB_SIZE = 80;
 
-const GallerySwiperScreen = (callback, deps) => {
+const GallerySwiperScreen = () => {
     const { params } = useRoute();
     const { galleries, position } = params;
 
@@ -73,7 +72,7 @@ const GallerySwiperScreen = (callback, deps) => {
             <View style={{ position: 'absolute', bottom: THUMB_SIZE / 2 }}>
                 <FlashList
                     disableHorizontalListHeightMeasurement
-                    estimatedListSize={{ width, height:THUMB_SIZE }}
+                    estimatedListSize={{ width, height: THUMB_SIZE }}
                     initialScrollIndex={position}
                     extraData={activityIndex}
                     ref={thumbRef}

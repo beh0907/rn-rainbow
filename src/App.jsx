@@ -8,6 +8,7 @@ import CustomSnackBar from './components/message/CustomSnackBar';
 import { PRIMARY } from './Colors';
 import CustomDialog from './components/message/CustomDialog';
 import { DialogProvider } from './contexts/DialogContext';
+import ThreeDimensionScreen from './screens/room/ThreeDimensionScreen';
 
 const theme = {
     ...DefaultTheme,
@@ -33,6 +34,7 @@ export default function App() {
                         <CustomSnackBar />
 
                         <StatusBar style='dark' />
+
                         <Navigation />
                     </UserProvider>
                 </DialogProvider>

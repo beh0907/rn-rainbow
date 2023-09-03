@@ -1,6 +1,6 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { ActivityIndicator, BackHandler, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { RoomRoutes } from '../../navigations/Routes';
 import GalleryItem from '../../components/item/GalleryItem';
 import { useRoomState } from '../../contexts/RoomContext';
@@ -10,7 +10,8 @@ import * as Gallery from '../../api/Gallery';
 import { IconButton } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { PRIMARY, WHITE } from '../../Colors';
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { Tabs, useAnimatedTabIndex, useFocusedTab } from 'react-native-collapsible-tab-view';
+import Animated from 'react-native-reanimated';
 
 const GalleryScreen = () => {
     const MAX_SELECT = 20; // 이미지 추가 시 최대 선택
@@ -39,13 +40,41 @@ const GalleryScreen = () => {
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
+    const focusedTab = useFocusedTab();
+
+    // 화면 최초 로드 리스트를 불러온다
     useLayoutEffect(() => {
         (async () => {
             await refetch();
-            setIsLoading(false);
+            setIsLoading(false)
         })();
     }, []);
 
+    //다른 탭으로 넘어갈 때 delete 모드가 취소된다
+    useEffect(() => {
+        if (focusedTab !== RoomRoutes.GALLERY) {
+            setSelectGalleries([])
+            setIsDeleteMode(false)
+        }
+    }, [focusedTab])
+
+    //백 버튼을 누를 때 이미지 삭제 모드 상태라면 삭제 모드를 취소한다
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (isDeleteMode) {
+                    setIsDeleteMode(false)
+                    return true;
+                }
+            };
+
+            BackHandler.addEventListener('hardwareBackPress', onBackPress);
+            return () =>
+                BackHandler.removeEventListener('hardwareBackPress', onBackPress);
+        }, [navigation, isDeleteMode])
+    );
+
+    //리스트를 갱신한다
     const refetch = useCallback(async () => {
         setRefetching(true);
 
@@ -57,14 +86,12 @@ const GalleryScreen = () => {
         setRefetching(false);
     }, []);
 
-
+    //무한 스크롤 페이징 처리를 하거나 첫 페이지부터 갱신된 정보를 불러 저장한다
     const fetchNextPage = useCallback(async (isRefetch) => {
-
         if (isFetch.current) {
             //페이지와 개수 정보를 파라미터로 입력한다
             // const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
             const list = await Gallery.readGalleryList(room.roomNum, { page: pageRef.current, amount });
-
 
             //페이지당 amount만큼 가져오지만 amount와 개수가 다를 경우 마지막 페이지임을 인식
             if (list.length !== amount) {
@@ -72,22 +99,24 @@ const GalleryScreen = () => {
             }
 
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
-            if (list.length > 0) {
-                // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
-                if (isRefetch === true) setGalleries(list);
-                else setGalleries(prev => [...prev, ...list]);
+            // if (list.length > 0) {
+            // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
+            if (isRefetch === true) setGalleries(list);
+            else setGalleries(prev => [...prev, ...list]);
 
-                pageRef.current++;
-            }
+            pageRef.current++;
+            // }
 
 
         }
     }, [isFetch.current, pageRef.current, amount, setGalleries]);
 
+    //삭제 모드에서 선택된 갤러리 여부를 판별한다
     const isSelectedGallery = (gallery) => {
         return selectGalleries.findIndex((item) => item.seq === gallery.seq) > -1;
     };
 
+    //이미지를 선택할 때 스위퍼 화면으로 이동한다
     const onPressImage = useCallback((index) => {
         navigation.navigate(RoomRoutes.GALLERY_SWIPER, {
             galleries,
@@ -95,6 +124,7 @@ const GalleryScreen = () => {
         });
     }, [galleries, setIsDeleteMode, navigation]);
 
+    //이미지 삭제 상태를 토글한다
     const onToggleImage = useCallback((gallery) => {
         // const gallery = galleries[index];
         const isSelected = isSelectedGallery(gallery);
@@ -118,6 +148,7 @@ const GalleryScreen = () => {
         });
     }, [isSelectedGallery, setSelectGalleries, setSnackbar]);
 
+    //이미지를 가져와 저장한다
     const pickImage = async () => {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
@@ -136,6 +167,7 @@ const GalleryScreen = () => {
         }
     };
 
+    //이미지 삭제 기능을 수행한다
     const deleteImage = async () => {
         let message = '';
 
@@ -163,17 +195,6 @@ const GalleryScreen = () => {
         setIsDeleteMode(!isDeleteMode);
     };
 
-    const handleScroll = async (event) => {
-        console.log('이벤트 : ', event);
-        const { layoutMeasurement, contentOffset, contentSize } = event.nativeEvent;
-        const isBottom = layoutMeasurement.height + contentOffset.y >= contentSize.height;
-
-        console.log('isBottom : ');
-
-        if (isBottom)
-            await fetchNextPage(false);
-    };
-
     if (isLoading)
         return (
             <View style={[styles.container]}>
@@ -184,7 +205,6 @@ const GalleryScreen = () => {
         <View style={styles.container}>
             {galleries.length === 0 ?
                 <Tabs.ScrollView
-                    onScroll={({nativeEvent})=>console.log(nativeEvent)}>
                     contentContainerStyle={{
                         justifyContent: 'center',
                         alignItems: 'center',
@@ -195,7 +215,7 @@ const GalleryScreen = () => {
                 </Tabs.ScrollView>
                 :
                 <Tabs.MasonryFlashList
-                    extraData={[isDeleteMode, isSelectedGallery, refetching]}
+                    extraData={[isDeleteMode, refetching, onToggleImage]}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={100}
                     contentContainerStyle={styles.galleryList}

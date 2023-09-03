@@ -1,9 +1,9 @@
-import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from 'react-native';
 import { IconButton } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
 import { PRIMARY, WHITE } from '../../Colors';
-import { useNavigation } from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserState } from '../../contexts/UserContext';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -24,6 +24,7 @@ const MemoryScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const navigation = useNavigation();
+    const {params} = useRoute()
     const { width, height } = useWindowDimensions();
 
     //무한 스크롤 페이징 처리 관련 변수들
@@ -31,6 +32,13 @@ const MemoryScreen = () => {
     const [amount, setAmount] = useState(20);
     const isFetch = useRef(true);
     const pageRef = useRef(1);
+
+    useEffect(() => {
+        if (params?.memory) {
+            console.log("메모리가 도착했어요 : ", params?.memory)
+            // setMemories(prev => ([params?.memory, prev]))
+        }
+    }, [params?.memory]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -65,13 +73,13 @@ const MemoryScreen = () => {
             }
 
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
-            if (list.length > 0) {
+            // if (list.length > 0) {
                 // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
                 if (isRefetch === true) setMemories(list);
                 else setMemories(prev => [...prev, ...list]);
 
                 pageRef.current++;
-            }
+            // }
 
 
         }
@@ -103,7 +111,7 @@ const MemoryScreen = () => {
                     message: (result !== null ? '추억의 영상이 삭제되었습니다.' : '통신 오류로 인해 추억의 영상 삭제를 실패하였습니다.'),
                     visible: true
                 });
-                await readMemoryList();
+                await refetch();
             },
             visible: true,
             isConfirm: true
