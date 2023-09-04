@@ -13,6 +13,7 @@ import { PRIMARY, WHITE } from '../../Colors';
 
 import { Tabs } from 'react-native-collapsible-tab-view';
 import snackbar from 'react-native-paper/src/components/Snackbar';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const CommentScreen = () => {
     const [user] = useUserState();
@@ -107,7 +108,7 @@ const CommentScreen = () => {
                 await refetch();
             },
             visible: true,
-            isConfirm: true
+            mode: DIALOG_MODE.CONFIRM
         });
     }, [comments, setSnackbar, refetch]);
 

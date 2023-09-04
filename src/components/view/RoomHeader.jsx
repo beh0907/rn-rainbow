@@ -1,4 +1,4 @@
-import { StyleSheet, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { Button, Text } from 'react-native-paper';
 import { GRAY, PRIMARY } from '../../Colors';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -14,9 +14,11 @@ const RoomHeader = ({ room }) => {
     return (
         <View style={styles.header}>
             <View style={styles.petInfoTextContainer}>
-                <AvatarImage
-                    source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
-                    size={72} />
+                <Pressable onPress={() => room.image && navigation.navigate(RoomRoutes.IMAGE_CONTROL, {url : `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}`})}>
+                    <AvatarImage
+                        source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
+                        size={72} />
+                </Pressable>
                 <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
             </View>
 

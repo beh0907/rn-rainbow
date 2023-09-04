@@ -10,8 +10,9 @@ import * as Gallery from '../../api/Gallery';
 import { IconButton } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { PRIMARY, WHITE } from '../../Colors';
-import { Tabs, useAnimatedTabIndex, useFocusedTab } from 'react-native-collapsible-tab-view';
-import Animated from 'react-native-reanimated';
+import { Tabs, useFocusedTab } from 'react-native-collapsible-tab-view';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
+import { useDialogState } from '../../contexts/DialogContext';
 
 const GalleryScreen = () => {
     const MAX_SELECT = 20; // 이미지 추가 시 최대 선택
@@ -20,7 +21,8 @@ const GalleryScreen = () => {
     const [user] = useUserState();
     const [room] = useRoomState();
 
-    //스낵바 알림
+    //알림
+    const [, setDialog] = useDialogState();
     const [, setSnackbar] = useSnackBarState();
 
     //로딩 상태
@@ -45,25 +47,26 @@ const GalleryScreen = () => {
     // 화면 최초 로드 리스트를 불러온다
     useLayoutEffect(() => {
         (async () => {
+            setIsLoading(true);
             await refetch();
-            setIsLoading(false)
+            setIsLoading(false);
         })();
-    }, []);
+    }, [room.roomNum]);
 
     //다른 탭으로 넘어갈 때 delete 모드가 취소된다
     useEffect(() => {
         if (focusedTab !== RoomRoutes.GALLERY) {
-            setSelectGalleries([])
-            setIsDeleteMode(false)
+            setSelectGalleries([]);
+            setIsDeleteMode(false);
         }
-    }, [focusedTab])
+    }, [focusedTab]);
 
     //백 버튼을 누를 때 이미지 삭제 모드 상태라면 삭제 모드를 취소한다
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
                 if (isDeleteMode) {
-                    setIsDeleteMode(false)
+                    setIsDeleteMode(false);
                     return true;
                 }
             };
@@ -159,11 +162,22 @@ const GalleryScreen = () => {
 
         //선택된 이미지가 있다면
         if (result.assets) {
+            setDialog({
+                message: '이미지를 추가하고 있습니다.....',
+                visible: true,
+                mode: DIALOG_MODE.LOADING
+            });
+
             //선택된 이미지들을 서버로 전송한다
             await Gallery.registerGallery(room, result.assets);
 
             //완료되었다면 리스트를 다시 가져온다
             await refetch();
+
+
+            setDialog({
+                visible: false
+            });
         }
     };
 
@@ -177,9 +191,19 @@ const GalleryScreen = () => {
             if (selectGalleries.length === 0) {
                 message = '이미지가 선택되지 않았습니다.';
             } else {
+                setDialog({
+                    message: '이미지를 삭제하고 있습니다.....',
+                    visible: true,
+                    mode: DIALOG_MODE.LOADING
+                });
+
                 await Gallery.removeGallery(selectGalleries);
                 message = '선택한 이미지가 삭제되었습니다.';
                 await refetch();
+
+                setDialog({
+                    visible: false
+                });
             }
         } else {
             message = `최대 ${MAX_SELECT}개의 삭제할 이미지를 선택해주세요.`;
@@ -241,7 +265,7 @@ const GalleryScreen = () => {
                 <View style={styles.buttonContainer}>
                     <IconButton style={{ marginHorizontal: 10 }} icon={isDeleteMode ? 'check' : 'delete'}
                                 mode='contained' onPress={deleteImage} containerColor={PRIMARY.DEFAULT}
-                                iconColor={WHITE} />
+                                iconColor={WHITE} animated disabled={galleries.length === 0} />
                     <IconButton style={{ marginHorizontal: 10 }} icon='plus' mode='contained'
                                 onPress={pickImage} containerColor={PRIMARY.DEFAULT} iconColor={WHITE} />
                 </View>
@@ -268,7 +292,8 @@ const styles = StyleSheet.create({
     listFooter: {
         flex: 1,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor:'yellow'
     }
 });
 

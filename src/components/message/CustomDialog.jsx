@@ -1,51 +1,78 @@
 import * as React from 'react';
+import { useCallback } from 'react';
 import { StyleSheet, View } from 'react-native';
-import { Button, Dialog, Portal, Text } from 'react-native-paper';
+import { ActivityIndicator, Button, Dialog, Divider, Portal, Text } from 'react-native-paper';
 import { useDialogState } from '../../contexts/DialogContext';
+import { GRAY, PRIMARY } from '../../Colors';
+
+export const DIALOG_MODE = {
+    ALERT: 'alert',
+    CONFIRM: 'confirm',
+    LOADING: 'loading'
+};
 
 const CustomDialog = () => {
     const [dialog, setDialog] = useDialogState();
-    const { title, message, onPress, visible, isConfirm } = dialog;
+    const { title, message, onPress, visible, isConfirm, mode } = dialog;
 
-    const onConfirmDialog = async () => {
-        await onPress()
-        await onDismissDialog()
-    }
+    const onConfirmDialog = useCallback(async () => {
+        await onPress();
+        await onDismissDialog();
+    }, [dialog]);
 
-    const onDismissDialog = () => setDialog({visible: false });
+    const onDismissDialog = useCallback(() => setDialog({ visible: false }), [dialog]);
 
     return (
-        <View>
-            <Portal>
-                <Dialog visible={visible} onDismiss={onDismissDialog}>
-                    {/*타이틀이 있을 때만 타이틀을 표시한다*/}
-                    {title && <Dialog.Title>{title}</Dialog.Title>}
-                    <Dialog.Content>
-                        <Text variant='bodyMedium'>{message}</Text>
-                    </Dialog.Content>
+        <Portal>
+            {(() => {
+                switch (mode) {
+                    case DIALOG_MODE.ALERT:
+                        return (
+                            <Dialog visible={visible} onDismiss={onDismissDialog} dismissable={false}>
+                                <Dialog.Title>{title}</Dialog.Title>
+                                <Dialog.Content>
+                                    <Text variant='bodyMedium'>{message}</Text>
+                                </Dialog.Content>
 
-                    <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
-                        <Dialog.Actions>
-                            {isConfirm && <Button onPress={onDismissDialog}>닫기</Button>}
-                            {onPress && <Button onPress={onConfirmDialog}>확인</Button>}
-                        </Dialog.Actions>
-                    </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <Dialog.Actions>
+                                        <Button onPress={onConfirmDialog}>확인</Button>
+                                    </Dialog.Actions>
+                                </View>
+                            </Dialog>
+                        );
 
+                    case DIALOG_MODE.CONFIRM:
+                        return (
+                            <Dialog visible={visible} onDismiss={onDismissDialog} dismissable={false}>
+                                <Dialog.Title>{title}</Dialog.Title>
+                                <Dialog.Content>
+                                    <Text variant='bodyMedium'>{message}</Text>
+                                </Dialog.Content>
 
-                </Dialog>
-            </Portal>
-        </View>
+                                <View style={{ flexDirection: 'row', justifyContent: 'flex-end' }}>
+                                    <Dialog.Actions>
+                                        <Button onPress={onDismissDialog}>닫기</Button>
+                                        <Button onPress={onConfirmDialog}>확인</Button>
+                                    </Dialog.Actions>
+                                </View>
+                            </Dialog>
+                        );
+
+                    case DIALOG_MODE.LOADING:
+                        return (
+                            <Dialog visible={visible} onDismiss={onDismissDialog} dismissable={false}>
+                                <Dialog.Content style={{ flexDirection: 'row', alignItems:'center' }}>
+                                    <ActivityIndicator size='small' color={PRIMARY.DEFAULT} />
+                                    <Divider horizontalInset/>
+                                    <Text variant='bodyMedium'>{message}</Text>
+                                </Dialog.Content>
+                            </Dialog>
+                        );
+                }
+            })()}
+        </Portal>
     );
 };
-
-const styles = StyleSheet.create({
-    popupArea: {
-        position: 'absolute',
-        backgroundColor: '#ccc',
-        margin: 8,
-        padding: 8,
-        minHeight: 90
-    }
-});
 
 export default CustomDialog;

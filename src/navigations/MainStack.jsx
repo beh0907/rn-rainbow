@@ -12,6 +12,7 @@ import MemoryRegisterScreen from '../screens/room/MemoryRegisterScreen';
 import RoomTab from '../screens/tab/RoomTab';
 import ProfileUpdateScreen from '../screens/main/ProfileUpdateScreen';
 import ThreeDimensionScreen from '../screens/room/ThreeDimensionScreen';
+import ImageControlScreen from '../screens/room/ImageControlScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -36,6 +37,8 @@ const MainStack = () => {
                 <Stack.Screen name={RoomRoutes.THREE_DIMENSION} component={ThreeDimensionScreen}
                               options={{ headerShown: false }} />
                 <Stack.Screen name={RoomRoutes.MEMORY_REGISTER} component={MemoryRegisterScreen}
+                              options={{ title: '' }} />
+                <Stack.Screen name={RoomRoutes.IMAGE_CONTROL} component={ImageControlScreen}
                               options={{ title: '' }} />
             </Stack.Navigator>
         </RoomProvider>

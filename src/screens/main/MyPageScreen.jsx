@@ -18,6 +18,7 @@ import { useSharedValue } from 'react-native-reanimated';
 import PaginationItem from '../../components/item/PaginationItem';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -48,6 +49,7 @@ const MyPageScreen = () => {
 
             setMyRooms(await readMyRoomList(user.id));
             setFavoriteRooms(await readBookmarkRoomList(favorites));
+
         })();
     }, []);
 
@@ -62,7 +64,7 @@ const MyPageScreen = () => {
                 setUser({});
             },
             visible: true,
-            isConfirm: true
+            mode: DIALOG_MODE.CONFIRM
         });
     };
 

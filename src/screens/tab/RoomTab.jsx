@@ -1,6 +1,6 @@
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { GRAY, PRIMARY } from '../../Colors';
-import React, { useLayoutEffect, useState } from 'react';
+import React, { useEffect, useLayoutEffect, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
@@ -9,13 +9,14 @@ import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
-import { MaterialTabBar, Tabs } from 'react-native-collapsible-tab-view';
+import { MaterialTabBar, Tabs, useFocusedTab } from 'react-native-collapsible-tab-view';
 import GalleryScreen from '../room/GalleryScreen';
 import MemoryScreen from '../room/MemoryScreen';
 import CommentScreen from '../room/CommentScreen';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { useDialogState } from '../../contexts/DialogContext';
 import RoomHeader from '../../components/view/RoomHeader';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const RoomTab = () => {
     const navigation = useNavigation();
@@ -41,11 +42,26 @@ const RoomTab = () => {
     const [memoryIcon, setMemoryIcon] = useState('video-outline');
     const [commentIcon, setCommentIcon] = useState('comment-text-outline');
 
+    useEffect(() => {
+        setGalleryIcon('view-grid');
+        setMemoryIcon('video-outline');
+        setCommentIcon('comment-text-outline');
+    }, [roomNum])
+
     useLayoutEffect(() => {
         (async () => {
             try {
+                setIsReady(false);
+                setDialog({
+                    message: '정보를 읽고 있습니다......',
+                    visible: true,
+                    mode: DIALOG_MODE.LOADING
+                });
+
                 //추모관에 필요한 정보들을 한꺼번에 불러온다
                 setRoom(await readRoom(roomNum));
+
+                setDialog({visible: false});
                 setIsReady(true);
             } catch (e) {
                 setDialog({
@@ -55,11 +71,11 @@ const RoomTab = () => {
                         navigation.goBack();
                     },
                     visible: true,
-                    isConfirm: false
+                    mode: DIALOG_MODE.ALERT
                 });
             }
         })();
-    }, [roomNum]);
+    }, [roomNum, readRoom]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -107,6 +123,7 @@ const RoomTab = () => {
     return (
         isReady ?
             <Tabs.Container
+                initialTabName={RoomRoutes.GALLERY}
                 onIndexChange={(index) => {
                     setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline');
                     setMemoryIcon(index === 1 ? 'video' : 'video-outline');

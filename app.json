@@ -95,11 +95,9 @@
       },
       "BASE_URL_API": "http://43.200.169.250/rainbow",
       "BASE_URL_FILE": "https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/",
-      "BASE_URL_BOARD": "http://43.200.169.250/rainbow/front/board/free.do"
+      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do"
     }
   }
-
-
 }
 
 

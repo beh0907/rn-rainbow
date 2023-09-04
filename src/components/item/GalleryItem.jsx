@@ -30,6 +30,7 @@ const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
                 {isDeleteMode &&
                     <View style={[styles.selectItem, {backgroundColor: isSelected ?'rgba(107,114,128,0.7)' : 'transparent'}]}>
                         <BouncyCheckbox
+                            onPress={onPress}
                             disableText
                             disableBuiltInState
                             ref={checkBoxRef}

@@ -12,6 +12,7 @@ import * as Memory from '../../api/Memory';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import MemoryItem from '../../components/item/MemoryItem';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 
 const MemoryScreen = () => {
@@ -114,7 +115,7 @@ const MemoryScreen = () => {
                 await refetch();
             },
             visible: true,
-            isConfirm: true
+            mode: DIALOG_MODE.CONFIRM
         });
     }, []);
 

@@ -14,7 +14,7 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
     //비디오 객체
     const video = useRef(null);
     // const [state, setState] = useState({})
-    const [isFullScreen, setIsFullScreen] = useState(false);
+    // const [isFullScreen, setIsFullScreen] = useState(false);
 
     return (
         <Surface style={styles.container} elevation={3}>
@@ -27,9 +27,10 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
                         uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
                     }}
                     useNativeControls
-                    resizeMode={isFullScreen ? ResizeMode.CONTAIN : ResizeMode.COVER}
+                    // resizeMode={isFullScreen ? ResizeMode.CONTAIN : ResizeMode.COVER}
+                    resizeMode={ResizeMode.CONTAIN}
                     // onPlaybackStatusUpdate={status => setState(() => status)}
-                    onFullscreenUpdate={event => setIsFullScreen(() => event.fullscreenUpdate <= 1)}
+                    // onFullscreenUpdate={event => setIsFullScreen(() => event.fullscreenUpdate <= 1)}
                 />
             </View>
 
@@ -78,6 +79,7 @@ const styles = StyleSheet.create({
             alignSelf: 'center',
             height: 200,
             flex: 1,
+            backgroundColor:GRAY.DARK,
             borderTopRightRadius: 16,
             borderTopLeftRadius: 16
             // borderRadius: 20

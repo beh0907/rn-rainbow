@@ -1,4 +1,4 @@
-import React, { memo, useCallback } from 'react';
+import React, { memo } from 'react';
 import { Pressable, StyleSheet, Text, View } from 'react-native';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import PropTypes from 'prop-types';
@@ -7,26 +7,32 @@ import { GRAY, PRIMARY } from '../../Colors';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import Constants from 'expo-constants';
 import ViewMoreText from 'react-native-view-more-text';
-import { IconButton, Paragraph } from 'react-native-paper';
-import { Image } from 'expo-image';
+import { IconButton } from 'react-native-paper';
 import { calculateTimeDifference } from '../../utils/DateUtil';
+import { RoomRoutes } from '../../navigations/Routes';
+import { useNavigation } from '@react-navigation/native';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
+    const navigation = useNavigation()
 
     return (
         <View style={styles.container}>
             {
                 comment.image ?
-                    <AvatarImage source={{ uri: `${BASE_URL_FILE}${comment.userId}/${comment.image}?version=${comment.userUpdateDate}` }} size={48}
-                                 style={styles.profileImage} />
+                    <Pressable onPress={() => navigation.navigate(RoomRoutes.IMAGE_CONTROL, {url : `${BASE_URL_FILE}${comment.userId}/${comment.image}?version=${comment.userUpdateDate}`})}>
+                        <AvatarImage
+                            source={{ uri: `${BASE_URL_FILE}${comment.userId}/${comment.image}?version=${comment.userUpdateDate}` }}
+                            size={48}
+                            style={styles.profileImage} />
+                    </Pressable>
                     : <AvatarText label={comment.nickName.charAt(0)} Text size={48}
                                   style={styles.profileImage} />
             }
 
             <View style={styles.commentInfo}>
-                <View style={{flexDirection:"row", alignItems:'center', justifyContent:"space-between"}}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View>
                         <Text style={styles.nickName} numberOfLines={1}>{comment.nickName}</Text>
                         <Text style={styles.commentDate}>{calculateTimeDifference(comment.date)}</Text>
@@ -109,7 +115,7 @@ const styles = StyleSheet.create({
     },
     commentCollapse: {
         color: GRAY.DEFAULT
-    },
+    }
 });
 
 export default CommentItem;

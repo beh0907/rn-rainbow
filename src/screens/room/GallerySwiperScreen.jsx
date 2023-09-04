@@ -1,5 +1,5 @@
 import React, { useCallback, useRef, useState } from 'react';
-import { useFocusEffect, useRoute } from '@react-navigation/native';
+import { useRoute } from '@react-navigation/native';
 import Constants from 'expo-constants';
 import { Pressable, useWindowDimensions, View } from 'react-native';
 import { Image } from 'expo-image';
@@ -7,7 +7,7 @@ import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import GallerySwiperItem from '../../components/item/GallerySwiperItem';
-import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import GallerySwiperItem2 from '../../components/item/GallerySwiperItem2';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 const THUMB_SIZE = 80;
@@ -45,8 +45,9 @@ const GallerySwiperScreen = () => {
         <View style={{ marginTop: top, marginBottom: bottom }}>
 
             <FlashList
+
+                snapToInterval={0.1}
                 estimatedListSize={{ width, height }}
-                progressViewOffset={30}
                 scrollEnabled={scrollEnabled}
                 initialScrollIndex={position}
                 extraData={[activityIndex, scrollEnabled]}
@@ -61,10 +62,7 @@ const GallerySwiperScreen = () => {
                 }}
                 renderItem={({ item, index }) => {
                     return (
-                        <GestureHandlerRootView>
-                            <GallerySwiperItem item={item} setScrollEnable={setScrollEnable} />
-                        </GestureHandlerRootView>
-
+                        <GallerySwiperItem item={item} setScrollEnable={setScrollEnable} />
                     );
                 }}
             />

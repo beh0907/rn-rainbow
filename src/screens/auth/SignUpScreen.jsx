@@ -14,6 +14,7 @@ import {TextInput} from "react-native-paper";
 import {signUp} from "../../api/Auth";
 import {useSnackBarState} from "../../contexts/SnackBarContext";
 import { useDialogState } from '../../contexts/DialogContext';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const SignUpScreen = () => {
     const navigation = useNavigation()
@@ -74,7 +75,7 @@ const SignUpScreen = () => {
                         dispatch({ type: AuthFormTypes.TOGGLE_LOADING })
                     },
                     visible: true,
-                    isConfirm: false
+                    mode: DIALOG_MODE.ALERT
                 });
             }
         }

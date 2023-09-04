@@ -26,5 +26,6 @@ export const RoomRoutes = {
     GALLERY: "갤러리",
     GALLERY_SWIPER: "갤러리 스위퍼",
     MEMORY_REGISTER: "추억의 영상 등록",
+    IMAGE_CONTROL: "이미지 조회",
     THREE_DIMENSION: "3D 모델"
 }

@@ -21,6 +21,7 @@ import { Image } from 'expo-image';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import { useDialogState } from '../../contexts/DialogContext';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const SignInScreen = () => {
     const navigation = useNavigation();
@@ -71,7 +72,7 @@ const SignInScreen = () => {
                         dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
                     },
                     visible: true,
-                    isConfirm: false
+                    mode: DIALOG_MODE.ALERT
                 });
             }
         }

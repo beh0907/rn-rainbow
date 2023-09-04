@@ -21,6 +21,7 @@ import { useDialogState } from '../../contexts/DialogContext';
 import * as SecureStore from '../../utils/PreferenceStore';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import { addHyphen } from '../../utils/CheckInputForm';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -87,7 +88,7 @@ const ProfileUpdateScreen = props => {
                 setUser({});
             },
             visible: true,
-            isConfirm: true
+            mode: DIALOG_MODE.CONFIRM
         });
     };
 

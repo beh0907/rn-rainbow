@@ -17,6 +17,8 @@ import Constants from 'expo-constants';
 import { MainRoutes } from './Routes';
 import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
+import { DIALOG_MODE } from '../components/message/CustomDialog';
+import * as TaskManager from 'expo-task-manager';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -36,22 +38,6 @@ Notifications.setNotificationHandler({
         shouldSetBadge: false
     })
 });
-
-// const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
-//
-// TaskManager.defineTask(
-//     BACKGROUND_NOTIFICATION_TASK,
-//     ({ data, error, executionInfo }) => {
-//         if (error) {
-//             console.log('error occurred');
-//         }
-//         if (data) {
-//             console.log('data-----', data);
-//         }
-//     }
-// );
-//
-// Notifications.registerTaskAsync(BACKGROUND_NOTIFICATION_TASK);
 
 const Navigation = () => {
     const navigationRef = useRef(null);
@@ -76,6 +62,41 @@ const Navigation = () => {
     const notificationListener = useRef();
     const responseListener = useRef();
 
+    //백그라운드 fcm 메시지 수신 관련 소스
+    const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
+
+    TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
+        console.log('111');
+        if (error) {
+            console.log('Error occurred:', error);
+        }
+
+        if (data) {
+            // 수신한 데이터를 처리하고 원하는 화면으로 navigate 시킵니다.
+            const roomId = data.data.id;
+            navigationRef.current?.navigate(MainRoutes.ROOM_TAB, { roomNum: roomId });
+        }
+    });
+
+    useEffect(() => {
+        // 백그라운드 작업(Task)을 등록합니다.
+        if (!TaskManager.isTaskDefined(BACKGROUND_NOTIFICATION_TASK)) {
+            TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
+                console.log('222');
+
+                // 수신한 데이터를 처리하고 원하는 화면으로 navigate 시킵니다.
+                const roomId = data.data.id;
+                navigationRef.current?.navigate(MainRoutes.ROOM_TAB, { roomNum: roomId });
+            });
+        }
+
+        return () => {
+            // 컴포넌트가 언마운트될 때 백그라운드 작업(Task)을 제거합니다.
+            TaskManager.unregisterAllTasksAsync();
+        };
+    }, []);
+
+    //포그라운드 fcm 메시지 수신 관련 소스
     useEffect(() => {
         (async () => {
             if (Platform.OS === 'android') {
@@ -189,7 +210,7 @@ const Navigation = () => {
                         setIsReady(true);
                     },
                     visible: true,
-                    isConfirm: false
+                    mode: DIALOG_MODE.ALERT
                 });
             }
         })();
