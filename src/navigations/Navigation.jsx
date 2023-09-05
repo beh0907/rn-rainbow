@@ -100,6 +100,7 @@ const Navigation = () => {
     useEffect(() => {
         (async () => {
             if (Platform.OS === 'android') {
+                await Notifications.deleteNotificationChannelAsync("expo_notifications_fallback_notification_channel")
                 await Notifications.setNotificationChannelAsync('default', {
                     name: 'default',
                     importance: Notifications.AndroidImportance.MAX,
@@ -108,10 +109,14 @@ const Navigation = () => {
                 });
             }
 
+            //알림이 표시될 때 이벤트
             notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                setNotification(notification);
+                const data = notification.request.trigger.remoteMessage;
+                console.log('푸시 아이디', data.data.id);
+                console.log('푸시 타입', data.data.type);
             });
 
+            //알림이 터치할 때 이벤트
             responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
                 const data = response.notification.request.trigger.remoteMessage;
                 console.log('푸시 아이디', data.data.id);
@@ -172,6 +177,7 @@ const Navigation = () => {
 
                 //저장된 정보에 따라 로그인을 시도한다
                 let user;
+
 
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId

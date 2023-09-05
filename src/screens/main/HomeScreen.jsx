@@ -176,7 +176,7 @@ const HomeScreen = () => {
                 paddingHorizontal: 16,
                 justifyContent: 'space-between'
             }}>
-                <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>전체 추모관</Text>
+                <Text variant='titleLarge' style={{ color: BLACK, flex: 1 }}>추모관 목록</Text>
 
                 <Menu
                     contentStyle={{ backgroundColor: WHITE }}

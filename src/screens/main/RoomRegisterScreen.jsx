@@ -2,7 +2,7 @@ import React, { useCallback, useRef, useState } from 'react';
 import { Pressable, ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { RadioButton, SegmentedButtons, Text, TextInput } from 'react-native-paper';
-import { GENDER, GRAY, WHITE } from '../../Colors';
+import { GENDER, GRAY, PRIMARY, WHITE } from '../../Colors';
 import SafeInputView from '../../components/view/SafeInputView';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { ReturnKeyTypes } from '../../components/view/Input';
@@ -15,7 +15,6 @@ import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
-import { Image } from 'expo-image';
 
 const RoomRegisterScreen = () => {
     const navigation = useNavigation();

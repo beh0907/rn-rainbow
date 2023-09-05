@@ -42,12 +42,6 @@ const RoomTab = () => {
     const [memoryIcon, setMemoryIcon] = useState('video-outline');
     const [commentIcon, setCommentIcon] = useState('comment-text-outline');
 
-    useEffect(() => {
-        setGalleryIcon('view-grid');
-        setMemoryIcon('video-outline');
-        setCommentIcon('comment-text-outline');
-    }, [roomNum])
-
     useLayoutEffect(() => {
         (async () => {
             try {
@@ -125,13 +119,13 @@ const RoomTab = () => {
             <Tabs.Container
                 initialTabName={RoomRoutes.GALLERY}
                 onIndexChange={(index) => {
-                    setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline');
-                    setMemoryIcon(index === 1 ? 'video' : 'video-outline');
-                    setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline');
+                        setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline')
+                        setMemoryIcon(index === 1 ? 'video' : 'video-outline')
+                        setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline')
                 }}
                 // allowHeaderOverscroll={true}
                 // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
-                // headerHeight={250}
+                headerHeight={268}
                 renderHeader={() => <RoomHeader room={room} />}
                 lazy
                 cancelLazyFadeIn

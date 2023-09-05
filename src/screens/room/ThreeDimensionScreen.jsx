@@ -1,12 +1,26 @@
 import * as React from 'react';
+import { useRef, useState } from 'react';
 import { GLView } from 'expo-gl';
 import { loadObjAsync, loadTextureAsync, Renderer } from 'expo-three';
-import { AmbientLight, BoxGeometry, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
+import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
+import { readRoom } from '../../api/Room';
+import { useDialogState } from '../../contexts/DialogContext';
 
 global.THREE = global.THREE || THREE; // 전역 객체로 설정
 
 
 const ThreeDimensionScreen = () => {
+    const [, setDialog] = useDialogState();
+
+    const modelRef = useRef(null);
+    const glViewRef = useRef(null);
+
+    const isMultiTouchRef = useRef(false);
+    const previousX1Ref = useRef(0);
+    const previousY1Ref = useRef(0);
+    const previousX2Ref = useRef(0);
+    const previousY2Ref = useRef(0);
 
     const loadModel = async (item) => {
         const texturesLength = item.textures?.length || 0;
@@ -65,6 +79,12 @@ const ThreeDimensionScreen = () => {
     };
 
     const onContextCreate = async (gl) => {
+        setDialog({
+            message: '3D 모델을 불러오고 있습니다......',
+            visible: true,
+            mode: DIALOG_MODE.LOADING
+        });
+
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
         const sceneColor = 0xabd2c3;
 
@@ -111,6 +131,14 @@ const ThreeDimensionScreen = () => {
                 {
                     name: 'bump',
                     image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
+                },
+                {
+                    name: 'australian_cattle_dog_bump',
+                    image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
+                },
+                {
+                    name: 'australian_cattle_dog_dif',
+                    image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
                 }
             ],
             scale: {
@@ -131,41 +159,146 @@ const ThreeDimensionScreen = () => {
         };
 
         const model = await loadModel(australian_cattle_dog_v3);
+        modelRef.current = model;
         scene.add(model);
-
-        const update = () => {
-            // model.rotation.y += 0.05;
-            // model.rotation.x += 0.025;
-        };
 
         // Setup an animation loop
         const render = () => {
             requestAnimationFrame(render);
-            update();
             renderer.render(scene, camera);
 
             gl.endFrameEXP();
         };
 
         render();
+        setDialog({visible: false});
+    };
+
+    const onStartShouldSetResponder = (event) => {
+        const { numberActiveTouches } = event.touchHistory;
+
+        if (numberActiveTouches === 1) {
+            previousX1Ref.current = event.nativeEvent.touches[0]?.pageX;
+            previousY1Ref.current = event.nativeEvent.touches[0]?.pageY;
+
+            isMultiTouchRef.current = false;
+        } else if (numberActiveTouches === 2) {
+            previousX1Ref.current = event.nativeEvent.touches[0]?.pageX;
+            previousY1Ref.current = event.nativeEvent.touches[0]?.pageY;
+
+            previousX2Ref.current = event.nativeEvent.touches[1]?.pageX;
+            previousY2Ref.current = event.nativeEvent.touches[1]?.pageY;
+            isMultiTouchRef.current = true;
+        }
+    };
+
+    const onMoveShouldSetResponder = (event) => {
+        const { numberActiveTouches } = event.touchHistory;
+
+        const X1 = event.nativeEvent?.pageX
+        const Y1 = event.nativeEvent?.pageY
+
+        const deltaX1 = X1 - previousX1Ref.current;
+        const deltaY1 = Y1 - previousY1Ref.current;
+
+        if (numberActiveTouches === 1 && !isMultiTouchRef.current) { // 1손가락 터치
+            let rotate = 0;
+            if (Math.abs(deltaX1) > Math.abs(deltaY1)) {
+                rotate = deltaX1 / 100;
+                rotateObjY(rotate);
+            } else {
+                rotate = deltaY1 / 100;
+                rotateObjX(rotate);
+            }
+        } else if (numberActiveTouches === 2 && isMultiTouchRef.current) { // 2손가락 터치
+            const X2 = event.nativeEvent.touches[1]?.pageX;
+            const Y2 = event.nativeEvent.touches[1]?.pageY;
+
+            const deltaX2 = X2 - previousX2Ref.current;
+            const deltaY2 = Y2 - previousY2Ref.current;
+
+            const len1 =  Math.sqrt((previousX1Ref.current - previousX2Ref.current) * (previousX1Ref.current - previousX2Ref.current) +
+                (previousY1Ref.current - previousY2Ref.current) * (previousY1Ref.current - previousY2Ref.current));
+            const len2 = Math.sqrt((X1 - X2) * (X1 - X2) + (Y1 - Y2) * (Y1 - Y2));
+
+            if (Math.abs(deltaX1) < Math.abs(deltaY1) && Math.abs(deltaX2) < Math.abs(deltaY2)) {
+                let move = 0;
+                if (deltaY1 * deltaY2 > 0) {
+                    move = -deltaY1 / 10;
+                    translate(0, move, 0);
+                } else {
+                    move = (len2 - len1) / 50;
+                    pinchZoom(move);
+                }
+            } else if (Math.abs(deltaX1) > Math.abs(deltaY1) && Math.abs(deltaX2) > Math.abs(deltaY2)) {
+                let move = 0;
+                if (deltaX1 * deltaX2 > 0) {
+                    move = deltaX1 / 10;
+                    translate(move, 0, 0);
+                } else {
+                    move = (len2 - len1) / 50;
+                    pinchZoom(move);
+                }
+            }
+
+            previousX2Ref.current = event.nativeEvent.touches[1]?.pageX;
+            previousY2Ref.current = event.nativeEvent.touches[1]?.pageY;
+        }
+
+        previousX1Ref.current = event.nativeEvent.touches[0]?.pageX;
+        previousY1Ref.current = event.nativeEvent.touches[0]?.pageY;
+    };
+
+    const onTouchEnd = () => {
+        isMultiTouchRef.current = false;
+    };
+
+    const rotateObjX = (angle) => {
+        modelRef.current.rotation.x += angle
+    };
+
+    const rotateObjY = (angle) => {
+        modelRef.current.rotation.y += angle
+    };
+
+    const translate = (x, y, z) => {
+        modelRef.current.position.x += x;
+        modelRef.current.position.y += y;
+        modelRef.current.position.z += z;
+    };
+
+    const pinchZoom = (move) => {
+        // Assuming parsedObject is your 3D object
+        const currentScale = modelRef.current.scale.x;
+        let newScale = currentScale + move;
+
+        // Define minimum and maximum scale and ensure it's within the range
+        const minScale = 0.5;
+        const maxScale = 5.0;
+        if (newScale < minScale) {
+            newScale = minScale;
+        } else if (newScale > maxScale) {
+            newScale = maxScale;
+        }
+
+        const scaleRatio = newScale / currentScale;
+
+        modelRef.current.scale.x *= scaleRatio;
+        modelRef.current.scale.y *= scaleRatio;
+        modelRef.current.scale.z *= scaleRatio;
     };
 
     return (
-
         <GLView
+            onStartShouldSetResponder={onStartShouldSetResponder}
+            onMoveShouldSetResponder={onMoveShouldSetResponder}
+            // onTouchEnd={onTouchEnd}
+            ref={glViewRef}
             style={{ flex: 1 }}
             onContextCreate={onContextCreate}
             key={'d'}
         />
     );
 };
-
-class IconMesh extends Mesh {
-    constructor() {
-        super(
-            new BoxGeometry(10.0, 10.0, 1.0)
-        );
-    }
-}
 
 export default ThreeDimensionScreen;

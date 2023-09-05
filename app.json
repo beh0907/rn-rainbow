@@ -35,11 +35,12 @@
         "android.permission.CAMERA",
         "android.permission.RECORD_AUDIO",
         "android.permission.POST_NOTIFICATIONS",
+        "android.permission.RECEIVE_BOOT_COMPLETED",
         "android.permission.SCHEDULE_EXACT_ALARM"
       ],
       "package": "com.skymilk.rainbow",
-      "googleServicesFile": "./google-services.json",
-      "useNextNotificationsApi": true
+      "useNextNotificationsApi": true,
+      "googleServicesFile": "./google-services.json"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -95,7 +96,8 @@
       },
       "BASE_URL_API": "http://43.200.169.250/rainbow",
       "BASE_URL_FILE": "https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/",
-      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do"
+      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do",
+      "TEST": "http://inhyeop.iptime.org:82/rainbow"
     }
   }
 }
