@@ -46,13 +46,13 @@ const ThreeDimensionScreen = () => {
 
         if (texturesLength > 0) {
             if (texturesLength === 1) {
-                obj.traverse(function(object) {
+                obj.traverse((object) => {
                     if (object instanceof THREE.Mesh) {
                         object.material.map = textures[0]?.map;
                     }
                 });
             } else {
-                obj.traverse(function(object) {
+                obj.traverse((object) => {
                     if (object instanceof THREE.Mesh) {
                         const selected = textures?.find(x => x.name === object.name);
                         object.material.map = selected?.map;

@@ -63,7 +63,7 @@ const CameraExample = () => {
 
     return (
         <View style={styles.container}>
-            {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }} />}
+            {imageUri && <Image source={{ uri: imageUri }} style={{ width: 200, height: 200 }}  />}
             <Button title='카메라 열기' onPress={pickImageFromCamera} />
             <View style={{ height: 20 }} />
             <Button title='알림 보내기' onPress={schedulePushNotification} />

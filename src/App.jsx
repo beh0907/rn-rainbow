@@ -28,12 +28,12 @@ export default function App() {
             <SnackBarProvider>
                 <DialogProvider>
                     <UserProvider>
+                        <StatusBar style='dark' />
+
                         {/*다이얼로그*/}
                         <CustomDialog />
                         {/*하단 스낵바 알림 메시지*/}
                         <CustomSnackBar />
-
-                        <StatusBar style='dark' />
 
                         <Navigation />
                     </UserProvider>

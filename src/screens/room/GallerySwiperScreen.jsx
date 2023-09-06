@@ -45,7 +45,6 @@ const GallerySwiperScreen = () => {
         <View style={{ marginTop: top, marginBottom: bottom }}>
 
             <FlashList
-
                 snapToInterval={0.1}
                 estimatedListSize={{ width, height }}
                 scrollEnabled={scrollEnabled}
@@ -78,13 +77,14 @@ const GallerySwiperScreen = () => {
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={galleries}
-                    // keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(_, index) => index.toString()}
                     contentContainerStyle={{ paddingHorizontal: 10 }}
                     renderItem={({ item, index }) => {
                         return (
                             <Pressable onPress={() => scrollToActivityIndex(index)}
                                        style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
                                 <Image progressiveRenderingEnabled
+                                       recyclingKey={index.toString()}
                                        style={{
                                            width: THUMB_SIZE,
                                            height: THUMB_SIZE,

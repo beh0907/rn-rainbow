@@ -10,6 +10,7 @@ const GallerySwiperItem = memo(({ item }) => {
 
     return (
         <Image
+            recyclingKey={item.seq.toString()}
             source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }}
             contentFit='contain'
             style={[{ width, height }]}

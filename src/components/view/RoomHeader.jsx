@@ -14,7 +14,9 @@ const RoomHeader = ({ room }) => {
     return (
         <View style={styles.header}>
             <View style={styles.petInfoTextContainer}>
-                <Pressable onPress={() => room.image && navigation.navigate(RoomRoutes.IMAGE_CONTROL, {url : `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}`})}>
+                <Pressable
+                    pointerEvents={'box-none'}
+                    onPress={() => room.image && navigation.navigate(RoomRoutes.IMAGE_CONTROL, { url: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` })}>
                     <AvatarImage
                         source={room.image ? { uri: `${BASE_URL_FILE}${room.id}/${room.roomNum}/profile/${room.image}?version=${room.updateDate}` } : require('../../../assets/background/bg_temp.jpg')}
                         size={72} />
@@ -49,6 +51,7 @@ const RoomHeader = ({ room }) => {
             </View>
 
             <Button
+                pointerEvents={'box-none'}
                 mode='outlined'
                 size={24}
                 iconColor={PRIMARY.DEFAULT}

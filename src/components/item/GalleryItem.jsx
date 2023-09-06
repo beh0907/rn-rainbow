@@ -1,49 +1,52 @@
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { Card } from 'react-native-paper';
 import { PRIMARY, WHITE } from '../../Colors';
 import Constants from 'expo-constants';
-import AutoHeightImage from 'react-native-auto-height-image';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import { MaterialCommunityIcons } from '@expo/vector-icons';
+import AutoHeightImage from 'react-native-auto-height-image';
+import ExpoImage from 'expo-image/build/ExpoImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
-    const imageUrl = `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`;
     const { width } = useWindowDimensions();
-    const checkBoxRef = useRef(null)
+
+    const imageUrl = `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`;
+    const IMAGE_WIDTH = width / 3 - 14;
+
+    const checkBoxRef = useRef(null);
+
 
     return (
-        <Pressable onPress={onPress} style={({ pressed }) => [{ opacity: pressed ? 0.5 : 1 }]}>
-            <Card style={styles.container} elevation={0}>
-                <AutoHeightImage style={styles.image} width={width / 3 - 14}
-                                 source={{ uri: imageUrl }} />
+        <Pressable onPress={onPress} style={({ pressed }) => [styles.container, { opacity: pressed ? 0.5 : 1 }]}>
+            <AutoHeightImage style={styles.image} width={IMAGE_WIDTH}
+                             source={{ uri: imageUrl }} />
 
-                {/*{isDeleteMode && isSelected &&*/}
-                {/*    <View style={[styles.selectItem]}>*/}
-                {/*        <MaterialCommunityIcons name={'check'} size={48} color={PRIMARY.DEFAULT} />*/}
-                {/*    </View>*/}
-                {/*}*/}
 
-                {isDeleteMode &&
-                    <View style={[styles.selectItem, {backgroundColor: isSelected ?'rgba(107,114,128,0.7)' : 'transparent'}]}>
-                        <BouncyCheckbox
-                            onPress={onPress}
-                            disableText
-                            disableBuiltInState
-                            ref={checkBoxRef}
-                            style={{ position: 'absolute', top: 10, left: 10 }}
-                            isChecked={isSelected}
-                            size={20}
-                            fillColor={PRIMARY.DEFAULT}
-                            unfillColor='#FFFFFF'
-                        />
-                    </View>
-                }
+            {/*<Image style={[styles.image, { width: IMAGE_WIDTH, aspectRatio: 1 }]}*/}
+            {/*       source={imageUrl}*/}
+            {/*       contentFit={'contain'}*/}
+            {/*       onProgress={event => console.log(event)} />*/}
 
-            </Card>
+
+            {isDeleteMode &&
+                <View
+                    style={[styles.selectItem, { backgroundColor: isSelected ? 'rgba(107,114,128,0.7)' : 'transparent' }]}>
+                    <BouncyCheckbox
+                        onPress={onPress}
+                        disableText
+                        disableBuiltInState
+                        ref={checkBoxRef}
+                        style={{ position: 'absolute', top: 10, left: 10 }}
+                        isChecked={isSelected}
+                        size={20}
+                        fillColor={PRIMARY.DEFAULT}
+                        unfillColor='#FFFFFF'
+                    />
+                </View>
+            }
+
         </Pressable>
     );
 });
@@ -57,7 +60,7 @@ const styles = StyleSheet.create({
     container: {
         margin: 5,
         backgroundColor: WHITE,
-        flex: 1
+        flex: 1,
     },
     image: {
         borderRadius: 12

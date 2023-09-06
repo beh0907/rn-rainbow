@@ -145,7 +145,7 @@ const MemoryScreen = () => {
                     showsVerticalScrollIndicator={false}
                     contentContainerStyle={styles.memoryList}
                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                    // keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(_, index) => index.toString()}
                     data={memories}
                     renderItem={({ item }) =>
                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다

@@ -11,7 +11,7 @@ import InputTextButton from '../../components/view/inputTextButton';
 import { Text } from 'react-native-paper';
 import { PRIMARY, WHITE } from '../../Colors';
 
-import { Tabs } from 'react-native-collapsible-tab-view';
+import { Tabs, useHeaderMeasurements } from 'react-native-collapsible-tab-view';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const CommentScreen = () => {
@@ -31,6 +31,8 @@ const CommentScreen = () => {
     const [amount, setAmount] = useState(100);
     const isFetch = useRef(true);
     const pageRef = useRef(1);
+
+    const { top } = useHeaderMeasurements()
 
     useLayoutEffect(() => {
         (async () => {
@@ -131,7 +133,7 @@ const CommentScreen = () => {
                     <Text>등록된 댓글이 없습니다</Text>
                 </Tabs.ScrollView>
                 :
-                <View style={{ flex: 1, marginTop: 16 }} contentContainerStyle={{ justifyContent: 'flex-start' }}>
+                <View style={{ flex: 1, marginTop: 16}}>
                     <Tabs.FlashList
                         extraData={refetching}
                         estimatedListSize={{ width, height }}
@@ -139,7 +141,7 @@ const CommentScreen = () => {
                         showsVerticalScrollIndicator={false}
                         contentContainerStyle={styles.commentList}
                         ItemSeparatorComponent={() => <View style={styles.separator}></View>}
-                        // keyExtractor={(item, index) => index.toString()}
+                        keyExtractor={(_, index) => index.toString()}
                         data={comments}
                         renderItem={({ item }) =>
                             //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
@@ -149,7 +151,7 @@ const CommentScreen = () => {
                         onEndReachedThreshold={0.9}
                         onEndReached={() => fetchNextPage(false)}
                         refreshing={refetching}
-                        // onRefresh={refetch}
+                        onRefresh={refetch}
                         ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                         ListFooterComponentStyle={styles.listFooter}
                     />
@@ -181,7 +183,7 @@ const styles = StyleSheet.create({
         marginVertical: 16
     },
     commentList: {
-        padding: 16
+        padding: 16,
     },
     listFooter: {
         flex: 1,

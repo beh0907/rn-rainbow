@@ -240,7 +240,7 @@ const GalleryScreen = () => {
                 :
                 <Tabs.MasonryFlashList
                     extraData={[isDeleteMode, refetching, onToggleImage]}
-                    estimatedListSize={{ width, height }}
+                    estimatedListSize={{ width: width, height: height }}
                     estimatedItemSize={100}
                     contentContainerStyle={styles.galleryList}
                     data={galleries}
@@ -293,7 +293,7 @@ const styles = StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor:'yellow'
+        backgroundColor: 'yellow'
     }
 });
 

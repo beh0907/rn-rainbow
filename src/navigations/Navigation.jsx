@@ -1,4 +1,4 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import * as SplashScreen from 'expo-splash-screen';
 import AuthStack from './AuthStack';
@@ -15,10 +15,8 @@ import { useDialogState } from '../contexts/DialogContext';
 import * as KakaoLogins from '@react-native-seoul/kakao-login';
 import Constants from 'expo-constants';
 import { MainRoutes } from './Routes';
-import { Platform } from 'react-native';
 import * as Notifications from 'expo-notifications';
 import { DIALOG_MODE } from '../components/message/CustomDialog';
-import * as TaskManager from 'expo-task-manager';
 
 const ImageAssets = [
     require('../../assets/icon.png'),
@@ -35,7 +33,7 @@ Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
         shouldPlaySound: true,
-        shouldSetBadge: false
+        shouldSetBadge: true
     })
 });
 
@@ -50,104 +48,70 @@ const Navigation = () => {
     const [checkIntro, setCheckIntro] = useState('');
 
     //권한
-    const [mediaStatus, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
-    const [cameraStatus, requestCameraPermission] = Camera.useCameraPermissions();
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+    const [, requestCameraPermission] = Camera.useCameraPermissions();
 
     //다이얼로그 설정
     const [, setDialog] = useDialogState();
 
     //푸시 메시지 관련 변수
-    const [expoPushToken, setExpoPushToken] = useState('');
-    const [notification, setNotification] = useState();
-    const notificationListener = useRef();
-    const responseListener = useRef();
+    // const [expoPushToken, setExpoPushToken] = useState('');
+    // const [notification, setNotification] = useState();
+    // const notificationListener = useRef();
+    // const responseListener = useRef();
 
     //백그라운드 fcm 메시지 수신 관련 소스
-    const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
-
-    TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
-        console.log('111');
-        if (error) {
-            console.log('Error occurred:', error);
-        }
-
-        if (data) {
-            // 수신한 데이터를 처리하고 원하는 화면으로 navigate 시킵니다.
-            const roomId = data.data.id;
-            navigationRef.current?.navigate(MainRoutes.ROOM_TAB, { roomNum: roomId });
-        }
-    });
-
-    useEffect(() => {
-        // 백그라운드 작업(Task)을 등록합니다.
-        if (!TaskManager.isTaskDefined(BACKGROUND_NOTIFICATION_TASK)) {
-            TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
-                console.log('222');
-
-                // 수신한 데이터를 처리하고 원하는 화면으로 navigate 시킵니다.
-                const roomId = data.data.id;
-                navigationRef.current?.navigate(MainRoutes.ROOM_TAB, { roomNum: roomId });
-            });
-        }
-
-        return () => {
-            // 컴포넌트가 언마운트될 때 백그라운드 작업(Task)을 제거합니다.
-            TaskManager.unregisterAllTasksAsync();
-        };
-    }, []);
-
-    //포그라운드 fcm 메시지 수신 관련 소스
-    useEffect(() => {
-        (async () => {
-            if (Platform.OS === 'android') {
-                await Notifications.deleteNotificationChannelAsync("expo_notifications_fallback_notification_channel")
-                await Notifications.setNotificationChannelAsync('default', {
-                    name: 'default',
-                    importance: Notifications.AndroidImportance.MAX,
-                    vibrationPattern: [0, 250, 250, 250],
-                    lightColor: '#FF231F7C'
-                });
-            }
-
-            //알림이 표시될 때 이벤트
-            notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
-                const data = notification.request.trigger.remoteMessage;
-                console.log('푸시 아이디', data.data.id);
-                console.log('푸시 타입', data.data.type);
-            });
-
-            //알림이 터치할 때 이벤트
-            responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-                const data = response.notification.request.trigger.remoteMessage;
-                console.log('푸시 아이디', data.data.id);
-                console.log('푸시 타입', data.data.type);
-
-                // 비로그인 상태에서는 FCM 토큰이 저장되어 있지 않아 알림X
-                // 로그인 상태일 경우 MainStack의 화면만 사용하기 때문에 추가 조건문 필요X
-                navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
-                    roomNum: data.data.id
-                });
-            });
-        })();
-
-        return () => {
-            Notifications.removeNotificationSubscription(notificationListener.current);
-            Notifications.removeNotificationSubscription(responseListener.current);
-        };
-    }, []);
-
     // const BACKGROUND_NOTIFICATION_TASK = 'BACKGROUND-NOTIFICATION-TASK';
     //
-    // TaskManager.defineTask(
-    //     BACKGROUND_NOTIFICATION_TASK,
-    //     ({ data, error, executionInfo }) =>{
-    //         if(error){
-    //             console.log('error occurred');
+    // TaskManager.defineTask(BACKGROUND_NOTIFICATION_TASK, async ({ data, error }) => {
+    //     console.log('111');
+    //     if (error) {
+    //         console.log('Error occurred:', error);
+    //     }
+    //
+    //     if (data) {
+    //         // 수신한 데이터를 처리하고 원하는 화면으로 navigate 시킵니다.
+    //         const roomId = data.data.id;
+    //         navigationRef.current?.navigate(MainRoutes.ROOM_TAB, { roomNum: roomId });
+    //     }
+    // });
+
+    //포그라운드 fcm 메시지 수신 관련 소스
+    // useEffect(() => {
+    //     (async () => {
+    //         if (Platform.OS === 'android') {
+    //             await Notifications.setNotificationChannelAsync('default', {
+    //                 name: 'default',
+    //                 importance: Notifications.AndroidImportance.MAX,
+    //                 vibrationPattern: [0, 250, 250, 250],
+    //                 lightColor: '#FF231F7C'
+    //             });
     //         }
-    //         if(data){
-    //             console.log('data-----',data);
-    //         }
-    //     })
+    //
+    //         //알림이 표시될 때 이벤트
+    //         notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+    //             console.log('notification', notification.remoteMessage);
+    //         });
+    //
+    //         //알림이 터치할 때 이벤트
+    //         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+    //             const data = response.notification.request.trigger.remoteMessage;
+    //             console.log('푸시 아이디', data.data.id);
+    //             console.log('푸시 타입', data.data.type);
+    //
+    //             // 비로그인 상태에서는 FCM 토큰이 저장되어 있지 않아 알림X
+    //             // 로그인 상태일 경우 MainStack의 화면만 사용하기 때문에 추가 조건문 필요X
+    //             navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
+    //                 roomNum: data.data.id
+    //             });
+    //         });
+    //     })();
+    //
+    //     return () => {
+    //         Notifications.removeNotificationSubscription(notificationListener.current);
+    //         Notifications.removeNotificationSubscription(responseListener.current);
+    //     };
+    // }, []);
 
     useLayoutEffect(() => {
         (async () => {
@@ -182,6 +146,12 @@ const Navigation = () => {
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
+                const expoToken = (await Notifications.getExpoPushTokenAsync({
+                    projectId: Constants.expoConfig.extra.eas.projectId
+                })).data;
+
+                console.log('fcmToken : ', fcmToken);
+                console.log('expoToken : ', expoToken);
 
                 switch (provider) {
                     case 'NATIVE':
@@ -228,7 +198,35 @@ const Navigation = () => {
 
     if (!isReady) return null;
     return (
-        <NavigationContainer onReady={onReady} ref={navigationRef}>
+        <NavigationContainer onReady={onReady} ref={navigationRef}
+                             linking={{
+                                 config: {
+                                     // Configuration for linking
+                                 },
+                                 subscribe() {
+                                     // 알림 메시지 터치 이벤트
+                                     const subscription = Notifications.addNotificationResponseReceivedListener(response => {
+                                         console.log('response 22 : ', response.notification.request.content.data);
+                                         const data = response.notification.request.content.data;
+                                         // const data = response.notification.request.trigger.remoteMessage.data.data;
+                                         const { id, type } = data
+                                         console.log('푸시 아이디', id);
+                                         console.log('푸시 타입', type);
+
+                                         // 비로그인 상태에서는 FCM 토큰이 저장되어 있지 않아 알림X
+                                         // 로그인 상태일 경우 MainStack의 화면만 사용하기 때문에 추가 조건문 필요X
+                                         navigationRef.current?.navigate(MainRoutes.ROOM_TAB, {
+                                             roomNum: id,
+                                             type: type
+                                         });
+                                     });
+
+                                     return () => {
+                                         subscription.remove();
+                                     };
+                                 }
+                             }}
+        >
             {user.id ? <MainStack /> : <AuthStack checkIntro={checkIntro} />}
         </NavigationContainer>
     );
