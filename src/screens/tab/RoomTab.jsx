@@ -125,7 +125,7 @@ const RoomTab = () => {
                 }}
                 // allowHeaderOverscroll={true}
                 // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
-                headerHeight={268}
+                // headerHeight={268}
                 renderHeader={() => <RoomHeader room={room} />}
                 lazy
                 cancelLazyFadeIn

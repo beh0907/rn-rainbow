@@ -1,5 +1,5 @@
 import { Pressable, StyleSheet, View } from 'react-native';
-import { Button, Text } from 'react-native-paper';
+import { IconButton, Text } from 'react-native-paper';
 import { GRAY, PRIMARY } from '../../Colors';
 import { RoomRoutes } from '../../navigations/Routes';
 import Constants from 'expo-constants';
@@ -22,6 +22,9 @@ const RoomHeader = ({ room }) => {
                         size={72} />
                 </Pressable>
                 <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
+
+                <IconButton icon={'video-3d'} iconColor={PRIMARY.DEFAULT}
+                            mode='outlined' onPress={() => navigation.navigate(RoomRoutes.THREE_DIMENSION)} />
             </View>
 
             <Text style={[styles.petDataText, { marginVertical: 20 }]} variant={'bodyLarge'}>{room.content}</Text>
@@ -50,18 +53,19 @@ const RoomHeader = ({ room }) => {
                 </View>
             </View>
 
-            <Button
-                pointerEvents={'box-none'}
-                mode='outlined'
-                size={24}
-                iconColor={PRIMARY.DEFAULT}
-                icon={'logout-variant'}
-                onPress={() => {
-                    navigation.navigate(RoomRoutes.THREE_DIMENSION);
-                }}
-            >
-                3D 테스트
-            </Button>
+            {/*<Button*/}
+            {/*    style={{ marginTop: 10 }}*/}
+            {/*    pointerEvents={'box-none'}*/}
+            {/*    mode='outlined'*/}
+            {/*    size={24}*/}
+            {/*    iconColor={PRIMARY.DEFAULT}*/}
+            {/*    icon={'logout-variant'}*/}
+            {/*    onPress={() => {*/}
+            {/*        navigation.navigate(RoomRoutes.THREE_DIMENSION);*/}
+            {/*    }}*/}
+            {/*>*/}
+            {/*    3D 테스트*/}
+            {/*</Button>*/}
 
         </View>
     );
@@ -83,8 +87,7 @@ const styles = StyleSheet.create({
     },
     petDataContainer: {
         flex: 1,
-        alignItems: 'center',
-        marginBottom: 10
+        alignItems: 'center'
     },
     petDataTitle: {
         fontWeight: 'bold',

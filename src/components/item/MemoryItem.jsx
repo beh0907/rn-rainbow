@@ -87,8 +87,8 @@ const styles = StyleSheet.create({
         containerCollapse: {
             flexDirection: 'row',
             marginTop: 10,
-            marginEnd: 10,
-            alignSelf: 'flex-end'
+            marginStart: 16,
+            alignSelf: 'flex-start'
         },
         memoryCollapse: {
             color: GRAY.DEFAULT

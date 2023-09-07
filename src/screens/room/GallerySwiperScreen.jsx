@@ -45,7 +45,6 @@ const GallerySwiperScreen = () => {
         <View style={{ marginTop: top, marginBottom: bottom }}>
 
             <FlashList
-                snapToInterval={0.1}
                 estimatedListSize={{ width, height }}
                 scrollEnabled={scrollEnabled}
                 initialScrollIndex={position}
@@ -101,8 +100,8 @@ const GallerySwiperScreen = () => {
                 />
             </View>
         </View>
-    );
-};
+    )
+}
 
 GallerySwiperScreen.propTypes = {};
 

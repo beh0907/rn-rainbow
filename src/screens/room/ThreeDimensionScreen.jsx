@@ -210,6 +210,13 @@ const ThreeDimensionScreen = () => {
                 rotate = deltaY1 / 100;
                 rotateObjX(rotate);
             }
+
+            // const sensitivity = 0.01; // 회전 감도 조절
+            // const rotateX = deltaY1 * sensitivity;
+            // const rotateY = -deltaX1 * sensitivity;
+            // const rotateZ = 0; // 여기에 필요한 경우 z 축 회전을 추가할 수 있습니다.
+            // rotateObj(rotateX, rotateY, rotateZ);
+
         } else if (numberActiveTouches === 2 && isMultiTouchRef.current) { // 2손가락 터치
             const X2 = event.nativeEvent.touches[1]?.pageX;
             const Y2 = event.nativeEvent.touches[1]?.pageY;
@@ -255,10 +262,19 @@ const ThreeDimensionScreen = () => {
 
     const rotateObjX = (angle) => {
         modelRef.current.rotation.x += angle
+        console.log("x : ", modelRef.current.rotation.x)
     };
 
     const rotateObjY = (angle) => {
+        console.log("y : ", modelRef.current.rotation.y)
         modelRef.current.rotation.y += angle
+        // modelRef.current.rotation.z += angle
+    };
+
+    const rotateObj = (angleX, angleY, angleZ) => {
+        modelRef.current.rotation.x += angleX
+        modelRef.current.rotation.y += angleY
+        modelRef.current.rotation.z += angleZ
     };
 
     const translate = (x, y, z) => {

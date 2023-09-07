@@ -28,15 +28,6 @@ const ImageAssets = [
     require('../../assets/background/bg_temp.jpg')
 ];
 
-//포그라운드에서 메시지 표시 핸들러
-Notifications.setNotificationHandler({
-    handleNotification: async () => ({
-        shouldShowAlert: true,
-        shouldPlaySound: true,
-        shouldSetBadge: true
-    })
-});
-
 const Navigation = () => {
     const navigationRef = useRef(null);
     const [user, setUser] = useUserState();
@@ -204,12 +195,21 @@ const Navigation = () => {
                                      // Configuration for linking
                                  },
                                  subscribe() {
+                                     //포그라운드에서 메시지 표시 핸들러
+                                     Notifications.setNotificationHandler({
+                                         handleNotification: async () => ({
+                                             shouldShowAlert: true,
+                                             shouldPlaySound: true,
+                                             shouldSetBadge: true
+                                         })
+                                     });
+
                                      // 알림 메시지 터치 이벤트
                                      const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-                                         console.log('response 22 : ', response.notification.request.content.data);
-                                         const data = response.notification.request.content.data;
-                                         // const data = response.notification.request.trigger.remoteMessage.data.data;
-                                         const { id, type } = data
+                                         console.log('response 22 : ', response.notification.request.trigger.remoteMessage.data);
+                                         const expoPushData = response.notification.request.content.data;
+                                         const fcmPushData = response.notification.request.trigger.remoteMessage.data;
+                                         const { id, type } = expoPushData ?? fcmPushData;
                                          console.log('푸시 아이디', id);
                                          console.log('푸시 타입', type);
 

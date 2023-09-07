@@ -4,11 +4,11 @@ import {createBottomTabNavigator} from "@react-navigation/bottom-tabs";
 import {MaterialCommunityIcons} from "@expo/vector-icons";
 import TabBarAddButton from "../../components/button/TabBarAddButton";
 import BoardScreen from "../main/BoardScreen";
-import TestScreen from "../main/TestScreen";
 import HomeScreen from "../main/HomeScreen";
 import {GRAY, PRIMARY} from "../../Colors";
 import {SafeAreaProvider} from "react-native-safe-area-context";
 import MyPageScreen from "../main/MyPageScreen";
+import SelfAssessmentScreen from '../main/SelfAssessmentScreen';
 
 const Tab = createBottomTabNavigator()
 
@@ -44,7 +44,7 @@ const MainTab = () => {
                 <Tab.Screen name={'addButton'} component={AddButtonScreen}
                             options={{tabBarButton: () => <TabBarAddButton/>}}/>
 
-                <Tab.Screen name={ContentRoutes.TEST} component={TestScreen}
+                <Tab.Screen name={ContentRoutes.SELF_ASSESSMENT} component={SelfAssessmentScreen}
                             options={{
                                 tabBarIcon: (props) => getTabBarIcon({...props, name: 'clipboard-list', color:PRIMARY.DEFAULT}),
                                 tabBarLabel: '자가진단', tabBarShowLabel:false

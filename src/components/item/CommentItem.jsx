@@ -110,8 +110,7 @@ const styles = StyleSheet.create({
     containerCollapse: {
         flexDirection: 'row',
         marginTop: 10,
-        marginEnd: 10,
-        alignSelf: 'flex-end'
+        alignSelf: 'flex-start'
     },
     commentCollapse: {
         color: GRAY.DEFAULT
