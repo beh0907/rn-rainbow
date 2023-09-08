@@ -1,11 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { BackHandler, StyleSheet, useWindowDimensions, View } from 'react-native';
+import React, { useCallback, useRef, useState } from 'react';
+import { Animated, BackHandler, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PRIMARY, WHITE } from '../../Colors';
 import { Divider, IconButton, ProgressBar, RadioButton, Surface, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import SelfAssessmentItem from '../../components/item/SelfAssessmentItem';
-import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useUserState } from '../../contexts/UserContext';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -47,6 +46,14 @@ const SelfAssessmentScreen = () => {
     const [visibleOptions, setVisibleOptions] = useState(true);
     const [selfAssementList, setSelfAssementList] = useState([QUESTIONS[0]]);
 
+    const toggleOptions = () => {
+        listRef?.current?.scrollToEnd({
+            animated: true
+        });
+
+        setVisibleOptions(prev => !prev);
+    };
+
     //답변 창이 열려있다면 back버튼은 답변 창부터 닫는다
     useFocusEffect(
         useCallback(() => {
@@ -66,46 +73,50 @@ const SelfAssessmentScreen = () => {
     );
 
     //말풍선을 터치할 경우 해당 번호로 이동해 답변을 수정할 수 있다
-    const onPressItem = useCallback(async (item) => {
+    const onPressItem = useCallback(async (item, index) => {
+        console.log("gggg")
+
+        listRef?.current?.scrollToIndex({
+            index: index,
+            animated: true,
+            viewPosition: 0.5
+        });
 
         setSelectOption(item.value);
         setVisibleOptions(true);
-
-    }, [selfAssementList, progress]);
+    }, [selfAssementList, progress, selectOption, visibleOptions, listRef]);
 
     // 대답을 입력한다면 대답하지 않은 마지막 항목으로 찾아간다
     const onPressAnswer = useCallback(async (index, answer) => {
         // 현재 selfAssementList 배열
         const list = [...selfAssementList];
-        const lastIndex = list.length
+        const lastIndex = list.length;
 
-        list[index].value = answer
-        if (lastIndex < QUESTIONS.length && list[lastIndex - 1].value) list.push(QUESTIONS[lastIndex])
+        list[index].value = answer;
+
+        //답변 문항이 더 있을 경우 다음 질문지를 추가한다
+        if (lastIndex < QUESTIONS.length && list[lastIndex - 1].value) list.push(QUESTIONS[lastIndex]);
 
         // selfAssementList 업데이트
         setSelfAssementList(list);
-
-        // console.log(index);
-        // console.log("list : ", list)
-        // console.log("selfAssementList : ", selfAssementList)
 
         //리스트를 하단으로 이동시킨다
         listRef?.current?.scrollToEnd({
             animated: true
         });
 
+        //새로운 질문 답변을 표시해야 하기 때문에 null로 채운다
         setSelectOption('');
-
-        console.log(lastIndex, " - ", QUESTIONS.length)
 
         if (lastIndex >= QUESTIONS.length) { // 모두 답변이 완료되었다면
             setProgress(selfAssementList.length);
             setVisibleOptions(false);
         } else {
-            setProgress(lastIndex + 1);
+            setProgress(lastIndex);
         }
 
     }, [selfAssementList, progress, visibleOptions]);
+
 
     return (
         <View style={{ flex: 1, backgroundColor: WHITE }}>
@@ -134,52 +145,56 @@ const SelfAssessmentScreen = () => {
                         showsVerticalScrollIndicator={false}
                         estimatedListSize={{ width, height }}
                         estimatedItemSize={64}
-                        contentContainerStyle={{ paddingVertical: 10 }}
+                        contentContainerStyle={{ paddingTop: 10, paddingBottom: 40 }}
                         ItemSeparatorComponent={() => <View style={styles.separator} />}
                         extraData={progress}
                         data={selfAssementList}
                         keyExtractor={(_, index) => index.toString()}
                         renderItem={({ item, index }) =>
                             <SelfAssessmentItem item={item} index={index} user={user}
-                                                progress={progress} />} />
+                                                progress={progress} onPressItem={() => onPressItem(item, index)} />} />
                 </View>
             </View>
 
-            <View>
-                <IconButton style={{ alignSelf: 'flex-end', marginEnd: 50 }}
-                            icon={visibleOptions ? 'menu-down' : 'menu-up'}
-                            onPress={() => {
-                                setVisibleOptions(prev => !prev);
+            <Animated.View>
 
-                                listRef?.current?.scrollToEnd({
-                                    animated: true
-                                });
-                            }}
-                            animated={true} />
-
-                {/*<Button contentStyle={{ flexDirection: 'row-reverse' }} icon={visibleOptions ? 'menu-down' : 'menu-up'}*/}
-                {/*        onPress={() => setVisibleOptions(prev => !prev)}>{visibleOptions ? '답변 창 닫기' : '답변 창 열기'}</Button>*/}
                 {
                     visibleOptions &&
-                    <Animated.View>
-                        <Surface style={{ backgroundColor: WHITE }} elevation={3} collapsable={true}>
-                            <RadioButton.Group
-                                onValueChange={value => onPressAnswer(selfAssementList.length - 1, value)}
-                                value={selectOption}>
-                                <RadioButton.Item labelVariant={'bodyMedium'} label='1. 매우 그렇다.' value='1'
-                                                  mode={'ios'} />
-                                <RadioButton.Item labelVariant={'bodyMedium'} label='2. 그렇다.' value='2' mode={'ios'} />
-                                <RadioButton.Item labelVariant={'bodyMedium'} label='3. 보통이다.' value='3' mode={'ios'} />
-                                <RadioButton.Item labelVariant={'bodyMedium'} label='4. 그렇지 않다' value='4'
-                                                  mode={'ios'} />
-                                <RadioButton.Item labelVariant={'bodyMedium'} label='5. 매우 그렇지 않다' value='5'
-                                                  mode={'ios'} />
-                            </RadioButton.Group>
-                        </Surface>
-
-                    </Animated.View>
+                    <Surface style={{ backgroundColor: WHITE }} elevation={5} collapsable={true}>
+                        <RadioButton.Group
+                            onValueChange={value => onPressAnswer(selfAssementList.length - 1, value)}
+                            value={selectOption}>
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='1. 매우 그렇다.' value='1'
+                                              mode={'ios'} />
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='2. 그렇다.' value='2' mode={'ios'} />
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='3. 보통이다.' value='3' mode={'ios'} />
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='4. 그렇지 않다' value='4'
+                                              mode={'ios'} />
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='5. 매우 그렇지 않다' value='5'
+                                              mode={'ios'} />
+                        </RadioButton.Group>
+                    </Surface>
                 }
-            </View>
+
+
+                <IconButton style={{
+                    position: 'absolute',
+                    width: 64,
+                    height: 30,
+                    right: 10,
+                    top: -36,
+                    borderRadius: 0,
+                    borderTopEndRadius: 20,
+                    borderTopStartRadius: 20
+                }}
+                            size={36}
+                            containerColor={PRIMARY.LIGHT}
+                            iconColor={WHITE}
+                            icon={visibleOptions ? 'menu-down' : 'menu-up'}
+                            onPress={() => toggleOptions()}
+                            animated={true} />
+
+            </Animated.View>
         </View>
 
     );
