@@ -1,8 +1,4 @@
-import axios from 'axios';
 import { axiosApiInstance } from './AxiosInstance';
-import Constants from 'expo-constants';
-
-const { BASE_URL_API} = Constants.expoConfig.extra;
 
 // export const readGalleryList = async (num) => {
 //     const response = await axiosApiInstance.get(`/gallery/readList?num=${num}`);
@@ -54,7 +50,7 @@ export const registerGallery = async (room, assets) => {
 // }
 
 export const removeGallery = async (galleries) => {
-    const response = await axios.delete(`${BASE_URL_API}/gallery/remove`, {
+    const response = await axiosApiInstance.delete(`/gallery/remove`, {
         data: galleries
     });
     return response.data;

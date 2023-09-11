@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { useRef, useState } from 'react';
 import { GLView } from 'expo-gl';
-import { loadObjAsync, loadTextureAsync, Renderer } from 'expo-three';
+import { loadAsync, loadObjAsync, loadTextureAsync, Renderer, TextureLoader } from 'expo-three';
 import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
-import { readRoom } from '../../api/Room';
 import { useDialogState } from '../../contexts/DialogContext';
+import { Asset } from 'expo-asset';
 
 global.THREE = global.THREE || THREE; // 전역 객체로 설정
-
 
 const ThreeDimensionScreen = () => {
     const [, setDialog] = useDialogState();
@@ -22,60 +21,42 @@ const ThreeDimensionScreen = () => {
     const previousX2Ref = useRef(0);
     const previousY2Ref = useRef(0);
 
-    const loadModel = async (item) => {
-        const texturesLength = item.textures?.length || 0;
-        console.log(`[loadModel] -> Textures length: ${texturesLength}`);
-        const textures = [];
-        for (let i = 0; i < texturesLength; i++) {
-            const texture = await loadTextureAsync({
-                asset: item.textures[i].image
-            });
-            if (item.type === 'glb') {
-                texture.flipY = false;
-            }
-            textures.push({ name: item.textures[i]?.name || '-', map: texture });
-        }
-        console.log(`[loadModel] -> Textures done loading`);
 
-        const obj = await loadObjAsync({
-            asset: item.model,
-            mtlAsset: item?.material || undefined
+    const onProgress = async (xhr) => {
+        if (xhr.lengthComputable) {
+            const percentComplete = xhr.loaded / xhr.total * 100;
+            console.log(Math.round(percentComplete) + '% downloaded');
+        }
+    };
+
+    const loadModel = async (model, resources) => {
+        const mesh = await loadAsync(
+            [
+                model['australian_cattle_dog_v3.obj'],
+                model['australian_cattle_dog_v3.mtl'],
+            ],
+            onProgress,
+            imageName => resources[imageName]
+        );
+
+        mesh.traverse(async child => {
+            if (child instanceof THREE.Mesh) {
+                const material = new THREE.MeshPhongMaterial();
+
+                const textureDiffuse = new TextureLoader().load(resources['australian_cattle_dog_dif.jpg']);
+                const textureBump = new TextureLoader().load(resources['australian_cattle_dog_bump.jpg']);
+
+                // console.log(textureDiffuse)
+                // console.log(textureBump)
+
+                material.map = textureDiffuse;
+                material.bumpMap = textureBump;
+
+                child.material = material;
+            }
         });
 
-        console.log(`[loadModel] -> Model done loading, adding textures now...`);
-
-        if (texturesLength > 0) {
-            if (texturesLength === 1) {
-                obj.traverse((object) => {
-                    if (object instanceof THREE.Mesh) {
-                        object.material.map = textures[0]?.map;
-                    }
-                });
-            } else {
-                obj.traverse((object) => {
-                    if (object instanceof THREE.Mesh) {
-                        const selected = textures?.find(x => x.name === object.name);
-                        object.material.map = selected?.map;
-                    }
-                });
-            }
-        }
-        console.log(`[loadModel] -> Textures done applied...`);
-
-        if (item.scale) {
-            obj.scale.set(item.scale.x, item.scale.y, item.scale.z);
-        }
-        if (item.position) {
-            obj.position.set(item.position.x, item.position.y, item.position.z);
-        }
-        if (item.rotation) {
-            obj.rotation.x = item.rotation.x;
-            obj.rotation.y = item.rotation.y;
-            obj.rotation.z = item.rotation.z;
-        }
-
-        console.log(`[loadModel] -> Complied`);
-        return obj;
+        return mesh;
     };
 
     const onContextCreate = async (gl) => {
@@ -110,55 +91,16 @@ const ThreeDimensionScreen = () => {
         scene.add(ambientLight);
 
         const australian_cattle_dog_v3 = {
-            type: 'obj',
-            name: 'australian_cattle_dog_v3',
-            isometric: false,
-            model: require('../../../assets/3d/australian_cattle_dog_v3.obj'),
-            material: require('../../../assets/3d/australian_cattle_dog_v3.mtl'),
-            textures: [
-                {
-                    name: 'map_Ka',
-                    image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
-                },
-                {
-                    name: 'map_Kd',
-                    image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
-                },
-                {
-                    name: 'map_bump',
-                    image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
-                },
-                {
-                    name: 'bump',
-                    image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
-                },
-                {
-                    name: 'australian_cattle_dog_bump',
-                    image: require('../../../assets/3d/australian_cattle_dog_bump.jpg')
-                },
-                {
-                    name: 'australian_cattle_dog_dif',
-                    image: require('../../../assets/3d/australian_cattle_dog_dif.jpg')
-                }
-            ],
-            scale: {
-                x: 1,
-                y: 1,
-                z: 1
-            },
-            position: {
-                x: 0,
-                y: 0,
-                z: 0
-            },
-            rotation: {
-                x: 0,
-                y: 0,
-                z: 0
-            }
-        };
+            'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
+            'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
+        }
 
-        const model = await loadModel(australian_cattle_dog_v3);
+        const resources = {
+            'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
+            'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
+        }
+
+        const model = await loadModel(australian_cattle_dog_v3, resources);
         modelRef.current = model;
         scene.add(model);
 
@@ -202,20 +144,16 @@ const ThreeDimensionScreen = () => {
         const deltaY1 = Y1 - previousY1Ref.current;
 
         if (numberActiveTouches === 1 && !isMultiTouchRef.current) { // 1손가락 터치
-            let rotate = 0;
-            if (Math.abs(deltaX1) > Math.abs(deltaY1)) {
-                rotate = deltaX1 / 100;
-                rotateObjY(rotate);
-            } else {
-                rotate = deltaY1 / 100;
-                rotateObjX(rotate);
-            }
-
-            // const sensitivity = 0.01; // 회전 감도 조절
-            // const rotateX = deltaY1 * sensitivity;
-            // const rotateY = -deltaX1 * sensitivity;
-            // const rotateZ = 0; // 여기에 필요한 경우 z 축 회전을 추가할 수 있습니다.
-            // rotateObj(rotateX, rotateY, rotateZ);
+            // let rotate = 0;
+            // if (Math.abs(deltaX1) > Math.abs(deltaY1)) {
+            //     rotate = deltaX1 / 100;
+            //     rotateObjY(rotate);
+            // } else {
+            //     rotate = deltaY1 / 100;
+            //     rotateObjX(rotate);
+            // }
+            const sensitivity = 0.01; // 회전 감도 조절
+            rotateObj(deltaY1 * sensitivity, deltaX1 * sensitivity)
 
         } else if (numberActiveTouches === 2 && isMultiTouchRef.current) { // 2손가락 터치
             const X2 = event.nativeEvent.touches[1]?.pageX;
@@ -260,27 +198,23 @@ const ThreeDimensionScreen = () => {
         isMultiTouchRef.current = false;
     };
 
-    const rotateObjX = (angle) => {
-        modelRef.current.rotation.x += angle
-        console.log("x : ", modelRef.current.rotation.x)
-    };
+    // const rotateObjX = (angle) => {
+    //     modelRef.current.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), angle);
+    // };
+    //
+    // const rotateObjY = (angle) => {
+    //     modelRef.current.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), angle);
+    // };
 
-    const rotateObjY = (angle) => {
-        console.log("y : ", modelRef.current.rotation.y)
-        modelRef.current.rotation.y += angle
-        // modelRef.current.rotation.z += angle
-    };
-
-    const rotateObj = (angleX, angleY, angleZ) => {
-        modelRef.current.rotation.x += angleX
-        modelRef.current.rotation.y += angleY
-        modelRef.current.rotation.z += angleZ
-    };
+    const rotateObj = (x,y) => {
+        modelRef.current.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), x);
+        modelRef.current.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), y);
+    }
 
     const translate = (x, y, z) => {
         modelRef.current.position.x += x;
         modelRef.current.position.y += y;
-        modelRef.current.position.z += z;
+        // modelRef.current.position.z += z;
     };
 
     const pinchZoom = (move) => {

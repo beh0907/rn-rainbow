@@ -3,15 +3,18 @@ import * as SecureStore from '../utils/PreferenceStore';
 import { uriToImageFile } from '../utils/ImageUtil';
 import { axiosApiInstance } from './AxiosInstance';
 
-export const signIn = async ({ id, password }, fcmToken = '') => {
+export const signIn = async ({ id, password }, fcmToken = '', aaa) => {
+    aaa = 3.1
     const response = await axiosApiInstance.get(`/user/login?id=${id}&password=${password}`, {
         headers: {
             fcmToken: fcmToken
         }
     });
+    aaa = 3.2
 
     response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
     response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
+    aaa = 3.3
 
     return response.data;
 };
@@ -70,7 +73,7 @@ export const modify = async (user, uri) => {
     if (uri !== null) {
         //file 객체 셋팅
         const file = uriToImageFile(user.id, uri);
-        user.image = "profile.jpg";
+        user.image = 'profile.jpg';
         formData.append('file', file);
     }
 
@@ -87,7 +90,7 @@ export const modify = async (user, uri) => {
 export const remove = async ({ id }) => {
     const response = await axios.delete(`/user/remove?id=${id}`);
 
-    return response.data
+    return response.data;
 };
 
 export const getAuthMessages = (error) => {

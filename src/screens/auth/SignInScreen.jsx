@@ -1,6 +1,6 @@
-import React, { useCallback, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Alert, Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { AuthRoutes, RoomRoutes } from '../../navigations/Routes';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
@@ -42,16 +42,31 @@ const SignInScreen = () => {
         if (!form.disabled && !form.isLoading) {
             dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
 
+            let aaa = 0
+
             try {
+
+                aaa = 1
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
 
-                const user = await Auth.signIn(form, fcmToken);
+                aaa = 2
+                const expoToken = (await Notifications.getExpoPushTokenAsync({
+                    projectId: Constants.expoConfig.extra.eas.projectId
+                })).data;
+
+                aaa = 3
+                // const user = await Auth.signIn(form, fcmToken);
+                const user = await Auth.signIn(form, expoToken, aaa);
+                console.log("aaa : ", aaa)
+
+                aaa = 4
 
                 /**자동 로그인이 체크되어 있다면
                  로그인 정보를 저장한다*/
                 if (isAutoLogin) {
+                    aaa = 5
                     await SecureStore.signInSecureStore({
                         [STORE_USER_KEYS.ID]: user.id,
                         [STORE_USER_KEYS.PASSWORD]: form.password,
@@ -63,11 +78,12 @@ const SignInScreen = () => {
                     await SecureStore.signOutSecureStore();
                 }
 
+                aaa = 6
                 setUser(user);
             } catch (e) {
                 setDialog({
                     title: '로그인 실패',
-                    message: '오류 발생',
+                    message: '오류 발생 :' + aaa,
                     onPress: async () => {
                         dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
                     },
@@ -91,7 +107,12 @@ const SignInScreen = () => {
             projectId: Constants.expoConfig.extra.eas.projectId
         })).data;
 
-        const user = await Auth.signInKaKao(profile, fcmToken);
+        const expoToken = (await Notifications.getExpoPushTokenAsync({
+            projectId: Constants.expoConfig.extra.eas.projectId
+        })).data;
+
+        // const user = await Auth.signInKaKao(profile, fcmToken);
+        const user = await Auth.signInKaKao(profile, expoToken);
 
         await SecureStore.signInSecureStore({
             [STORE_USER_KEYS.ID]: profile.id,

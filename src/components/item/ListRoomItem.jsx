@@ -1,4 +1,4 @@
-import React, { memo, useState } from 'react';
+import React, { memo, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Card, Subheading, Text, Title } from 'react-native-paper';
 import { Pressable, StyleSheet, View } from 'react-native';
@@ -13,16 +13,6 @@ import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-
-function SkeletonContent(props) {
-    return null;
-}
-
-SkeletonContent.propTypes = {
-    isLoading: PropTypes.bool,
-    layout: PropTypes.any,
-    containerStyle: PropTypes.shape({ flex: PropTypes.number })
-};
 const ListRoomItem = memo(({ room }) => {
     const navigation = useNavigation();
 

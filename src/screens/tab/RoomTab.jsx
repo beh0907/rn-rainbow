@@ -1,6 +1,6 @@
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { GRAY, PRIMARY } from '../../Colors';
-import React, { useEffect, useLayoutEffect, useState } from 'react';
+import React, { useLayoutEffect, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { readRoom } from '../../api/Room';
 import { useRoomState } from '../../contexts/RoomContext';
@@ -9,7 +9,7 @@ import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
-import { MaterialTabBar, Tabs, useFocusedTab } from 'react-native-collapsible-tab-view';
+import { MaterialTabBar, Tabs, useAnimatedTabIndex } from 'react-native-collapsible-tab-view';
 import GalleryScreen from '../room/GalleryScreen';
 import MemoryScreen from '../room/MemoryScreen';
 import CommentScreen from '../room/CommentScreen';
@@ -20,6 +20,7 @@ import { DIALOG_MODE } from '../../components/message/CustomDialog';
 
 const RoomTab = () => {
     const navigation = useNavigation();
+    const tabRef = useRef(null);
 
     //컨텍스트 데이터
     const [room, setRoom] = useRoomState();
@@ -38,9 +39,7 @@ const RoomTab = () => {
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
 
-    const [galleryIcon, setGalleryIcon] = useState('view-grid');
-    const [memoryIcon, setMemoryIcon] = useState('video-outline');
-    const [commentIcon, setCommentIcon] = useState('comment-text-outline');
+    const [currentIndex, setCurrentIndex] = useState(0)
 
     useLayoutEffect(() => {
         (async () => {
@@ -55,7 +54,7 @@ const RoomTab = () => {
                 //추모관에 필요한 정보들을 한꺼번에 불러온다
                 setRoom(await readRoom(roomNum));
 
-                setDialog({visible: false});
+                setDialog({ visible: false });
                 setIsReady(true);
             } catch (e) {
                 setDialog({
@@ -113,16 +112,12 @@ const RoomTab = () => {
         })();
     }, []);
 
-
     return (
         isReady ?
             <Tabs.Container
+                ref={tabRef}
                 initialTabName={RoomRoutes.GALLERY}
-                onIndexChange={(index) => {
-                        setGalleryIcon(index === 0 ? 'view-grid' : 'view-grid-outline')
-                        setMemoryIcon(index === 1 ? 'video' : 'video-outline')
-                        setCommentIcon(index === 2 ? 'comment-text' : 'comment-text-outline')
-                }}
+                onIndexChange={(index) => setCurrentIndex(index)}
                 // allowHeaderOverscroll={true}
                 // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
                 // headerHeight={268}
@@ -137,18 +132,24 @@ const RoomTab = () => {
                                     indicatorStyle={{ backgroundColor: PRIMARY.DEFAULT }} />}
             >
                 <Tabs.Tab name={RoomRoutes.GALLERY}
-                          label={(props) => <MaterialCommunityIcons name={galleryIcon} size={24}
-                                                                    color={PRIMARY.DEFAULT} />}>
+                          label={(props) => {
+                              return <MaterialCommunityIcons name={currentIndex === 0 ? 'view-grid' : 'view-grid-outline'} size={24}
+                                                             color={PRIMARY.DEFAULT} />;
+                          }}>
                     <GalleryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.MEMORY}
-                          label={(props) => <MaterialCommunityIcons name={memoryIcon} size={24}
-                                                                    color={PRIMARY.DEFAULT} />}>
+                          label={(props) => {
+                              return <MaterialCommunityIcons name={currentIndex === 1 ? 'video' : 'video-outline'} size={24}
+                                                             color={PRIMARY.DEFAULT} />;
+                          }}>
                     <MemoryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.COMMENT}
-                          label={(props) => <MaterialCommunityIcons name={commentIcon} size={24}
-                                                                    color={PRIMARY.DEFAULT} />}>
+                          label={(props) => {
+                              return <MaterialCommunityIcons name={currentIndex === 2 ? 'comment-text' : 'comment-text-outline'} size={24}
+                                                             color={PRIMARY.DEFAULT} />;
+                          }}>
                     <CommentScreen />
                 </Tabs.Tab>
             </Tabs.Container>

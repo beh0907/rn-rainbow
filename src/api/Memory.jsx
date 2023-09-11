@@ -3,8 +3,6 @@ import { axiosApiInstance } from './AxiosInstance';
 import Constants from 'expo-constants';
 import { uriToImageFile, uriToVideoFile } from '../utils/ImageUtil';
 
-const { BASE_URL_API} = Constants.expoConfig.extra;
-
 // export const readMemoryList = async (num, type) => {
 //     const response = await axiosApiInstance.get(`/memory/readList?num=${num}&type=${type}`);
 //     return response.data
@@ -44,7 +42,7 @@ export const modifyMemory = async (memory) => {
 
 
 export const removeMemory = async (memory) => {
-    const response = await axios.delete(`${BASE_URL_API}/memory/remove`, {
+    const response = await axiosApiInstance.delete(`/memory/remove`, {
         data: memory
     });
     return response.data

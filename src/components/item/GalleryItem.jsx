@@ -1,11 +1,10 @@
-import React, { memo, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PRIMARY, WHITE } from '../../Colors';
-import Constants from 'expo-constants';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import AutoHeightImage from 'react-native-auto-height-image';
-import ExpoImage from 'expo-image/build/ExpoImage';
+import Constants from 'expo-constants';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -60,7 +59,7 @@ const styles = StyleSheet.create({
     container: {
         margin: 5,
         backgroundColor: WHITE,
-        flex: 1,
+        flex: 1
     },
     image: {
         borderRadius: 12

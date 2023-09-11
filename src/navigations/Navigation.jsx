@@ -28,6 +28,7 @@ const ImageAssets = [
     require('../../assets/background/bg_temp.jpg')
 ];
 
+
 const Navigation = () => {
     const navigationRef = useRef(null);
     const [user, setUser] = useUserState();
@@ -133,26 +134,25 @@ const Navigation = () => {
                 //저장된 정보에 따라 로그인을 시도한다
                 let user;
 
-
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
+
                 const expoToken = (await Notifications.getExpoPushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
 
-                console.log('fcmToken : ', fcmToken);
-                console.log('expoToken : ', expoToken);
-
                 switch (provider) {
                     case 'NATIVE':
-                        user = await signIn({ id, password }, fcmToken);
+                        // user = await signIn({ id, password }, fcmToken);
+                        user = await signIn({ id, password }, expoToken);
                         break;
                     case 'KAKAO':
                         const token = await KakaoLogins.login();
                         const profile = await KakaoLogins.getProfile();
 
-                        user = await Auth.signInKaKao(profile, fcmToken);
+                        // user = await Auth.signInKaKao(profile, fcmToken);
+                        user = await Auth.signInKaKao(profile, expoToken);
                         break;
                     default: //아무것도 없을 경우 무시한다
                         break;

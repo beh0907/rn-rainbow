@@ -117,7 +117,7 @@ const MemoryScreen = () => {
             visible: true,
             mode: DIALOG_MODE.CONFIRM
         });
-    }, []);
+    }, [setDialog, setSnackbar, Memory.removeMemory, refetch]);
 
     if (isLoading)
         return (

@@ -1,4 +1,4 @@
-import React, { memo, useRef, useState } from 'react';
+import React, { memo, useRef } from 'react';
 import { Pressable, StyleSheet, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
 import Constants from 'expo-constants';
@@ -10,18 +10,16 @@ import { calculateTimeDifference } from '../../utils/DateUtil';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
-const MemoryItem = memo(({ memory, removeMemory }) => {
-    //비디오 객체
-    const video = useRef(null);
-    // const [state, setState] = useState({})
-    // const [isFullScreen, setIsFullScreen] = useState(false);
 
+const MemoryItem = memo(({ memory, removeMemory }) => {
+    console.log("111")
+
+    //비디오 객체
     return (
         <Surface style={styles.container} elevation={3}>
             <View style={{ flexDirection: 'row' }}>
                 <Video
-                    isLooping={true}
-                    ref={video}
+                    // isLooping={true}
                     style={styles.video}
                     source={{
                         uri: `${BASE_URL_FILE}${memory.id}/${memory.roomNum}/memory/${memory.type}/${memory.name}`
@@ -34,7 +32,12 @@ const MemoryItem = memo(({ memory, removeMemory }) => {
                 />
             </View>
 
-            <View style={{ alignItems: 'center', justifyContent: 'space-between', flexDirection: 'row', marginStart:16 }}>
+            <View style={{
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexDirection: 'row',
+                marginStart: 16
+            }}>
                 <Text style={styles.memoryDate}>{calculateTimeDifference(memory.date)}</Text>
 
                 <IconButton mode={'outlined'} icon={'delete'} iconColor={PRIMARY.DEFAULT}
@@ -71,15 +74,15 @@ const styles = StyleSheet.create({
             flex: 1,
             backgroundColor: WHITE,
             marginHorizontal: 10,
-            paddingBottom:10,
-            marginTop:10,
-            borderRadius: 16,
+            paddingBottom: 10,
+            marginTop: 10,
+            borderRadius: 16
         },
         video: {
             alignSelf: 'center',
             height: 200,
             flex: 1,
-            backgroundColor:GRAY.DARK,
+            backgroundColor: GRAY.DARK,
             borderTopRightRadius: 16,
             borderTopLeftRadius: 16
             // borderRadius: 20
