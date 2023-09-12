@@ -12,8 +12,6 @@ const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 
 const MemoryItem = memo(({ memory, removeMemory }) => {
-    console.log("111")
-
     //비디오 객체
     return (
         <Surface style={styles.container} elevation={3}>

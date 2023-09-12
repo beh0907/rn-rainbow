@@ -59,7 +59,6 @@ const SignInScreen = () => {
                 aaa = 3
                 // const user = await Auth.signIn(form, fcmToken);
                 const user = await Auth.signIn(form, expoToken, aaa);
-                console.log("aaa : ", aaa)
 
                 aaa = 4
 

@@ -1,11 +1,10 @@
 import * as React from 'react';
-import { useRef, useState } from 'react';
+import { useRef } from 'react';
 import { GLView } from 'expo-gl';
-import { loadAsync, loadObjAsync, loadTextureAsync, Renderer, TextureLoader } from 'expo-three';
+import { loadAsync, Renderer, TextureLoader } from 'expo-three';
 import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
-import { Asset } from 'expo-asset';
 
 global.THREE = global.THREE || THREE; // 전역 객체로 설정
 
@@ -32,22 +31,21 @@ const ThreeDimensionScreen = () => {
     const loadModel = async (model, resources) => {
         const mesh = await loadAsync(
             [
-                model['australian_cattle_dog_v3.obj'],
-                model['australian_cattle_dog_v3.mtl'],
+                model['obj'],
+                model['mtl']
             ],
             onProgress,
-            imageName => resources[imageName]
+            null
         );
 
         mesh.traverse(async child => {
             if (child instanceof THREE.Mesh) {
                 const material = new THREE.MeshPhongMaterial();
 
-                const textureDiffuse = new TextureLoader().load(resources['australian_cattle_dog_dif.jpg']);
-                const textureBump = new TextureLoader().load(resources['australian_cattle_dog_bump.jpg']);
+                const textureLoader = new TextureLoader()
 
-                // console.log(textureDiffuse)
-                // console.log(textureBump)
+                const textureDiffuse = textureLoader.load(resources['dif']);
+                const textureBump = textureLoader.load(resources['bump']);
 
                 material.map = textureDiffuse;
                 material.bumpMap = textureBump;
@@ -90,17 +88,37 @@ const ThreeDimensionScreen = () => {
         const ambientLight = new AmbientLight(0x404040); // soft white light
         scene.add(ambientLight);
 
-        const australian_cattle_dog_v3 = {
-            'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
-            'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
-        }
+        const dog = {
+            // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
+            // 'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
+            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj',
+            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'
+        };
 
-        const resources = {
-            'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
-            'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
-        }
+        const dogResources = {
+            // 'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
+            // 'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
+            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg',
+            'bump': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'
+        };
 
-        const model = await loadModel(australian_cattle_dog_v3, resources);
+        // const model = await loadModel(dog, dogResources);
+
+        const cat = {
+            // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
+            // 'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
+            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/obj/12221_Cat_v1_l3.obj',
+            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/mtl/12221_Cat_v1_l3.mtl'
+        };
+
+        const catResources = {
+            // 'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
+            // 'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
+            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_diffuse.jpg',
+            'bump': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_bump.jpg'
+        };
+
+        const model = await loadModel(cat, catResources);
         modelRef.current = model;
         scene.add(model);
 
@@ -113,7 +131,7 @@ const ThreeDimensionScreen = () => {
         };
 
         render();
-        setDialog({visible: false});
+        setDialog({ visible: false });
     };
 
     const onStartShouldSetResponder = (event) => {
@@ -137,8 +155,8 @@ const ThreeDimensionScreen = () => {
     const onMoveShouldSetResponder = (event) => {
         const { numberActiveTouches } = event.touchHistory;
 
-        const X1 = event.nativeEvent?.pageX
-        const Y1 = event.nativeEvent?.pageY
+        const X1 = event.nativeEvent?.pageX;
+        const Y1 = event.nativeEvent?.pageY;
 
         const deltaX1 = X1 - previousX1Ref.current;
         const deltaY1 = Y1 - previousY1Ref.current;
@@ -153,7 +171,7 @@ const ThreeDimensionScreen = () => {
             //     rotateObjX(rotate);
             // }
             const sensitivity = 0.01; // 회전 감도 조절
-            rotateObj(deltaY1 * sensitivity, deltaX1 * sensitivity)
+            rotateObj(deltaY1 * sensitivity, deltaX1 * sensitivity);
 
         } else if (numberActiveTouches === 2 && isMultiTouchRef.current) { // 2손가락 터치
             const X2 = event.nativeEvent.touches[1]?.pageX;
@@ -162,7 +180,7 @@ const ThreeDimensionScreen = () => {
             const deltaX2 = X2 - previousX2Ref.current;
             const deltaY2 = Y2 - previousY2Ref.current;
 
-            const len1 =  Math.sqrt((previousX1Ref.current - previousX2Ref.current) * (previousX1Ref.current - previousX2Ref.current) +
+            const len1 = Math.sqrt((previousX1Ref.current - previousX2Ref.current) * (previousX1Ref.current - previousX2Ref.current) +
                 (previousY1Ref.current - previousY2Ref.current) * (previousY1Ref.current - previousY2Ref.current));
             const len2 = Math.sqrt((X1 - X2) * (X1 - X2) + (Y1 - Y2) * (Y1 - Y2));
 
@@ -206,10 +224,10 @@ const ThreeDimensionScreen = () => {
     //     modelRef.current.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), angle);
     // };
 
-    const rotateObj = (x,y) => {
+    const rotateObj = (x, y) => {
         modelRef.current.rotateOnWorldAxis(new THREE.Vector3(1, 0, 0), x);
         modelRef.current.rotateOnWorldAxis(new THREE.Vector3(0, 1, 0), y);
-    }
+    };
 
     const translate = (x, y, z) => {
         modelRef.current.position.x += x;

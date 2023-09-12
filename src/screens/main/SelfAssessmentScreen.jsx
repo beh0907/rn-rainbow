@@ -1,7 +1,7 @@
 import React, { useCallback, useRef, useState } from 'react';
 import { Animated, BackHandler, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { PRIMARY, WHITE } from '../../Colors';
-import { Divider, IconButton, ProgressBar, RadioButton, Surface, Text } from 'react-native-paper';
+import { Button, Divider, IconButton, ProgressBar, RadioButton, Surface, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import SelfAssessmentItem from '../../components/item/SelfAssessmentItem';
@@ -74,14 +74,13 @@ const SelfAssessmentScreen = () => {
 
     //말풍선을 터치할 경우 해당 번호로 이동해 답변을 수정할 수 있다
     const onPressItem = useCallback(async (item, index) => {
-        console.log("gggg")
-
         listRef?.current?.scrollToIndex({
             index: index,
             animated: true,
             viewPosition: 0.5
         });
 
+        setProgress(index);
         setSelectOption(item.value);
         setVisibleOptions(true);
     }, [selfAssementList, progress, selectOption, visibleOptions, listRef]);
@@ -108,11 +107,13 @@ const SelfAssessmentScreen = () => {
         //새로운 질문 답변을 표시해야 하기 때문에 null로 채운다
         setSelectOption('');
 
-        if (lastIndex >= QUESTIONS.length) { // 모두 답변이 완료되었다면
-            setProgress(selfAssementList.length);
-            setVisibleOptions(false);
-        } else {
+        if (!list[lastIndex - 1].value) {
+            setProgress(lastIndex - 1);
+        } else if (lastIndex < QUESTIONS.length) {
             setProgress(lastIndex);
+        } else { // 모두 답변이 완료되었다면
+            setProgress(lastIndex - 1);
+            setVisibleOptions(false);
         }
 
     }, [selfAssementList, progress, visibleOptions]);
@@ -130,11 +131,12 @@ const SelfAssessmentScreen = () => {
                         marginBottom: 5
                     }}>
                         <Text variant={'titleMedium'}
-                              style={{ flex: 1 }}>{`${progress}/${QUESTIONS.length}`}</Text>
-                        <Text variant={'titleMedium'}>{parseInt(progress / QUESTIONS.length * 100)} %</Text>
+                              style={{ flex: 1 }}>{`${selfAssementList.length}/${QUESTIONS.length}`}</Text>
+                        <Text
+                            variant={'titleMedium'}>{parseInt(selfAssementList.length / QUESTIONS.length * 100)} %</Text>
                     </View>
                     <ProgressBar style={{ backgroundColor: PRIMARY.LIGHT, borderRadius: 10, height: 10 }}
-                                 animatedValue={progress / QUESTIONS.length} color={PRIMARY.DEFAULT} />
+                                 animatedValue={selfAssementList.length / QUESTIONS.length} color={PRIMARY.DEFAULT} />
                 </View>
 
                 <Divider style={{ width: width - 32, height: 1, marginVertical: 10 }} />
@@ -147,7 +149,7 @@ const SelfAssessmentScreen = () => {
                         estimatedItemSize={64}
                         contentContainerStyle={{ paddingTop: 10, paddingBottom: 40 }}
                         ItemSeparatorComponent={() => <View style={styles.separator} />}
-                        extraData={progress}
+                        extraData={[progress, onPressItem]}
                         data={selfAssementList}
                         keyExtractor={(_, index) => index.toString()}
                         renderItem={({ item, index }) =>
@@ -162,7 +164,7 @@ const SelfAssessmentScreen = () => {
                     visibleOptions &&
                     <Surface style={{ backgroundColor: WHITE }} elevation={5} collapsable={true}>
                         <RadioButton.Group
-                            onValueChange={value => onPressAnswer(selfAssementList.length - 1, value)}
+                            onValueChange={value => onPressAnswer(progress, value)}
                             value={selectOption}>
                             <RadioButton.Item labelVariant={'bodyMedium'} label='1. 매우 그렇다.' value='1'
                                               mode={'ios'} />
