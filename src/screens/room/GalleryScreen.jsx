@@ -10,7 +10,7 @@ import * as Gallery from '../../api/Gallery';
 import { IconButton } from 'react-native-paper';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { PRIMARY, WHITE } from '../../Colors';
-import { Tabs, useFocusedTab } from 'react-native-collapsible-tab-view';
+import { Tabs, useFocusedTab, useHeaderMeasurements } from 'react-native-collapsible-tab-view';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
 
@@ -43,6 +43,7 @@ const GalleryScreen = () => {
     const pageRef = useRef(1);
 
     const focusedTab = useFocusedTab();
+    const { top, height: headerHeight } = useHeaderMeasurements();
 
     // 화면 최초 로드 리스트를 불러온다
     useLayoutEffect(() => {
@@ -238,13 +239,13 @@ const GalleryScreen = () => {
                     <Text>등록된 이미지가 없습니다</Text>
                 </Tabs.ScrollView>
                 :
-                <Tabs.MasonryFlashList
+                <Tabs.FlatList
                     extraData={[isDeleteMode, refetching, onToggleImage]}
                     estimatedListSize={{ width: width, height: height }}
                     estimatedItemSize={100}
                     contentContainerStyle={styles.galleryList}
                     data={galleries}
-                    // keyExtractor={(item, index) => index.toString()}
+                    keyExtractor={(_, index) => index.toString()}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
                     renderItem={({ item, index }) => <GalleryItem item={item}
@@ -258,7 +259,59 @@ const GalleryScreen = () => {
                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                     ListFooterComponentStyle={styles.listFooter}
                 />
+                // <Tabs.MasonryFlashList
+                //     extraData={[isDeleteMode, refetching, onToggleImage]}
+                //     estimatedListSize={{ width: width, height: height }}
+                //     estimatedItemSize={100}
+                //     contentContainerStyle={styles.galleryList}
+                //     data={galleries}
+                //     keyExtractor={(_, index) => index.toString()}
+                //     numColumns={3}
+                //     showsVerticalScrollIndicator={false}
+                //     renderItem={({ item, index }) => <GalleryItem item={item}
+                //                                                   onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
+                //                                                   isSelected={isSelectedGallery(item)}
+                //                                                   isDeleteMode={isDeleteMode} />}
+                //     onEndReachedThreshold={0.9}
+                //     onEndReached={() => fetchNextPage(false)}
+                //     refreshing={refetching}
+                //     // onRefresh={refetch}
+                //     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
+                //     ListFooterComponentStyle={styles.listFooter}
+                // />
             }
+
+            {/*<Tabs.ScrollView*/}
+            {/*    contentContainerStyle={{*/}
+            {/*        justifyContent: 'center',*/}
+            {/*        alignItems: 'center',*/}
+            {/*        paddingTop: 0*/}
+            {/*    }}*/}
+            {/*    showsVerticalScrollIndicator={false}>*/}
+            {/*    <Tabs.MasonryFlashList*/}
+            {/*        extraData={[isDeleteMode, refetching, onToggleImage]}*/}
+            {/*        estimatedListSize={{ width: width, height: height }}*/}
+            {/*        estimatedItemSize={100}*/}
+            {/*        contentContainerStyle={styles.galleryList}*/}
+            {/*        data={galleries}*/}
+            {/*        keyExtractor={(_, index) => index.toString()}*/}
+            {/*        numColumns={3}*/}
+            {/*        showsVerticalScrollIndicator={false}*/}
+            {/*        renderItem={({ item, index }) => <GalleryItem item={item}*/}
+            {/*                                                      onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}*/}
+            {/*                                                      isSelected={isSelectedGallery(item)}*/}
+            {/*                                                      isDeleteMode={isDeleteMode} />}*/}
+            {/*        onEndReachedThreshold={0.9}*/}
+            {/*        onEndReached={() => fetchNextPage(false)}*/}
+            {/*        refreshing={refetching}*/}
+            {/*        // onRefresh={refetch}*/}
+            {/*        ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}*/}
+            {/*        ListFooterComponentStyle={styles.listFooter}*/}
+            {/*        ListEmptyComponent={<Text*/}
+            {/*            style={{ alignSelf: 'center', marginTop: (height - headerHeight.value) / 3 }}>등록된 이미지가*/}
+            {/*            없습니다</Text>}*/}
+            {/*    />*/}
+            {/*</Tabs.ScrollView>*/}
 
             {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
                 user.id === room.id &&

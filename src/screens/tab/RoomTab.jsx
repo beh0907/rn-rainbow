@@ -118,7 +118,7 @@ const RoomTab = () => {
                 ref={tabRef}
                 initialTabName={RoomRoutes.GALLERY}
                 onIndexChange={(index) => setCurrentIndex(index)}
-                // allowHeaderOverscroll={true}
+                allowHeaderOverscroll={true}
                 // revealHeaderOnScroll // 위쪽으로 스크롤 할 때 헤더를 표시
                 // headerHeight={268}
                 renderHeader={() => <RoomHeader room={room} />}

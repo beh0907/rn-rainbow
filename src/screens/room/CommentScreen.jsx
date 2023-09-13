@@ -119,6 +119,7 @@ const CommentScreen = () => {
                 <ActivityIndicator size='large' color={PRIMARY.DEFAULT} />
             </View>
         );
+
     return (
         <View style={styles.container}>
             {/*로딩 중일때는 인디케이터 표시*/}
@@ -134,7 +135,7 @@ const CommentScreen = () => {
                 </Tabs.ScrollView>
                 :
                 <View style={{ flex: 1, marginTop: 16}}>
-                    <Tabs.FlashList
+                    <Tabs.FlatList
                         extraData={refetching}
                         estimatedListSize={{ width, height }}
                         estimatedItemSize={92}
@@ -165,11 +166,65 @@ const CommentScreen = () => {
                 placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={addComment === ''}
                 styles={{
                     input: {
-                        margin: 16
+                        position:'absolute',
+                        margin: 16,
+                        bottom:0
                     }
                 }} />
         </View>
     );
+
+    // return (
+    //     <View style={styles.container}>
+    //         {/*로딩 중일때는 인디케이터 표시*/}
+    //         {comments.length === 0 ?
+    //             <Tabs.ScrollView
+    //                 contentContainerStyle={{
+    //                     justifyContent: 'center',
+    //                     alignItems: 'center',
+    //                     paddingTop: 0
+    //                 }}
+    //                 showsVerticalScrollIndicator={false}>
+    //                 <Text>등록된 댓글이 없습니다</Text>
+    //             </Tabs.ScrollView>
+    //             :
+    //             <View style={{ flex: 1, marginTop: 16}}>
+    //                 <Tabs.FlashList
+    //                     extraData={refetching}
+    //                     estimatedListSize={{ width, height }}
+    //                     estimatedItemSize={92}
+    //                     showsVerticalScrollIndicator={false}
+    //                     contentContainerStyle={styles.commentList}
+    //                     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
+    //                     keyExtractor={(_, index) => index.toString()}
+    //                     data={comments}
+    //                     renderItem={({ item }) =>
+    //                         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+    //                         <CommentItem comment={item} isCanDelete={user.id === item.userId || user.id === room.id}
+    //                                      removeComment={removeComment} />
+    //                     }
+    //                     onEndReachedThreshold={0.9}
+    //                     onEndReached={() => fetchNextPage(false)}
+    //                     refreshing={refetching}
+    //                     onRefresh={refetch}
+    //                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
+    //                     ListFooterComponentStyle={styles.listFooter}
+    //                 />
+    //             </View>
+    //         }
+    //
+    //
+    //         {/*댓글 작성 입력창*/}
+    //         <InputTextButton
+    //             value={addComment} onChangeText={setAddComment} icon={'send'}
+    //             placeholder={'댓글을 입력해주세요.'} onSubmit={registerComment} disabled={addComment === ''}
+    //             styles={{
+    //                 input: {
+    //                     margin: 16
+    //                 }
+    //             }} />
+    //     </View>
+    // );
 };
 
 CommentScreen.propTypes = {};
@@ -184,6 +239,7 @@ const styles = StyleSheet.create({
     },
     commentList: {
         padding: 16,
+        paddingBottom:84
     },
     listFooter: {
         flex: 1,

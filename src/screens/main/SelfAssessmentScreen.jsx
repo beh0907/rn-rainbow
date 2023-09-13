@@ -72,6 +72,20 @@ const SelfAssessmentScreen = () => {
         }, [visibleOptions])
     );
 
+    const getResult = (list) => {
+        let score = 0
+
+        list.map(item => score += (6 - item.value))
+
+        if (score >= 56) {
+            console.log("결과 점수  : ", score, "\n심리적으로 큰 위축감을 느끼고 계실 수 있습니다. 상담을 받으시는 것이 좋습니다.")
+        } else if (score >= 40) {
+            console.log("결과 점수  : ", score, "\n심리적으로 중간 정도의 위축감을 느끼고 계실 수 있습니다. 주의가 필요합니다.")
+        } else {
+            console.log("결과 점수  : ", score, "\n심리적으로 위축감을 느끼지 않고 계시는 것 같습니다. 그러나 일상생활에 불편을 느끼는 경우도 있으니 주의하세요.")
+        }
+    }
+
     //말풍선을 터치할 경우 해당 번호로 이동해 답변을 수정할 수 있다
     const onPressItem = useCallback(async (item, index) => {
         listRef?.current?.scrollToIndex({
@@ -114,9 +128,10 @@ const SelfAssessmentScreen = () => {
         } else { // 모두 답변이 완료되었다면
             setProgress(lastIndex - 1);
             setVisibleOptions(false);
+            getResult(list)
         }
 
-    }, [selfAssementList, progress, visibleOptions]);
+    }, [selfAssementList, progress, visibleOptions, getResult]);
 
 
     return (

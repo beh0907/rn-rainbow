@@ -1,8 +1,8 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { GLView } from 'expo-gl';
-import { loadAsync, Renderer, TextureLoader } from 'expo-three';
-import { AmbientLight, HemisphereLight, PerspectiveCamera, PointLight, Scene } from 'three';
+import { loadAsync, Renderer } from 'expo-three';
+import { AmbientLight, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
 
@@ -22,6 +22,7 @@ const ThreeDimensionScreen = () => {
 
 
     const onProgress = async (xhr) => {
+        console.log("xhr : ", xhr);
         if (xhr.lengthComputable) {
             const percentComplete = xhr.loaded / xhr.total * 100;
             console.log(Math.round(percentComplete) + '% downloaded');
@@ -39,18 +40,13 @@ const ThreeDimensionScreen = () => {
         );
 
         mesh.traverse(async child => {
-            if (child instanceof THREE.Mesh) {
-                const material = new THREE.MeshPhongMaterial();
+            if (child instanceof Mesh) {
+                child.material.flatShading = false;
+                child.material.side = THREE.FrontSide;
 
-                const textureLoader = new TextureLoader()
-
-                const textureDiffuse = textureLoader.load(resources['dif']);
-                const textureBump = textureLoader.load(resources['bump']);
-
-                material.map = textureDiffuse;
-                material.bumpMap = textureBump;
-
-                child.material = material;
+                /// Apply other maps - maybe this is supposed to be automatic :[
+                child.material.map = await loadAsync(resources['dif']);
+                child.material.bumpMap = await loadAsync(resources['bump']);
             }
         });
 

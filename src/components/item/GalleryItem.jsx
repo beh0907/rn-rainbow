@@ -5,6 +5,7 @@ import { PRIMARY, WHITE } from '../../Colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
 import AutoHeightImage from 'react-native-auto-height-image';
 import Constants from 'expo-constants';
+import { Image } from 'expo-image';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -16,17 +17,15 @@ const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
 
     const checkBoxRef = useRef(null);
 
-
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [styles.container, { opacity: pressed ? 0.5 : 1 }]}>
-            <AutoHeightImage style={styles.image} width={IMAGE_WIDTH}
-                             source={{ uri: imageUrl }} />
+            {/*<AutoHeightImage style={styles.image} width={IMAGE_WIDTH}*/}
+            {/*                 source={{ uri: imageUrl }} />*/}
 
 
-            {/*<Image style={[styles.image, { width: IMAGE_WIDTH, aspectRatio: 1 }]}*/}
-            {/*       source={imageUrl}*/}
-            {/*       contentFit={'contain'}*/}
-            {/*       onProgress={event => console.log(event)} />*/}
+            <Image style={[styles.image, { height: IMAGE_WIDTH }]}
+                   source={imageUrl}
+                   contentFit={'cover'} />
 
 
             {isDeleteMode &&

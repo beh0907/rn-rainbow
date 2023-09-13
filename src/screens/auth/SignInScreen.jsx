@@ -144,7 +144,6 @@ const SignInScreen = () => {
 
     return (
         <SafeInputView>
-            <StatusBar style={'dark'} />
             <View style={[styles.container, { marginTop: top }]}>
 
                 {/*로그인 정보 입력 폼*/}
@@ -235,6 +234,7 @@ const SignInScreen = () => {
                     </View>
                 </View>
 
+                {/*카카오 로그인 버튼*/}
                 <Pressable onPress={onSignInKaKao}>
                     <Image style={
                         { width: width - 40, height: 50, alignSelf: 'center', marginBottom: 20 }}

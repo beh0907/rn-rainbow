@@ -138,7 +138,7 @@ const MemoryScreen = () => {
                     <Text>등록된 추억이 없습니다</Text>
                 </Tabs.ScrollView>
                 :
-                <Tabs.FlashList
+                <Tabs.FlatList
                     extraData={refetching}
                     estimatedListSize={{ width, height }}
                     estimatedItemSize={200}
@@ -157,8 +157,37 @@ const MemoryScreen = () => {
                     // onRefresh={refetch}
                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                     ListFooterComponentStyle={styles.listFooter}
+                    ListEmptyComponent={
+                        <View style={{justifyContent: 'center',
+                            alignItems: 'center',
+                            paddingTop: 0}}>
+                            <Text>등록된 추억이 없습니다</Text>
+                        </View>
+                    }
                 />
+                // <Tabs.FlashList
+                //     extraData={refetching}
+                //     estimatedListSize={{ width, height }}
+                //     estimatedItemSize={200}
+                //     showsVerticalScrollIndicator={false}
+                //     contentContainerStyle={styles.memoryList}
+                //     ItemSeparatorComponent={() => <View style={styles.separator}></View>}
+                //     keyExtractor={(_, index) => index.toString()}
+                //     data={memories}
+                //     renderItem={({ item }) =>
+                //         //댓글 작성자이거나 추모관 개설자는 댓글을 삭제할 수 있다
+                //         <MemoryItem memory={item} removeMemory={removeMemory} />
+                //     }
+                //     onEndReachedThreshold={0.9}
+                //     onEndReached={() => fetchNextPage(false)}
+                //     refreshing={refetching}
+                //     // onRefresh={refetch}
+                //     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
+                //     ListFooterComponentStyle={styles.listFooter}
+                // />
             }
+
+
 
             {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
                 user.id === room.id &&
