@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { GLView } from 'expo-gl';
-import { loadAsync, Renderer } from 'expo-three';
+import { loadAsync, Renderer, TextureLoader } from 'expo-three';
 import { AmbientLight, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
@@ -61,16 +61,18 @@ const ThreeDimensionScreen = () => {
         });
 
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
-        const sceneColor = 0xabd2c3;
 
         const renderer = new Renderer({ gl });
         renderer.setSize(width, height);
-        renderer.setClearColor(sceneColor);
+        // renderer.setClearColor(0x000000, 0);
+        // renderer.setClearColor(0xabd2c3);
 
         const camera = new PerspectiveCamera(75, width / height, 0.1, 1000);
         camera.position.set(0, 0, 100);
 
         const scene = new Scene();
+        scene.background = await loadAsync(require('../../../assets/background/bg_splash.png')); // 백그라운드 이미지 적용
+
 
         const pointLight = new PointLight(0xffffff, 2, 1000, 1);
         pointLight.position.set(0, 30, 100);
@@ -130,6 +132,7 @@ const ThreeDimensionScreen = () => {
         setDialog({ visible: false });
     };
 
+    //터치 시작할 때 이벤트
     const onStartShouldSetResponder = (event) => {
         const { numberActiveTouches } = event.touchHistory;
 
@@ -148,6 +151,7 @@ const ThreeDimensionScreen = () => {
         }
     };
 
+    //터치 이동할 때 이벤트
     const onMoveShouldSetResponder = (event) => {
         const { numberActiveTouches } = event.touchHistory;
 
@@ -208,6 +212,7 @@ const ThreeDimensionScreen = () => {
         previousY1Ref.current = event.nativeEvent.touches[0]?.pageY;
     };
 
+    //터치 종료할 때 이벤트
     const onTouchEnd = () => {
         isMultiTouchRef.current = false;
     };
@@ -256,9 +261,9 @@ const ThreeDimensionScreen = () => {
         <GLView
             onStartShouldSetResponder={onStartShouldSetResponder}
             onMoveShouldSetResponder={onMoveShouldSetResponder}
-            // onTouchEnd={onTouchEnd}
+            onTouchEnd={onTouchEnd}
             ref={glViewRef}
-            style={{ flex: 1 }}
+            style={{ flex: 1}}
             onContextCreate={onContextCreate}
             key={'d'}
         />

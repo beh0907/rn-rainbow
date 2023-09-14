@@ -47,8 +47,14 @@ const SelfAssessmentScreen = () => {
     const [selfAssementList, setSelfAssementList] = useState([QUESTIONS[0]]);
 
     const toggleOptions = () => {
-        listRef?.current?.scrollToEnd({
-            animated: true
+        // listRef?.current?.scrollToEnd({
+        //     animated: true
+        // });
+
+        listRef?.current?.scrollToIndex({
+            index: progress,
+            animated: true,
+            viewPosition: 0.5
         });
 
         setVisibleOptions(prev => !prev);

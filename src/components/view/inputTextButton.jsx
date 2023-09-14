@@ -10,7 +10,7 @@ import Button, { ButtonTypes } from '../button/Button';
 const inputTextButton = ({ value, onChangeText, placeholder, icon, onSubmit, styles, disabled }) => {
 
     return (
-        <Surface style={[defaultStyles.container, styles?.input]} onLayout={event => console.log(event.nativeEvent.layout.height)}>
+        <Surface style={[defaultStyles.container, styles?.input]}>
             <TextInput
                 value={value}
                 onChangeText={onChangeText}

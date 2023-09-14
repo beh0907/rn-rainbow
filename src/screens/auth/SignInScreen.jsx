@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useReducer, useRef, useState } from 'react';
+import React, { useCallback, useReducer, useRef, useState } from 'react';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import { Alert, Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { AuthRoutes, RoomRoutes } from '../../navigations/Routes';
+import { Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { AuthRoutes } from '../../navigations/Routes';
 import { ReturnKeyTypes } from '../../components/view/Input';
 import Button from '../../components/button/Button';
 import TextButton from '../../components/button/TextButton';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import SafeInputView from '../../components/view/SafeInputView';
-import { StatusBar } from 'expo-status-bar';
 import { PRIMARY, WHITE } from '../../Colors';
 import { authFormReducer, AuthFormTypes, initAuthForm } from '../../reducer/AuthFormReducer';
 import { useUserState } from '../../contexts/UserContext';
@@ -42,30 +41,22 @@ const SignInScreen = () => {
         if (!form.disabled && !form.isLoading) {
             dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
 
-            let aaa = 0
-
             try {
-
-                aaa = 1
                 const fcmToken = (await Notifications.getDevicePushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
 
-                aaa = 2
                 const expoToken = (await Notifications.getExpoPushTokenAsync({
                     projectId: Constants.expoConfig.extra.eas.projectId
                 })).data;
 
-                aaa = 3
                 // const user = await Auth.signIn(form, fcmToken);
-                const user = await Auth.signIn(form, expoToken, aaa);
+                const user = await Auth.signIn(form, expoToken);
 
-                aaa = 4
 
                 /**자동 로그인이 체크되어 있다면
                  로그인 정보를 저장한다*/
                 if (isAutoLogin) {
-                    aaa = 5
                     await SecureStore.signInSecureStore({
                         [STORE_USER_KEYS.ID]: user.id,
                         [STORE_USER_KEYS.PASSWORD]: form.password,
@@ -77,12 +68,11 @@ const SignInScreen = () => {
                     await SecureStore.signOutSecureStore();
                 }
 
-                aaa = 6
                 setUser(user);
             } catch (e) {
                 setDialog({
                     title: '로그인 실패',
-                    message: '오류 발생 :' + aaa,
+                    message: '오류 발생 :',
                     onPress: async () => {
                         dispatch({ type: AuthFormTypes.TOGGLE_LOADING });
                     },
@@ -234,7 +224,6 @@ const SignInScreen = () => {
                     </View>
                 </View>
 
-                {/*카카오 로그인 버튼*/}
                 <Pressable onPress={onSignInKaKao}>
                     <Image style={
                         { width: width - 40, height: 50, alignSelf: 'center', marginBottom: 20 }}

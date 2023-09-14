@@ -3,7 +3,7 @@ import { Keyboard, KeyboardAvoidingView, Platform, Pressable } from 'react-nativ
 
 const SafeInputView = ({ children }) => {
     return (
-        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.select({ android: 'position', ios: 'padding' })}>
+        <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.select({ ios: 'padding' })}>
             <Pressable style={{ flex: 1 }} onPress={() => Keyboard.dismiss()}>
                 {children}
             </Pressable>

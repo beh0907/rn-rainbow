@@ -17,6 +17,7 @@ export default function App() {
     return (
         <PaperProvider theme={theme}>
             <StatusBar style='dark' />
+
             <SnackBarProvider>
                 <DialogProvider>
                     <UserProvider>

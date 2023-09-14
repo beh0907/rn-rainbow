@@ -206,7 +206,6 @@ const Navigation = () => {
 
                                      // 알림 메시지 터치 이벤트
                                      const subscription = Notifications.addNotificationResponseReceivedListener(response => {
-                                         console.log('response 22 : ', response.notification.request.trigger.remoteMessage.data);
                                          const expoPushData = response.notification.request.content.data;
                                          const fcmPushData = response.notification.request.trigger.remoteMessage.data;
                                          const { id, type } = expoPushData ?? fcmPushData;
