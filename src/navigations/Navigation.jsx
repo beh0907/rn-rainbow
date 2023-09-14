@@ -209,8 +209,8 @@ const Navigation = () => {
                                          const expoPushData = response.notification.request.content.data;
                                          const fcmPushData = response.notification.request.trigger.remoteMessage.data;
                                          const { id, type } = expoPushData ?? fcmPushData;
-                                         console.log('푸시 아이디', id);
-                                         console.log('푸시 타입', type);
+                                         // console.log('푸시 아이디', id);
+                                         // console.log('푸시 타입', type);
 
                                          // 비로그인 상태에서는 FCM 토큰이 저장되어 있지 않아 알림X
                                          // 로그인 상태일 경우 MainStack의 화면만 사용하기 때문에 추가 조건문 필요X

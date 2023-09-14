@@ -26,11 +26,6 @@ export const registerVideo = async (memory, uri, imageUri) => {
     const formData = setFormData(memory, uri, imageUri);
 
     const response = await axiosApiInstance.postForm(`/memory/registerVideo`, formData)
-        .catch(e => {
-            console.log('에러', e);
-            console.log('에러 응답', e.response);
-            console.log('에러 코드', e.status);
-        });
 
     return response.data
 }

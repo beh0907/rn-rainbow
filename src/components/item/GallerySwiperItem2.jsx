@@ -26,12 +26,10 @@ const GallerySwiperItem = memo(({ item, setScrollEnable }) => {
         onStart: (event, context) => {
             baseScale = imageScale.value;
 
-            console.log('터치 시작');
             // runOnJS(setScrollEnable)(false); // UI 스레드에서 호출
         },
         onActive: (event) => {
             imageScale.value = baseScale * event.scale;
-            console.log('터치 중');
         },
         onEnd: (event) => {
             if (imageScale.value < minScale) {
@@ -40,7 +38,6 @@ const GallerySwiperItem = memo(({ item, setScrollEnable }) => {
                 imageScale.value = withSpring(maxScale);
             }
 
-            console.log('터치 끝');
             // runOnJS(setScrollEnable)(true); // UI 스레드에서 호출
         }
     });

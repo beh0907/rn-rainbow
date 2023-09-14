@@ -20,22 +20,13 @@ const ThreeDimensionScreen = () => {
     const previousX2Ref = useRef(0);
     const previousY2Ref = useRef(0);
 
-
-    const onProgress = async (xhr) => {
-        console.log("xhr : ", xhr);
-        if (xhr.lengthComputable) {
-            const percentComplete = xhr.loaded / xhr.total * 100;
-            console.log(Math.round(percentComplete) + '% downloaded');
-        }
-    };
-
     const loadModel = async (model, resources) => {
         const mesh = await loadAsync(
             [
                 model['obj'],
                 model['mtl']
             ],
-            onProgress,
+            null,
             null
         );
 

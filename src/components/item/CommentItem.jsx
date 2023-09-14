@@ -32,7 +32,7 @@ const CommentItem = memo(({ comment, isCanDelete, removeComment }) => {
             }
 
             <View style={styles.commentInfo}>
-                <View style={{ flexDirection: 'rowarn', alignItems: 'center', justifyContent: 'space-between' }}>
+                <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
                     <View>
                         <Text style={styles.nickName} numberOfLines={1}>{comment.nickName}</Text>
                         <Text style={styles.commentDate}>{calculateTimeDifference(comment.date)}</Text>

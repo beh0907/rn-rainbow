@@ -45,7 +45,8 @@
             "targetSdkVersion": 33,
             "buildToolsVersion": "33.0.0",
             "minSdkVersion": 23,
-            "kotlinVersion": "1.8.10"
+            "kotlinVersion": "1.8.10",
+            "usesCleartextTraffic": true
           },
           "ios": {
             "deploymentTarget": "13.0"
@@ -87,8 +88,7 @@
       },
       "BASE_URL_API": "http://43.200.169.250/rainbow",
       "BASE_URL_FILE": "https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/",
-      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do",
-      "TEST": "http://inhyeop.iptime.org:82/rainbow"
+      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do"
     }
   }
 }

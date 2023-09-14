@@ -2,28 +2,18 @@ import axios from 'axios';
 import * as SecureStore from '../utils/PreferenceStore';
 import { uriToImageFile } from '../utils/ImageUtil';
 import { axiosApiInstance } from './AxiosInstance';
-import { Alert } from 'react-native';
 
 export const signIn = async ({ id, password }, fcmToken = '') => {
-    let aaa = 3.1
-    try {
-        const response = await axiosApiInstance.get(`/user/login?id=${id}&password=${password}`, {
-            headers: {
-                fcmToken: fcmToken
-            }
-        });
-        aaa = 3.2
+    const response = await axiosApiInstance.get(`/user/login?id=${id}&password=${password}`, {
+        headers: {
+            fcmToken: fcmToken
+        }
+    });
 
-        response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
-        response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
-        aaa = 3.3
+    response.headers.accesstoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.ACCESS_TOKEN, response.headers.accesstoken);
+    response.headers.refreshtoken && await SecureStore.save(SecureStore.STORE_USER_KEYS.REFRESH_TOKEN, response.headers.refreshtoken);
 
-        return response.data;
-    } catch (e) {
-        Alert.alert("로그인 중 오류 발생 : " + aaa, e)
-        return undefined
-    }
-
+    return response.data;
 };
 
 export const signInKaKao = async (user, fcmToken = '') => {
@@ -85,11 +75,6 @@ export const modify = async (user, uri) => {
     }
 
     const response = await axiosApiInstance.postForm(`/user/modifyRN`, formData)
-        .catch(e => {
-            console.log('에러', e);
-            console.log('에러 응답', e.response);
-            console.log('에러 코드', e.status);
-        });
 
     return response.data;
 };

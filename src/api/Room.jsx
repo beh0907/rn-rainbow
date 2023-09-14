@@ -28,11 +28,6 @@ export const registerRoom = async (room, uri) => {
     const formData = setFormData(room, uri);
 
     const response = await axiosApiInstance.postForm(`/room/register`, formData)
-        .catch(e => {
-            console.log('에러', e);
-            console.log('에러 응답', e.response);
-            console.log('에러 코드', e.status);
-        });
 
     return response.data;
 };
@@ -41,11 +36,6 @@ export const modifyRoom = async (room, uri) => {
     const formData = setFormData(room, uri);
 
     const response = await axiosApiInstance.postForm(`/room/modify`, formData)
-        .catch(e => {
-            console.log('에러', e);
-            console.log('에러 응답', e.response);
-            console.log('에러 코드', e.status);
-        });
 
     return response.data;
 };
