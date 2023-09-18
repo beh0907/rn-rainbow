@@ -48,10 +48,8 @@ const SelfAssessmentItem = ({ item, index, user, progress, onPressItem }) => {
                                             case '2':
                                                 return ' 그렇다.';
                                             case '3':
-                                                return ' 보통이다.';
-                                            case '4':
                                                 return ' 그렇지 않다.';
-                                            case '5':
+                                            case '4':
                                                 return ' 매우 그렇지 않다.';
                                         }
 

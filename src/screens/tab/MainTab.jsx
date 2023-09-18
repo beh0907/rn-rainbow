@@ -22,7 +22,8 @@ const AddButtonScreen = () => null
 const MainTab = () => {
     return (
         <SafeAreaProvider>
-            <Tab.Navigator screenOptions={{
+            <Tab.Navigator
+                screenOptions={{
                 headerShown: false,
                 tabBarActiveTintColor: PRIMARY.DARK,
                 tabBarInactiveTintColor: GRAY.DARK,

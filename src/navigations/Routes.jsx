@@ -9,7 +9,8 @@ export const MainRoutes = {
     ROOM_TAB: '추모관',
     PROFILE_UPDATE: '프로필 갱신',
     ROOM_REGISTER: '추모관 개설',
-    ROOM_UPDATE: '추모관 수정'
+    ROOM_UPDATE: '추모관 수정',
+    SELF_ASSESSMENT_RESULT: '자가진단 결과',
 };
 
 export const ContentRoutes = {

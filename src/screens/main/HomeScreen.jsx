@@ -1,6 +1,6 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { BackHandler, Keyboard, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { BackHandler, Keyboard, Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { Button, Menu, Text } from 'react-native-paper';
 import { useUserState } from '../../contexts/UserContext';
@@ -13,6 +13,7 @@ import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import ListRoomItem from '../../components/item/ListRoomItem';
 import { FlashList } from '@shopify/flash-list';
 import * as Room from '../../api/Room';
+import { ContentRoutes } from '../../navigations/Routes';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -22,6 +23,8 @@ const HomeScreen = () => {
 
     const [user] = useUserState();
     const [, setSnackbar] = useSnackBarState();
+
+    const navigation = useNavigation()
 
     const [searchQuery, setSearchQuery] = useState(''); //검색 값
     const [menuVisible, setMenuVisible] = useState(false);
@@ -139,7 +142,7 @@ const HomeScreen = () => {
 
     return (
         <View style={[styles.container, { paddingTop: top, paddingBottom: bottom }]}>
-            <View style={styles.containerUser}>
+            <Pressable style={styles.containerUser}>
 
                 {
                     user.image ?
@@ -154,7 +157,7 @@ const HomeScreen = () => {
                     <Text variant={'titleLarge'} style={{ fontWeight: 'bold' }}>{user.nickName}</Text>
                     {/*<Text variant={"titleSmall"} style={{color: GRAY.DARK}}>{user.mail}</Text>*/}
                 </View>
-            </View>
+            </Pressable>
 
             <InputTextButton
                 styles={{

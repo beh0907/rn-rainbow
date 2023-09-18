@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
 import { PRIMARY } from '../../Colors';
 
-const HeaderRight = ({ onPress, name, color, ...props }) => {
+const HeaderRight = ({ onPress, name, color, disabled }) => {
     return (
-        <Pressable hitSlop={10} onPress={onPress} props>
+        <Pressable hitSlop={10} onPress={onPress} disabled={disabled}>
             <MaterialCommunityIcons
                 name={name}
                 size={24}
@@ -16,13 +16,15 @@ const HeaderRight = ({ onPress, name, color, ...props }) => {
 };
 
 HeaderRight.defaultProps = {
-    color: PRIMARY.DEFAULT
+    color: PRIMARY.DEFAULT,
+    disabled: true,
 };
 
 HeaderRight.propTypes = {
     onPress: PropTypes.func,
     name: PropTypes.string.isRequired,
-    color: PropTypes.string
+    color: PropTypes.string,
+    disabled: PropTypes.bool,
 };
 
 export default HeaderRight;

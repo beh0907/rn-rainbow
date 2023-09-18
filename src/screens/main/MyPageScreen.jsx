@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
-import { Button, Divider, Text } from 'react-native-paper';
+import { Button, Text } from 'react-native-paper';
 import * as SecureStore from '../../utils/PreferenceStore';
 import { STORE_SETTING_KEYS } from '../../utils/PreferenceStore';
 import { useNavigation } from '@react-navigation/native';
-import { MainRoutes } from '../../navigations/Routes';
+import { ContentRoutes, MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { useDialogState } from '../../contexts/DialogContext';
@@ -82,20 +82,25 @@ const MyPageScreen = () => {
                 borderBottomLeftRadius: 50,
                 borderBottomRightRadius: 50
             }}>
-                <View style={{
+                <Pressable
+                    onPress={() => navigation.navigate(RoomRoutes.IMAGE_CONTROL, { url: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` })}
+                    style={{
                     flexDirection: 'row',
                     width: '100%',
-                    marginTop: 36
+                    marginTop: 36,
+                    justifyContent:'center'
                 }}>
+                    {
+                        user.image ?
+                            <AvatarImage
+                                source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }}
+                                size={IMAGE_SIZE}
+                                style={styles.image} />
+                            : <AvatarText label={user.nickName.charAt(0)} Text size={100}
+                                          style={styles.image} />
+                    }
 
-                </View>
-                {
-                    user.image ?
-                        <AvatarImage source={{ uri: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` }} size={IMAGE_SIZE}
-                                     style={styles.image} />
-                        : <AvatarText label={user.nickName.charAt(0)} Text size={100}
-                                      style={styles.image} />
-                }
+                </Pressable>
 
                 <Text variant={'titleLarge'} style={{
                     color: PRIMARY.DEFAULT,
@@ -126,7 +131,7 @@ const MyPageScreen = () => {
                         정보 수정
                     </Button>
 
-                    <View style={{marginHorizontal:10}}   />
+                    <View style={{ marginHorizontal: 10 }} />
 
                     <Button
                         mode='outlined'
@@ -180,7 +185,7 @@ const MyPageScreen = () => {
                 </Pressable>
             </View>
 
-            <View style={{flex:1, justifyContent:'center'}}>
+            <View style={{ flex: 1, justifyContent: 'center' }}>
                 <Carousel
                     onProgressChange={(_, absoluteProgress) =>
                         (progressValue.value = absoluteProgress)

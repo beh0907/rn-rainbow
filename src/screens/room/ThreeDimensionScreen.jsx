@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { GLView } from 'expo-gl';
-import { loadAsync, Renderer, TextureLoader } from 'expo-three';
-import { AmbientLight, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
+import { loadAsync, Renderer } from 'expo-three';
+import { AmbientLight, FrontSide, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
 
-global.THREE = global.THREE || THREE; // 전역 객체로 설정
+// global.THREE = global.THREE || THREE; // 전역 객체로 설정
 
 const ThreeDimensionScreen = () => {
     const [, setDialog] = useDialogState();
@@ -33,11 +33,11 @@ const ThreeDimensionScreen = () => {
         mesh.traverse(async child => {
             if (child instanceof Mesh) {
                 child.material.flatShading = false;
-                child.material.side = THREE.FrontSide;
+                child.material.side = FrontSide;
 
                 /// Apply other maps - maybe this is supposed to be automatic :[
-                child.material.map = await loadAsync(resources['dif']);
-                child.material.bumpMap = await loadAsync(resources['bump']);
+                child.material.map = resources['dif'] && await loadAsync(resources['dif']);
+                child.material.bumpMap = resources['bump'] && await loadAsync(resources['bump']);
             }
         });
 
@@ -62,7 +62,7 @@ const ThreeDimensionScreen = () => {
         camera.position.set(0, 0, 100);
 
         const scene = new Scene();
-        scene.background = await loadAsync(require('../../../assets/background/bg_splash.png')); // 백그라운드 이미지 적용
+        // scene.background = await loadAsync(require('../../../assets/background/bg_splash.png')); // 백그라운드 이미지 적용
 
 
         const pointLight = new PointLight(0xffffff, 2, 1000, 1);
@@ -77,14 +77,14 @@ const ThreeDimensionScreen = () => {
         const ambientLight = new AmbientLight(0x404040); // soft white light
         scene.add(ambientLight);
 
-        const dog = {
+        const australianCattleDog = {
             // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
             // 'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
             'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj',
             'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'
         };
 
-        const dogResources = {
+        const australianCattleDogResources = {
             // 'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
             // 'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
             'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg',
@@ -94,20 +94,25 @@ const ThreeDimensionScreen = () => {
         // const model = await loadModel(dog, dogResources);
 
         const cat = {
-            // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
-            // 'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
             'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/obj/12221_Cat_v1_l3.obj',
             'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/mtl/12221_Cat_v1_l3.mtl'
         };
 
         const catResources = {
-            // 'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
-            // 'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
             'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_diffuse.jpg',
             'bump': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_bump.jpg'
         };
 
-        const model = await loadModel(cat, catResources);
+        const canaanDog = {
+            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/obj/13466_Canaan_Dog_v1_L3.obj',
+            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/mtl/13466_Canaan_Dog_v1_L3.mtl'
+        };
+
+        const canaanDogResources = {
+            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/texture/13466_Canaan_Dog_diff.jpg',
+        };
+
+        const model = await loadModel(canaanDog, canaanDogResources);
         modelRef.current = model;
         scene.add(model);
 
@@ -254,7 +259,7 @@ const ThreeDimensionScreen = () => {
             onMoveShouldSetResponder={onMoveShouldSetResponder}
             onTouchEnd={onTouchEnd}
             ref={glViewRef}
-            style={{ flex: 1}}
+            style={{ flex: 1 }}
             onContextCreate={onContextCreate}
             key={'d'}
         />

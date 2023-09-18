@@ -11,7 +11,7 @@ const ImageControlScreen = () => {
     return (
         <ImageZoom
             maxScale={3}
-            minScale={0.6}
+            minScale={0.8}
             useNativeDriver
             cropWidth={width}
             cropHeight={height}
