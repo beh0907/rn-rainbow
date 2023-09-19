@@ -6,8 +6,6 @@ import { Image } from 'expo-image';
 import { PRIMARY } from '../../Colors';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
-import GallerySwiperItem from '../../components/item/GallerySwiperItem';
-import GallerySwiperItem2 from '../../components/item/GallerySwiperItem2';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 const THUMB_SIZE = 80;
@@ -58,9 +56,14 @@ const GallerySwiperScreen = () => {
                 onMomentumScrollEnd={event => {
                     scrollToActivityIndex(Math.round(event.nativeEvent.contentOffset.x / width));
                 }}
-                renderItem={({ item, index }) => {
+                renderItem={({ item }) => {
                     return (
-                        <GallerySwiperItem item={item} setScrollEnable={setScrollEnable} />
+                        <Image
+                            recyclingKey={item.seq.toString()}
+                            source={{ uri: `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}` }}
+                            contentFit='contain'
+                            style={[{ width, height }]}
+                        />
                     );
                 }}
             />
@@ -69,10 +72,10 @@ const GallerySwiperScreen = () => {
                 <FlashList
                     disableHorizontalListHeightMeasurement
                     estimatedListSize={{ width, height: THUMB_SIZE }}
+                    estimatedItemSize={THUMB_SIZE + 10}
                     initialScrollIndex={position}
                     extraData={activityIndex}
                     ref={thumbRef}
-                    estimatedItemSize={THUMB_SIZE}
                     horizontal
                     showsHorizontalScrollIndicator={false}
                     data={galleries}
@@ -100,8 +103,8 @@ const GallerySwiperScreen = () => {
                 />
             </View>
         </View>
-    )
-}
+    );
+};
 
 GallerySwiperScreen.propTypes = {};
 

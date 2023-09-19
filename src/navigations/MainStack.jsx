@@ -44,7 +44,7 @@ const MainStack = () => {
 
                 {/*자가진단 결과 화면*/}
                 <Stack.Screen name={MainRoutes.SELF_ASSESSMENT_RESULT} component={SelfAssessmentResultScreen}
-                              options={{ title: '' }} />
+                              options={{ headerShown: false }} />
 
 
                 {/*이미지 조회 화면*/}

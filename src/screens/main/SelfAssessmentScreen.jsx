@@ -1,13 +1,12 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState } from 'react';
 import { Animated, BackHandler, StyleSheet, useWindowDimensions, View } from 'react-native';
-import { GRAY, PRIMARY, WHITE } from '../../Colors';
-import { IconButton, ProgressBar, RadioButton, Surface, Text } from 'react-native-paper';
+import { PRIMARY, WHITE } from '../../Colors';
+import { Banner, IconButton, ProgressBar, RadioButton, Text } from 'react-native-paper';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { FlashList } from '@shopify/flash-list';
 import SelfAssessmentItem from '../../components/item/SelfAssessmentItem';
 import { useUserState } from '../../contexts/UserContext';
 import { useFocusEffect, useNavigation } from '@react-navigation/native';
-import HeaderRight from '../../components/view/HeaderRight';
 import { MainRoutes } from '../../navigations/Routes';
 
 const SelfAssessmentScreen = () => {
@@ -65,10 +64,10 @@ const SelfAssessmentScreen = () => {
     const getResult = (list) => {
         navigation.navigate(MainRoutes.SELF_ASSESSMENT_RESULT, { list });
 
-        setProgress(0)
-        setSelectOption('')
-        setSelfAssementList([QUESTIONS[0]])
-        setVisibleOptions(true)
+        setProgress(0);
+        setSelectOption('');
+        setSelfAssementList([QUESTIONS[0]]);
+        setVisibleOptions(true);
     };
 
     const toggleOptions = () => {
@@ -171,23 +170,45 @@ const SelfAssessmentScreen = () => {
             </View>
 
             <Animated.View>
+                <Banner
+                    visible={visibleOptions}
+                    contentStyle={{ backgroundColor: WHITE }}
+                >
+                    {/*<Surface style={{ backgroundColor: WHITE }} elevation={5} collapsable={true}>*/}
+                    <View style={{ backgroundColor: WHITE, width: width - 32 }}>
 
-                {
-                    visibleOptions &&
-                    <Surface style={{ backgroundColor: WHITE }} elevation={5} collapsable={true}>
                         <RadioButton.Group
                             onValueChange={value => onPressAnswer(progress, value)}
                             value={selectOption}>
                             <RadioButton.Item labelVariant={'bodyMedium'} label='1. 매우 그렇다.' value='1'
                                               mode={'ios'} />
-                            <RadioButton.Item labelVariant={'bodyMedium'} label='2. 그렇다.' value='2' mode={'ios'} />
+                            <RadioButton.Item labelVariant={'bodyMedium'} label='2. 그렇다.' value='2'
+                                              mode={'ios'} />
                             <RadioButton.Item labelVariant={'bodyMedium'} label='3. 그렇지 않다' value='3'
                                               mode={'ios'} />
                             <RadioButton.Item labelVariant={'bodyMedium'} label='4. 매우 그렇지 않다' value='4'
                                               mode={'ios'} />
                         </RadioButton.Group>
-                    </Surface>
-                }
+                    </View>
+                    {/*</Surface>*/}
+                </Banner>
+
+                {/*{*/}
+                {/*    visibleOptions &&*/}
+                {/*    <Surface style={{ backgroundColor: WHITE }} elevation={5} collapsable={true}>*/}
+                {/*        <RadioButton.Group*/}
+                {/*            onValueChange={value => onPressAnswer(progress, value)}*/}
+                {/*            value={selectOption}>*/}
+                {/*            <RadioButton.Item labelVariant={'bodyMedium'} label='1. 매우 그렇다.' value='1'*/}
+                {/*                              mode={'ios'} />*/}
+                {/*            <RadioButton.Item labelVariant={'bodyMedium'} label='2. 그렇다.' value='2' mode={'ios'} />*/}
+                {/*            <RadioButton.Item labelVariant={'bodyMedium'} label='3. 그렇지 않다' value='3'*/}
+                {/*                              mode={'ios'} />*/}
+                {/*            <RadioButton.Item labelVariant={'bodyMedium'} label='4. 매우 그렇지 않다' value='4'*/}
+                {/*                              mode={'ios'} />*/}
+                {/*        </RadioButton.Group>*/}
+                {/*    </Surface>*/}
+                {/*}*/}
 
 
                 <IconButton style={{

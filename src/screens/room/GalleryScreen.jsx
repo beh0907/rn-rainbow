@@ -13,6 +13,9 @@ import { PRIMARY, WHITE } from '../../Colors';
 import { Tabs, useFocusedTab, useHeaderMeasurements } from 'react-native-collapsible-tab-view';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const GalleryScreen = () => {
     const MAX_SELECT = 20; // 이미지 추가 시 최대 선택
@@ -248,10 +251,13 @@ const GalleryScreen = () => {
                     keyExtractor={(_, index) => index.toString()}
                     numColumns={3}
                     showsVerticalScrollIndicator={false}
-                    renderItem={({ item, index }) => <GalleryItem item={item}
-                                                                  onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
-                                                                  isSelected={isSelectedGallery(item)}
-                                                                  isDeleteMode={isDeleteMode} />}
+                    renderItem={({ item, index }) =>
+                        <GalleryItem
+                            imageUrl={`${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`}
+                            size={width / 3 - 13}
+                            onPress={isDeleteMode ? () => onToggleImage(item) : () => onPressImage(index)}
+                            isSelected={isSelectedGallery(item)}
+                            isDeleteMode={isDeleteMode} />}
                     onEndReachedThreshold={0.9}
                     onEndReached={() => fetchNextPage(false)}
                     refreshing={refetching}

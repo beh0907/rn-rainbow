@@ -1,31 +1,23 @@
 import React, { memo, useRef } from 'react';
-import PropTypes from 'prop-types';
-import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
+import { Pressable, StyleSheet, View } from 'react-native';
 import { PRIMARY, WHITE } from '../../Colors';
 import BouncyCheckbox from 'react-native-bouncy-checkbox';
-import AutoHeightImage from 'react-native-auto-height-image';
-import Constants from 'expo-constants';
 import { Image } from 'expo-image';
 
-const { BASE_URL_FILE } = Constants.expoConfig.extra;
-
-const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
-    const { width } = useWindowDimensions();
-
-    const imageUrl = `${BASE_URL_FILE}${item.id}/${item.roomNum}/gallery/${item.name}`;
-    const IMAGE_WIDTH = width / 3 - 14;
-
-    const checkBoxRef = useRef(null);
-
+const GalleryItem = memo(({ imageUrl, size, onPress, isDeleteMode, isSelected }) => {
     return (
         <Pressable onPress={onPress} style={({ pressed }) => [styles.container, { opacity: pressed ? 0.5 : 1 }]}>
             {/*<AutoHeightImage style={styles.image} width={IMAGE_WIDTH}*/}
             {/*                 source={{ uri: imageUrl }} />*/}
 
 
-            <Image style={[styles.image, { height: IMAGE_WIDTH }]}
-                   source={imageUrl}
-                   contentFit={'cover'} />
+            {/*<Image style={[styles.image, { width: IMAGE_WIDTH, height: IMAGE_WIDTH }]}*/}
+            {/*       source={imageUrl}*/}
+            {/*       contentFit={'cover'} />*/}
+            <Image style={[styles.image, { width: size, height: size }]}
+                   source={{ uri: imageUrl }}
+                   contentFit={'cover'}
+                   sharedTransitionTag={imageUrl} />
 
 
             {isDeleteMode &&
@@ -35,7 +27,6 @@ const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
                         onPress={onPress}
                         disableText
                         disableBuiltInState
-                        ref={checkBoxRef}
                         style={{ position: 'absolute', top: 10, left: 10 }}
                         isChecked={isSelected}
                         size={20}
@@ -49,16 +40,11 @@ const GalleryItem = memo(({ item, onPress, isDeleteMode, isSelected }) => {
     );
 });
 
-GalleryItem.propTypes = {
-    item: PropTypes.object.isRequired,
-    onPress: PropTypes.func
-};
-
 const styles = StyleSheet.create({
     container: {
         margin: 5,
-        backgroundColor: WHITE,
-        flex: 1
+        backgroundColor: WHITE
+        // flex: 1
     },
     image: {
         borderRadius: 12

@@ -36,5 +36,5 @@ export const calculateTimeDifference = (dateTime) => {
     const minuteDiff = currentDateTime.getMinutes() - targetDateTime.getMinutes();
     if (minuteDiff > 0) return minuteDiff + '분 전';
 
-    return '방금';
+    return '방금'; // 1분 미만 차이일 경우 방금으로 표기한다
 };
