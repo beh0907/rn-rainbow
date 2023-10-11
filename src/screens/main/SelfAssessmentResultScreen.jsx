@@ -1,7 +1,7 @@
 import React, { useLayoutEffect, useState } from 'react';
 import { ScrollView, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Text } from 'react-native-paper';
+import { List, Text } from 'react-native-paper';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
 import { Image } from 'expo-image';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -92,7 +92,7 @@ const SelfAssessmentResultScreen = () => {
     return (
         <View style={{ backgroundColor: WHITE, paddingTop: top, paddingBottom: bottom, flex: 1 }}>
 
-            <ScrollView contentContainerStyle={{ paddingBottom: 64, paddingHorizontal:16 }}>
+            <ScrollView contentContainerStyle={{ paddingBottom: 64, paddingHorizontal: 16 }}>
 
                 <View>
                     <Image style={{ height: 200 }} source={require('../../../assets/background/bg_mark.png')}
@@ -108,11 +108,9 @@ const SelfAssessmentResultScreen = () => {
                     {/*<Text variant={'titleLarge'}>최종 점수 : </Text>*/}
                     {/*<Text variant={'titleLarge'}>{score.totalScore} / {MAX_SCORE}</Text>*/}
 
-                    <Text  variant={'bodyLarge'}>{result}</Text>
+                    <Text variant={'bodyLarge'}>{result}</Text>
 
                 </View>
-
-
 
                 {/*정보*/}
                 <View style={{ flexDirection: 'row' }}>
@@ -137,34 +135,50 @@ const SelfAssessmentResultScreen = () => {
                     </View>
                 </View>
 
-                <View>
-                    <View style={styles.text}>
-                        <Text variant={'titleLarge'}>1. 감정 표현하기</Text>
-                        <Text style={styles.text} variant={'bodyMedium'}>눈물은 펫로스에 따른 감정 표현의 일부입니다. 하염없이 울고 있는 것은 좋지 않지만
-                            눈물을 억지로 참는다든가 고통스러운 감정을 억누르는 것은 오히려 스트레스를 유발하여 펫로스를 극복하는 데 장애가 됩니다. 울고싶을 때에는 울어서 감정을 표출하도록
-                            하십시오.</Text>
-                    </View>
+                <List.AccordionGroup>
 
-                    <View style={styles.text}>
-                        <Text variant={'titleLarge'}>2. 편안한 사람과 대화하기</Text>
-                        <Text style={styles.text} variant={'bodyMedium'}>펫로스는 받아들이기 어려운 일일 수 있습니다. 그러므로 펫로스의 경험이 있는
-                            사람들이나 사별한 자기의 반려동물과 친했던 가족 또는 친구들과 추억담을 나누는 것이 펫로스 극복 과정을 단축시키는 하나의 방법이 됩니다.</Text>
-                    </View>
+                    <List.Accordion title='펫로스 증후군이란?' id='1'>
+                        <List.Item title='Item 2' />
+                    </List.Accordion>
+                    <List.Accordion title='펫로스 증후군 극복하기' id='2'>
+                        <View>
+                            <View style={styles.text}>
+                                <Text variant={'titleLarge'}>1. 감정 표현하기</Text>
+                                <Text style={styles.text} variant={'bodyMedium'}>눈물은 펫로스에 따른 감정 표현의 일부입니다. 하염없이 울고 있는 것은
+                                    좋지 않지만
+                                    눈물을 억지로 참는다든가 고통스러운 감정을 억누르는 것은 오히려 스트레스를 유발하여 펫로스를 극복하는 데 장애가 됩니다. 울고싶을 때에는 울어서 감정을
+                                    표출하도록
+                                    하십시오.</Text>
+                            </View>
 
-                    <View style={styles.text}>
-                        <Text variant={'titleLarge'}>3. 좋아하는 일에 몰두하기</Text>
-                        <Text style={styles.text} variant={'bodyMedium'}>무언가 다른 일에 몰두하는 것도 고통스러운 생각으로부터 벗어나는 하나의 해결책입니다.
-                            그렇게 하는 것이 펫로스를 극복하는 아주 좋은 방법입니다. 보다 많은 시간을 들여 좋아하는 일에 몰두해 보십시오.</Text>
-                    </View>
+                            <View style={styles.text}>
+                                <Text variant={'titleLarge'}>2. 편안한 사람과 대화하기</Text>
+                                <Text style={styles.text} variant={'bodyMedium'}>펫로스는 받아들이기 어려운 일일 수 있습니다. 그러므로 펫로스의 경험이
+                                    있는
+                                    사람들이나 사별한 자기의 반려동물과 친했던 가족 또는 친구들과 추억담을 나누는 것이 펫로스 극복 과정을 단축시키는 하나의 방법이 됩니다.</Text>
+                            </View>
 
-                    <View style={styles.text}>
-                        <Text variant={'titleLarge'}>4. 장례를 치르고 작별하기</Text>
-                        <Text style={styles.text} variant={'bodyMedium'}>반려동물의 죽음은 크나큰 고통을 안겨 주지만 적절한 뒷수습은 펫로스를 극복하는 데
-                            도움이 될 수 있습니다. 펫로스를 극복하는 한 가지 방법으로 비용이 더 많이 들긴 합니다만 죽은 사람의 경우처럼 슬픔 케어의 일부로서 반려동물 장례를 치러 주는 것을
-                            들 수 있습니다. 이렇게 하면 사랑하는 개나 고양이의 죽음을 받아들이고 펫로스에 따른 여러 가지 증후의 발현을 예방하는 데 도움이 될 것입니다.</Text>
-                    </View>
-                </View>
+                            <View style={styles.text}>
+                                <Text variant={'titleLarge'}>3. 좋아하는 일에 몰두하기</Text>
+                                <Text style={styles.text} variant={'bodyMedium'}>무언가 다른 일에 몰두하는 것도 고통스러운 생각으로부터 벗어나는 하나의
+                                    해결책입니다.
+                                    그렇게 하는 것이 펫로스를 극복하는 아주 좋은 방법입니다. 보다 많은 시간을 들여 좋아하는 일에 몰두해 보십시오.</Text>
+                            </View>
+
+                            <View style={styles.text}>
+                                <Text variant={'titleLarge'}>4. 장례를 치르고 작별하기</Text>
+                                <Text style={styles.text} variant={'bodyMedium'}>반려동물의 죽음은 크나큰 고통을 안겨 주지만 적절한 뒷수습은 펫로스를
+                                    극복하는 데
+                                    도움이 될 수 있습니다. 펫로스를 극복하는 한 가지 방법으로 비용이 더 많이 들긴 합니다만 죽은 사람의 경우처럼 슬픔 케어의 일부로서 반려동물 장례를
+                                    치러 주는 것을
+                                    들 수 있습니다. 이렇게 하면 사랑하는 개나 고양이의 죽음을 받아들이고 펫로스에 따른 여러 가지 증후의 발현을 예방하는 데 도움이 될
+                                    것입니다.</Text>
+                            </View>
+                        </View>
+                    </List.Accordion>
+                </List.AccordionGroup>
             </ScrollView>
+
 
             <Button title='확인'
                     onPress={() => navigation.goBack()}

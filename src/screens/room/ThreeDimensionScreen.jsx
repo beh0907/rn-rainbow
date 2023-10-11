@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useRef } from 'react';
 import { GLView } from 'expo-gl';
-import { loadAsync, Renderer } from 'expo-three';
+import { loadAsync, Renderer, THREE } from 'expo-three';
 import { AmbientLight, FrontSide, HemisphereLight, Mesh, PerspectiveCamera, PointLight, Scene } from 'three';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
-
-// global.THREE = global.THREE || THREE; // 전역 객체로 설정
+import { Alert } from 'react-native';
 
 const ThreeDimensionScreen = () => {
     const [, setDialog] = useDialogState();
@@ -20,7 +19,10 @@ const ThreeDimensionScreen = () => {
     const previousX2Ref = useRef(0);
     const previousY2Ref = useRef(0);
 
+    let aaa = 0;
+
     const loadModel = async (model, resources) => {
+
         const mesh = await loadAsync(
             [
                 model['obj'],
@@ -29,15 +31,18 @@ const ThreeDimensionScreen = () => {
             null,
             null
         );
+        aaa = 3.1
 
         mesh.traverse(async child => {
             if (child instanceof Mesh) {
+                aaa = 3.2
                 child.material.flatShading = false;
                 child.material.side = FrontSide;
 
                 /// Apply other maps - maybe this is supposed to be automatic :[
                 child.material.map = resources['dif'] && await loadAsync(resources['dif']);
                 child.material.bumpMap = resources['bump'] && await loadAsync(resources['bump']);
+                aaa = 3.3
             }
         });
 
@@ -51,6 +56,10 @@ const ThreeDimensionScreen = () => {
             mode: DIALOG_MODE.LOADING
         });
 
+        try {
+
+
+        aaa = 1;
         const { drawingBufferWidth: width, drawingBufferHeight: height } = gl;
 
         const renderer = new Renderer({ gl });
@@ -76,6 +85,8 @@ const ThreeDimensionScreen = () => {
         // AmbientLight - add more brightness?
         const ambientLight = new AmbientLight(0x404040); // soft white light
         scene.add(ambientLight);
+
+        aaa = 2;
 
         const australianCattleDog = {
             // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
@@ -109,12 +120,16 @@ const ThreeDimensionScreen = () => {
         };
 
         const canaanDogResources = {
-            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/texture/13466_Canaan_Dog_diff.jpg',
+            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/texture/13466_Canaan_Dog_diff.jpg'
         };
 
-        const model = await loadModel(canaanDog, canaanDogResources);
+        aaa = 3;
+
+        const model = await loadModel(australianCattleDog, australianCattleDogResources);
         modelRef.current = model;
         scene.add(model);
+
+        aaa = 4;
 
         // Setup an animation loop
         const render = () => {
@@ -124,8 +139,17 @@ const ThreeDimensionScreen = () => {
             gl.endFrameEXP();
         };
 
+        aaa = 5;
         render();
         setDialog({ visible: false });
+        aaa = 6;
+
+
+        } catch (e) {
+            Alert.alert("오류 발생", aaa)
+        } finally {
+
+        }
     };
 
     //터치 시작할 때 이벤트

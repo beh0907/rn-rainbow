@@ -180,6 +180,7 @@ const SignInScreen = () => {
                     {/*자동 로그인 체크박스*/}
                     <View style={{ width: '100%', alignItems: 'flex-start', left: 8 }}>
                         <BouncyCheckbox
+                            style={{justifyContent:'center'}}
                             size={20}
                             fillColor={PRIMARY.DEFAULT}
                             unfillColor='#FFFFFF'

@@ -83,7 +83,9 @@ const styles = StyleSheet.create({
         bottom: 0,
         left: 0,
         right: 0,
-        backgroundColor: 'rgba(0, 0, 0, 0.2)'
+        backgroundColor: 'rgba(0, 0, 0, 0.2)',
+        margin: 8,
+        borderRadius: 16
     },
     overlayViews: {
         position: 'absolute',
