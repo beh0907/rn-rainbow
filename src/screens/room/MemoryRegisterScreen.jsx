@@ -1,6 +1,6 @@
-import React, { useLayoutEffect, useRef, useState } from 'react';
+import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { Divider, TextInput } from 'react-native-paper';
+import { TextInput } from 'react-native-paper';
 import { GRAY, PRIMARY } from '../../Colors';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
@@ -8,6 +8,9 @@ import { ReturnKeyTypes } from '../../components/view/Input';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import HeaderRight from '../../components/view/HeaderRight';
 import * as Memory from '../../api/Memory';
+import { DIALOG_MODE } from '../../components/message/CustomDialog';
+import { useDialogState } from '../../contexts/DialogContext';
+import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 
 
 const MemoryRegisterScreen = ({ route }) => {
@@ -20,15 +23,24 @@ const MemoryRegisterScreen = ({ route }) => {
     const video = useRef(null);
 
     const [comment, setComment] = useState('');
+    const [, setDialog] = useDialogState();
+
+    console.log(params);
 
     useLayoutEffect(() => {
         navigation.setOptions({
-            headerRight: () => <HeaderRight disabled={comment.length > 0} onPress={registerMemory} name={'check'}
+            headerRight: () => <HeaderRight disabled={!(comment.length > 0)} onPress={registerMemory} name={'check'}
                                             color={comment.length > 0 ? PRIMARY.DEFAULT : GRAY.DEFAULT} />
         });
     }, [navigation, comment]);
 
-    const registerMemory = async () => {
+    const registerMemory = useCallback(async () => {
+        setDialog({
+            message: '동영상을 업로드 하고 있습니다.....',
+            visible: true,
+            mode: DIALOG_MODE.LOADING
+        });
+
         const { uri: imageUri } = await VideoThumbnails.getThumbnailAsync(
             uri, {
                 time: 0 // 썸네일을 얻고자 하는 시간 (0은 처음)
@@ -44,9 +56,13 @@ const MemoryRegisterScreen = ({ route }) => {
 
         await Memory.registerVideo(memory, uri, imageUri);
 
+        setDialog({
+            visible: false
+        });
+
         // navigation.goBack({memory:memory })
         navigation.goBack();
-    };
+    }, [navigation, setDialog, Memory, VideoThumbnails, uri]);
 
     return (
         <View style={styles.container}>
@@ -104,7 +120,7 @@ const styles = StyleSheet.create({
         width: '100%',
         flex: 1
         // borderRadius: 20
-    },
+    }
 
 });
 

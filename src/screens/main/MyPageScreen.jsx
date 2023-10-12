@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Pressable, StyleSheet, useWindowDimensions, View } from 'react-native';
 import { useUserState } from '../../contexts/UserContext';
 import { GRAY, PRIMARY, WHITE } from '../../Colors';
-import { Button, Text } from 'react-native-paper';
+import { Button, IconButton, Text } from 'react-native-paper';
 import * as SecureStore from '../../utils/PreferenceStore';
 import { STORE_SETTING_KEYS } from '../../utils/PreferenceStore';
 import { useNavigation } from '@react-navigation/native';
-import { ContentRoutes, MainRoutes, RoomRoutes } from '../../navigations/Routes';
+import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { readBookmarkRoomList, readMyRoomList } from '../../api/Room';
 import AvatarText from 'react-native-paper/src/components/Avatar/AvatarText';
 import { useDialogState } from '../../contexts/DialogContext';
@@ -45,13 +45,16 @@ const MyPageScreen = () => {
 
     useEffect(() => {
         (async () => {
-            const favorites = await SecureStore.getListFor(STORE_SETTING_KEYS.FAVORITE_ROOMS);
-
-            setMyRooms(await readMyRoomList(user.id));
-            setFavoriteRooms(await readBookmarkRoomList(favorites));
-
+            await refreshList();
         })();
     }, []);
+
+    const refreshList = async () => {
+        const favorites = await SecureStore.getListFor(STORE_SETTING_KEYS.FAVORITE_ROOMS);
+
+        setMyRooms(await readMyRoomList(user.id));
+        setFavoriteRooms(await readBookmarkRoomList(favorites));
+    };
 
 
     const onSignOut = () => {
@@ -67,7 +70,6 @@ const MyPageScreen = () => {
             mode: DIALOG_MODE.CONFIRM
         });
     };
-
 
     return (
         <View style={{
@@ -85,11 +87,11 @@ const MyPageScreen = () => {
                 <Pressable
                     onPress={() => navigation.navigate(RoomRoutes.IMAGE_CONTROL, { url: `${BASE_URL_FILE}${user.id}/${user.image}?version=${user.updateDate}` })}
                     style={{
-                    flexDirection: 'row',
-                    width: '100%',
-                    marginTop: 36,
-                    justifyContent:'center'
-                }}>
+                        flexDirection: 'row',
+                        width: '100%',
+                        marginTop: 36,
+                        justifyContent: 'center'
+                    }}>
                     {
                         user.image ?
                             <AvatarImage
@@ -148,41 +150,48 @@ const MyPageScreen = () => {
 
             <View style={{
                 flexDirection: 'row',
-                paddingHorizontal: 40,
-                paddingTop: 20
+                paddingHorizontal: 30,
+                paddingTop: 20,
+                justifyContent: 'space-between'
             }}>
+                <View style={{
+                    flexDirection: 'row'
+                }}>
+                    <Pressable
+                        onPress={() => setMyRoomSelected(true)}
+                        style={({ pressed }) => [{
+                            borderBottomColor: myRoomSelected ? WHITE : PRIMARY.DEFAULT,
+                            borderBottomWidth: 4,
+                            paddingVertical: 6
+                        },
+                            { opacity: pressed ? 0.5 : 1 }]}
+                    >
+                        <Text style={{
+                            fontWeight: 'bold',
+                            color: myRoomSelected ? WHITE : GRAY.LIGHT
+                        }}>나의 추모관</Text>
+                    </Pressable>
 
-                <Pressable
-                    onPress={() => setMyRoomSelected(true)}
-                    style={({ pressed }) => [{
-                        borderBottomColor: myRoomSelected ? WHITE : PRIMARY.DEFAULT,
-                        borderBottomWidth: 4,
-                        paddingVertical: 6
-                    },
-                        { opacity: pressed ? 0.5 : 1 }]}
-                >
-                    <Text style={{
-                        fontWeight: 'bold',
-                        color: myRoomSelected ? WHITE : GRAY.LIGHT
-                    }}>나의 추모관</Text>
-                </Pressable>
 
+                    <Pressable
+                        onPress={() => setMyRoomSelected(false)}
+                        style={({ pressed }) => [{
+                            borderBottomColor: myRoomSelected ? PRIMARY.DEFAULT : WHITE,
+                            borderBottomWidth: 4,
+                            paddingVertical: 6,
+                            marginLeft: 30
+                        },
+                            { opacity: pressed ? 0.5 : 1 }]}
+                    >
+                        <Text style={{
+                            fontWeight: 'bold',
+                            color: myRoomSelected ? GRAY.LIGHT : WHITE
+                        }}>즐겨찾는 추모관</Text>
+                    </Pressable>
+                </View>
 
-                <Pressable
-                    onPress={() => setMyRoomSelected(false)}
-                    style={({ pressed }) => [{
-                        borderBottomColor: myRoomSelected ? PRIMARY.DEFAULT : WHITE,
-                        borderBottomWidth: 4,
-                        paddingVertical: 6,
-                        marginLeft: 30
-                    },
-                        { opacity: pressed ? 0.5 : 1 }]}
-                >
-                    <Text style={{
-                        fontWeight: 'bold',
-                        color: myRoomSelected ? GRAY.LIGHT : WHITE
-                    }}>즐겨찾는 추모관</Text>
-                </Pressable>
+                <IconButton icon={'refresh'} iconColor={PRIMARY.DEFAULT} containerColor={WHITE} animated={true}
+                            size={12} onPress={refreshList} />
             </View>
 
             <View style={{ flex: 1, justifyContent: 'center' }}>

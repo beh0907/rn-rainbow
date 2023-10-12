@@ -17,6 +17,7 @@ import Constants from 'expo-constants';
 import { useRoomState } from '../../contexts/RoomContext';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
 import { Image } from 'expo-image';
+import { useSnackBarState } from '../../contexts/SnackBarContext';
 
 const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
@@ -30,6 +31,9 @@ const RoomUpdateScreen = () => {
     //추모관 설정 정보
     const [user] = useUserState();
     const [, setRoom] = useRoomState();
+
+    //하단 스낵바 알림 메시지
+    const [, setSnackbar] = useSnackBarState();
 
     const [image, setImage] = useState(null);
     const [updateRoom, setUpdateRoom] = useState(useRoute().params.room);
@@ -45,8 +49,14 @@ const RoomUpdateScreen = () => {
     const [date, setDate] = useState(new Date(updateRoom.date));
     const [show, setShow] = useState(false);
 
+    //갤러리 권한
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+
     /**이미지를 선택 */
     const pickImage = async () => {
+        const { canAskAgain, granted, expires, status } = await requestMediaPermission();
+
+        if (granted) {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
@@ -58,6 +68,13 @@ const RoomUpdateScreen = () => {
 
         if (result.assets) {
             setImage(result.assets[0].uri);
+        }
+        } else {
+            //상태에 따른 스낵바를 출력
+            setSnackbar({
+                message: '어플리케이션 설정 화면에서 사진 및 동영상 접근 권한을 허용해 주세요.',
+                visible: true
+            });
         }
     };
 

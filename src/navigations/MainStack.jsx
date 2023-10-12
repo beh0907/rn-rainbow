@@ -49,7 +49,9 @@ const MainStack = () => {
 
                 {/*이미지 조회 화면*/}
                 <Stack.Screen name={RoomRoutes.IMAGE_CONTROL} component={ImageControlScreen}
-                              options={{ title: '', animation: 'slide_from_bottom' }} />
+                              options={{
+                                  title: '', animation: 'slide_from_bottom',
+                              }} />
 
                 {/*추모관 내 갤러리 목록 스위퍼 화면*/}
                 <Stack.Screen name={RoomRoutes.GALLERY_SWIPER} component={GallerySwiperScreen}

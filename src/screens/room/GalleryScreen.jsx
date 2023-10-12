@@ -45,6 +45,9 @@ const GalleryScreen = () => {
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
+    //갤러리 권한
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+
     const focusedTab = useFocusedTab();
     const { top, height: headerHeight } = useHeaderMeasurements();
 
@@ -157,30 +160,39 @@ const GalleryScreen = () => {
 
     //이미지를 가져와 저장한다
     const pickImage = async () => {
-        // No permissions request is necessary for launching the image library
-        const result = await ImagePicker.launchImageLibraryAsync({
-            allowsMultipleSelection: true,
-            mediaTypes: ImagePicker.MediaTypeOptions.Images,
-            quality: 1
-        });
+        const { canAskAgain, granted, expires, status } = await requestMediaPermission();
 
-        //선택된 이미지가 있다면
-        if (result.assets) {
-            setDialog({
-                message: '이미지를 추가하고 있습니다.....',
-                visible: true,
-                mode: DIALOG_MODE.LOADING
+        if (granted) {
+            // No permissions request is necessary for launching the image library
+            const result = await ImagePicker.launchImageLibraryAsync({
+                allowsMultipleSelection: true,
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                quality: 1
             });
 
-            //선택된 이미지들을 서버로 전송한다
-            await Gallery.registerGallery(room, result.assets);
+            //선택된 이미지가 있다면
+            if (result.assets) {
+                setDialog({
+                    message: '이미지를 추가하고 있습니다.....',
+                    visible: true,
+                    mode: DIALOG_MODE.LOADING
+                });
 
-            //완료되었다면 리스트를 다시 가져온다
-            await refetch();
+                //선택된 이미지들을 서버로 전송한다
+                await Gallery.registerGallery(room, result.assets);
 
+                //완료되었다면 리스트를 다시 가져온다
+                await refetch();
 
-            setDialog({
-                visible: false
+                setDialog({
+                    visible: false
+                });
+            }
+        } else {
+            //상태에 따른 스낵바를 출력
+            setSnackbar({
+                message: '어플리케이션 설정 화면에서 사진 및 동영상 접근 권한을 허용해 주세요.',
+                visible: true
             });
         }
     };

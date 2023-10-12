@@ -15,6 +15,7 @@ import { MainRoutes } from '../../navigations/Routes';
 import { useNavigation } from '@react-navigation/native';
 import { useUserState } from '../../contexts/UserContext';
 import AvatarImage from 'react-native-paper/src/components/Avatar/AvatarImage';
+import { useSnackBarState } from '../../contexts/SnackBarContext';
 
 const RoomRegisterScreen = () => {
     const navigation = useNavigation();
@@ -38,6 +39,9 @@ const RoomRegisterScreen = () => {
         // code: ''
     });
 
+    //하단 스낵바 알림 메시지
+    const [, setSnackbar] = useSnackBarState();
+
     // 설정 정보 REF
     const nameRef = useRef(null);
     const contentRef = useRef(null);
@@ -49,8 +53,14 @@ const RoomRegisterScreen = () => {
     const [date, setDate] = useState(new Date());
     const [show, setShow] = useState(false);
 
+    //갤러리 권한
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+
     /**이미지를 선택 */
     const pickImage = useCallback(async () => {
+        const { canAskAgain, granted, expires, status } = await requestMediaPermission();
+
+        if (granted) {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
@@ -62,6 +72,13 @@ const RoomRegisterScreen = () => {
 
         if (result.assets) {
             setImage(result.assets[0].uri);
+        }
+        } else {
+            //상태에 따른 스낵바를 출력
+            setSnackbar({
+                message: '어플리케이션 설정 화면에서 사진 및 동영상 접근 권한을 허용해 주세요.',
+                visible: true
+            });
         }
     }, []);
 

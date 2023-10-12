@@ -43,8 +43,13 @@ const ProfileUpdateScreen = props => {
     const mailRef = useRef();
     const phoneRef = useRef();
 
+    //갤러리 권한
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
 
     const pickImage = useCallback(async () => {
+        const { canAskAgain, granted, expires, status } = await requestMediaPermission();
+
+        if (granted) {
         // No permissions request is necessary for launching the image library
         const result = await ImagePicker.launchImageLibraryAsync({
             // allowsMultipleSelection:true,
@@ -56,6 +61,13 @@ const ProfileUpdateScreen = props => {
 
         if (result.assets) {
             setImage(result.assets[0].uri);
+        }
+        } else {
+            //상태에 따른 스낵바를 출력
+            setSnackbar({
+                message: '어플리케이션 설정 화면에서 사진 및 동영상 접근 권한을 허용해 주세요.',
+                visible: true
+            });
         }
     }, []);
 

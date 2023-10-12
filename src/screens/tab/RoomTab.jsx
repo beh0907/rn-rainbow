@@ -9,7 +9,7 @@ import HeaderRight from '../../components/view/HeaderRight';
 import { useUserState } from '../../contexts/UserContext';
 import { useSnackBarState } from '../../contexts/SnackBarContext';
 import * as PreferenceStore from '../../utils/PreferenceStore';
-import { MaterialTabBar, Tabs, useAnimatedTabIndex } from 'react-native-collapsible-tab-view';
+import { MaterialTabBar, Tabs } from 'react-native-collapsible-tab-view';
 import GalleryScreen from '../room/GalleryScreen';
 import MemoryScreen from '../room/MemoryScreen';
 import CommentScreen from '../room/CommentScreen';
@@ -39,7 +39,7 @@ const RoomTab = () => {
     //북마크 여부 체크
     const [isBookMark, setIsBookMark] = useState(false);
 
-    const [currentIndex, setCurrentIndex] = useState(0)
+    const [currentIndex, setCurrentIndex] = useState(0);
 
     useLayoutEffect(() => {
         (async () => {
@@ -72,6 +72,10 @@ const RoomTab = () => {
 
     useLayoutEffect(() => {
         (async () => {
+
+            console.log('user.id : ', user.id);
+            console.log('room.id : ', room.id);
+
             /**탭 네비게이션 설정*/
             navigation.setOptions({
                 headerTitle: 'Room No.' + String(roomNum).padStart(4, '0'),
@@ -81,13 +85,13 @@ const RoomTab = () => {
                     return (
                         user.id === room.id
                             ? // 내가 개설한 추모관이라면 방 설정
-                            <HeaderRight name={'cog'} onPress={() => {
+                            <HeaderRight disabled={false} name={'cog'} onPress={() => {
                                 navigation.navigate(MainRoutes.ROOM_UPDATE, {
                                     room
                                 });
                             }} />
                             : // 아니라면 즐겨찾기
-                            <HeaderRight color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
+                            <HeaderRight disabled={false} color={isBookMark ? PRIMARY.DEFAULT : GRAY.DEFAULT}
                                          name={isBookMark ? 'star' : 'star-outline'} onPress={() => {
                                 setIsBookMark(prev => {
                                     const changeState = !prev;
@@ -104,7 +108,7 @@ const RoomTab = () => {
                 }
             });
         })();
-    }, [roomNum, isBookMark, user, room]);
+    }, [roomNum, isBookMark, user, room, setSnackbar, navigation, HeaderRight]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -133,22 +137,25 @@ const RoomTab = () => {
             >
                 <Tabs.Tab name={RoomRoutes.GALLERY}
                           label={(props) => {
-                              return <MaterialCommunityIcons name={currentIndex === 0 ? 'view-grid' : 'view-grid-outline'} size={24}
-                                                             color={PRIMARY.DEFAULT} />;
+                              return <MaterialCommunityIcons
+                                  name={currentIndex === 0 ? 'view-grid' : 'view-grid-outline'} size={24}
+                                  color={PRIMARY.DEFAULT} />;
                           }}>
                     <GalleryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.MEMORY}
                           label={(props) => {
-                              return <MaterialCommunityIcons name={currentIndex === 1 ? 'video' : 'video-outline'} size={24}
+                              return <MaterialCommunityIcons name={currentIndex === 1 ? 'video' : 'video-outline'}
+                                                             size={24}
                                                              color={PRIMARY.DEFAULT} />;
                           }}>
                     <MemoryScreen />
                 </Tabs.Tab>
                 <Tabs.Tab name={RoomRoutes.COMMENT}
                           label={(props) => {
-                              return <MaterialCommunityIcons name={currentIndex === 2 ? 'comment-text' : 'comment-text-outline'} size={24}
-                                                             color={PRIMARY.DEFAULT} />;
+                              return <MaterialCommunityIcons
+                                  name={currentIndex === 2 ? 'comment-text' : 'comment-text-outline'} size={24}
+                                  color={PRIMARY.DEFAULT} />;
                           }}>
                     <CommentScreen />
                 </Tabs.Tab>

@@ -25,7 +25,7 @@ const MemoryScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const navigation = useNavigation();
-    const {params} = useRoute()
+    const { params } = useRoute();
     const { width, height } = useWindowDimensions();
 
     //무한 스크롤 페이징 처리 관련 변수들
@@ -34,9 +34,12 @@ const MemoryScreen = () => {
     const isFetch = useRef(true);
     const pageRef = useRef(1);
 
+    //갤러리 권한
+    const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
+
     useEffect(() => {
         if (params?.memory) {
-            console.log("메모리가 도착했어요 : ", params?.memory)
+            console.log('메모리가 도착했어요 : ', params?.memory);
             // setMemories(prev => ([params?.memory, prev]))
         }
     }, [params?.memory]);
@@ -75,11 +78,11 @@ const MemoryScreen = () => {
 
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
             // if (list.length > 0) {
-                // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
-                if (isRefetch === true) setMemories(list);
-                else setMemories(prev => [...prev, ...list]);
+            // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
+            if (isRefetch === true) setMemories(list);
+            else setMemories(prev => [...prev, ...list]);
 
-                pageRef.current++;
+            pageRef.current++;
             // }
 
 
@@ -87,17 +90,27 @@ const MemoryScreen = () => {
     }, [isFetch.current, pageRef.current, amount, setMemories]);
 
     const pickVideo = useCallback(async () => {
-        // No permissions request is necessary for launching the image library
-        const result = await ImagePicker.launchImageLibraryAsync({
-            // allowsMultipleSelection:true,
-            mediaTypes: ImagePicker.MediaTypeOptions.Videos,
-            quality: 1
-        });
+        const { canAskAgain, granted, expires, status } = await requestMediaPermission();
 
-        if (result.assets) {
-            navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
-                uri: result.assets[0].uri,
-                room
+        if (granted) {
+            // No permissions request is necessary for launching the image library
+            const result = await ImagePicker.launchImageLibraryAsync({
+                // allowsMultipleSelection:true,
+                mediaTypes: ImagePicker.MediaTypeOptions.Videos,
+                quality: 1
+            });
+
+            if (result.assets) {
+                navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
+                    uri: result.assets[0].uri,
+                    room
+                });
+            }
+        } else {
+            //상태에 따른 스낵바를 출력
+            setSnackbar({
+                message: '어플리케이션 설정 화면에서 사진 및 동영상 접근 권한을 허용해 주세요.',
+                visible: true
             });
         }
     }, []);
@@ -158,9 +171,11 @@ const MemoryScreen = () => {
                     ListFooterComponent={refetching && <Text>목록을 불러오고 있습니다.</Text>}
                     ListFooterComponentStyle={styles.listFooter}
                     ListEmptyComponent={
-                        <View style={{justifyContent: 'center',
+                        <View style={{
+                            justifyContent: 'center',
                             alignItems: 'center',
-                            paddingTop: 0}}>
+                            paddingTop: 0
+                        }}>
                             <Text>등록된 추억이 없습니다</Text>
                         </View>
                     }
@@ -186,7 +201,6 @@ const MemoryScreen = () => {
                 //     ListFooterComponentStyle={styles.listFooter}
                 // />
             }
-
 
 
             {/*//추모관 개설자는 이미지를 추가하거나 삭제할 수 있다*/
