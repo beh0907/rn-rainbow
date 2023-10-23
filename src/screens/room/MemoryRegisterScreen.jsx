@@ -1,5 +1,5 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
 import { TextInput } from 'react-native-paper';
 import { GRAY, PRIMARY } from '../../Colors';
 import { StyleSheet, useWindowDimensions, View } from 'react-native';
@@ -11,6 +11,7 @@ import * as Memory from '../../api/Memory';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
 import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
+import { useMemoryState } from '../../contexts/MemoryContext';
 
 
 const MemoryRegisterScreen = ({ route }) => {
@@ -25,14 +26,17 @@ const MemoryRegisterScreen = ({ route }) => {
     const [comment, setComment] = useState('');
     const [, setDialog] = useDialogState();
 
-    console.log(params);
+    const [,setMemory] = useMemoryState()
+
 
     useLayoutEffect(() => {
         navigation.setOptions({
             headerRight: () => <HeaderRight disabled={!(comment.length > 0)} onPress={registerMemory} name={'check'}
                                             color={comment.length > 0 ? PRIMARY.DEFAULT : GRAY.DEFAULT} />
         });
+        console.log(comment)
     }, [navigation, comment]);
+
 
     const registerMemory = useCallback(async () => {
         setDialog({
@@ -50,7 +54,7 @@ const MemoryRegisterScreen = ({ route }) => {
         const memory = {
             id: room.id,
             roomNum: room.roomNum,
-            comment,
+            comment: comment,
             type: 2
         };
 
@@ -59,6 +63,8 @@ const MemoryRegisterScreen = ({ route }) => {
         setDialog({
             visible: false
         });
+
+        setMemory(memory)
 
         // navigation.goBack({memory:memory })
         navigation.goBack();

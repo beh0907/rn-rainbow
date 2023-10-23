@@ -3,7 +3,7 @@ import { ActivityIndicator, StyleSheet, Text, useWindowDimensions, View } from '
 import { IconButton } from 'react-native-paper';
 import { useRoomState } from '../../contexts/RoomContext';
 import { PRIMARY, WHITE } from '../../Colors';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import { useIsFocused, useNavigation, useRoute } from '@react-navigation/native';
 import * as ImagePicker from 'expo-image-picker';
 import { useUserState } from '../../contexts/UserContext';
 import { RoomRoutes } from '../../navigations/Routes';
@@ -13,6 +13,7 @@ import { useSnackBarState } from '../../contexts/SnackBarContext';
 import { useDialogState } from '../../contexts/DialogContext';
 import MemoryItem from '../../components/item/MemoryItem';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
+import { useMemoryState } from '../../contexts/MemoryContext';
 
 
 const MemoryScreen = () => {
@@ -25,7 +26,6 @@ const MemoryScreen = () => {
     const [isLoading, setIsLoading] = useState(true);
 
     const navigation = useNavigation();
-    const { params } = useRoute();
     const { width, height } = useWindowDimensions();
 
     //무한 스크롤 페이징 처리 관련 변수들
@@ -37,12 +37,18 @@ const MemoryScreen = () => {
     //갤러리 권한
     const [, requestMediaPermission] = ImagePicker.useMediaLibraryPermissions();
 
+    //영상이 추가되었을 때 목록에 추가하기 위해 객체 작성
+    const isFocused = useIsFocused();
+    const [memory, setMemory] = useMemoryState()
+
     useEffect(() => {
-        if (params?.memory) {
-            console.log('메모리가 도착했어요 : ', params?.memory);
-            // setMemories(prev => ([params?.memory, prev]))
+        // 영상 업로드가 완료 됐을 때 호출
+        if (isFocused && memory.hasOwnProperty('id')) {
+            setMemories([memory, ...memories])
+            setMemory({})
         }
-    }, [params?.memory]);
+
+    }, [isFocused]);
 
     useLayoutEffect(() => {
         (async () => {
@@ -121,11 +127,12 @@ const MemoryScreen = () => {
             message: '정말 추억의 영상을 삭제하시겠습니까?',
             onPress: async () => {
                 const result = await Memory.removeMemory(memory);
+                await refetch();
+
                 setSnackbar({
                     message: (result !== null ? '추억의 영상이 삭제되었습니다.' : '통신 오류로 인해 추억의 영상 삭제를 실패하였습니다.'),
                     visible: true
                 });
-                await refetch();
             },
             visible: true,
             mode: DIALOG_MODE.CONFIRM
