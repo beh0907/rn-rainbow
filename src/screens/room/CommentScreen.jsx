@@ -50,7 +50,7 @@ const CommentScreen = () => {
         await fetchNextPage(true);
 
         setRefetching(false);
-    }, []);
+    }, [fetchNextPage, setRefetching, pageRef, isFetch]);
 
     const fetchNextPage = useCallback(async (isRefetch) => {
 

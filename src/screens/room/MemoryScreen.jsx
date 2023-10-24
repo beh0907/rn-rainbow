@@ -14,6 +14,7 @@ import { useDialogState } from '../../contexts/DialogContext';
 import MemoryItem from '../../components/item/MemoryItem';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useMemoryState } from '../../contexts/MemoryContext';
+import { formatDateTime } from '../../utils/DateUtil';
 
 
 const MemoryScreen = () => {
@@ -66,12 +67,10 @@ const MemoryScreen = () => {
         await fetchNextPage(true);
 
         setRefetching(false);
-    }, []);
+    }, [fetchNextPage, setRefetching, pageRef, isFetch]);
 
 
     const fetchNextPage = useCallback(async (isRefetch) => {
-
-
         if (isFetch.current) {
             //페이지와 개수 정보를 파라미터로 입력한다
             // const list = await readCommentList(room.roomNum, { page: pageRef.current, amount, type: '' });
@@ -85,15 +84,21 @@ const MemoryScreen = () => {
             //새로 가져온 추모관이 하나라도 있다면 리스트에 추가한다
             // if (list.length > 0) {
             // 새로고침이라면 새로 추가하고 아니라면 배열을 합친다
-            if (isRefetch === true) setMemories(list);
-            else setMemories(prev => [...prev, ...list]);
+            if (isRefetch === true) {
+                setMemories(list);
+                console.log(`${formatDateTime(new Date())} reset`)
+            }
+            else {
+                setMemories(prev => [...prev, ...list]);
+                console.log(`${formatDateTime(new Date())} add`)
+            }
 
             pageRef.current++;
             // }
 
 
         }
-    }, [isFetch.current, pageRef.current, amount, setMemories]);
+    }, [isFetch, pageRef, amount, setMemories]);
 
     const pickVideo = useCallback(async () => {
         const { canAskAgain, granted, expires, status } = await requestMediaPermission();

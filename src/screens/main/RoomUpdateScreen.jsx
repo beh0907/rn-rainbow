@@ -80,7 +80,7 @@ const RoomUpdateScreen = () => {
 
     /**추모관 생성*/
     const onModify = async () => {
-        const paramRoom = { ...updateRoom, date: formatDate(date), updateDate: formatDateTime(new Date)};
+        const paramRoom = { ...updateRoom, date: formatDate(date), updateDate: formatDateTime(new Date())};
 
         const result = await Room.modifyRoom(paramRoom, image);
 

@@ -94,7 +94,7 @@ const GalleryScreen = () => {
         await fetchNextPage(true);
 
         setRefetching(false);
-    }, []);
+    }, [fetchNextPage, setRefetching, pageRef, isFetch]);
 
     //무한 스크롤 페이징 처리를 하거나 첫 페이지부터 갱신된 정보를 불러 저장한다
     const fetchNextPage = useCallback(async (isRefetch) => {

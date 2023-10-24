@@ -51,12 +51,16 @@ const MemoryRegisterScreen = ({ route }) => {
             }
         );
 
+        console.log("등록 comment : ", comment)
+
         const memory = {
             id: room.id,
             roomNum: room.roomNum,
             comment: comment,
             type: 2
         };
+
+        console.log("memory 1 : ", memory)
 
         await Memory.registerVideo(memory, uri, imageUri);
 
@@ -65,10 +69,11 @@ const MemoryRegisterScreen = ({ route }) => {
         });
 
         setMemory(memory)
+        console.log("memory 2 : ", memory)
 
         // navigation.goBack({memory:memory })
         navigation.goBack();
-    }, [navigation, setDialog, Memory, VideoThumbnails, uri]);
+    }, [navigation, setDialog, Memory, VideoThumbnails, uri, comment]);
 
     return (
         <View style={styles.container}>

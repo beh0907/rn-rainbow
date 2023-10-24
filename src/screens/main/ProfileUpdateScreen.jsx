@@ -73,7 +73,7 @@ const ProfileUpdateScreen = props => {
 
     const onModify = async () => {
         try {
-            const paramUser = { ...user, ...profile, updateDate: formatDateTime(new Date) };
+            const paramUser = { ...user, ...profile, updateDate: formatDateTime(new Date()) };
 
             const result = await modify(paramUser, image);
 
