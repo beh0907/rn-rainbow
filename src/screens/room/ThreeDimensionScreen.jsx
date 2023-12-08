@@ -6,6 +6,9 @@ import { AmbientLight, FrontSide, HemisphereLight, Mesh, PerspectiveCamera, Poin
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
 import { Alert } from 'react-native';
+import Constants from 'expo-constants';
+
+const { BASE_URL_FILE } = Constants.expoConfig.extra;
 
 const ThreeDimensionScreen = () => {
     const [, setDialog] = useDialogState();
@@ -91,36 +94,36 @@ const ThreeDimensionScreen = () => {
         const australianCattleDog = {
             // 'australian_cattle_dog_v3.obj': require('../../../assets/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj'),
             // 'australian_cattle_dog_v3.mtl': require('../../../assets/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'),
-            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/obj/australian_cattle_dog_v3.obj',
-            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl'
+            'obj': `${BASE_URL_FILE}3d/australianCattleDog/obj/australian_cattle_dog_v3.obj`,
+            'mtl': `${BASE_URL_FILE}3d/australianCattleDog/mtl/australian_cattle_dog_v3.mtl`
         };
 
         const australianCattleDogResources = {
             // 'australian_cattle_dog_dif.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg'),
             // 'australian_cattle_dog_bump.jpg': require('../../../assets/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'),
-            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg',
-            'bump': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg'
+            'dif': `${BASE_URL_FILE}3d/australianCattleDog/texture/australian_cattle_dog_dif.jpg`,
+            'bump': `${BASE_URL_FILE}3d/australianCattleDog/texture/australian_cattle_dog_bump.jpg`
         };
 
         // const model = await loadModel(dog, dogResources);
 
         const cat = {
-            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/obj/12221_Cat_v1_l3.obj',
-            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/mtl/12221_Cat_v1_l3.mtl'
+            'obj': `${BASE_URL_FILE}3d/Cat/obj/12221_Cat_v1_l3.obj`,
+            'mtl': `${BASE_URL_FILE}3d/Cat/mtl/12221_Cat_v1_l3.mtl`
         };
 
         const catResources = {
-            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_diffuse.jpg',
-            'bump': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/Cat/texture/Cat_bump.jpg'
+            'dif': `${BASE_URL_FILE}3d/Cat/texture/Cat_diffuse.jpg`,
+            'bump': `${BASE_URL_FILE}3d/Cat/texture/Cat_bump.jpg`
         };
 
         const canaanDog = {
-            'obj': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/obj/13466_Canaan_Dog_v1_L3.obj',
-            'mtl': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/mtl/13466_Canaan_Dog_v1_L3.mtl'
+            'obj': `${BASE_URL_FILE}3d/CanaanDog/obj/13466_Canaan_Dog_v1_L3.obj`,
+            'mtl': `${BASE_URL_FILE}3d/CanaanDog/mtl/13466_Canaan_Dog_v1_L3.mtl`
         };
 
         const canaanDogResources = {
-            'dif': 'https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/3d/CanaanDog/texture/13466_Canaan_Dog_diff.jpg'
+            'dif': `${BASE_URL_FILE}3d/CanaanDog/texture/13466_Canaan_Dog_diff.jpg`
         };
 
         aaa = 3;

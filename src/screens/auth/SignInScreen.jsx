@@ -53,6 +53,7 @@ const SignInScreen = () => {
                 // const user = await Auth.signIn(form, fcmToken);
                 const user = await Auth.signIn(form, expoToken);
 
+
                 /**자동 로그인이 체크되어 있다면
                  로그인 정보를 저장한다*/
                 if (isAutoLogin) {

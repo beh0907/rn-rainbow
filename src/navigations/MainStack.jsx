@@ -66,7 +66,7 @@ const MainStack = () => {
 
                     {/*추모관 내 추억의 영상 추가 화면*/}
                     <Stack.Screen name={RoomRoutes.MEMORY_REGISTER} component={MemoryRegisterScreen}
-                                  options={{ title: '' }} />
+                                  options={{ title: '추억의 영상 등록' }} />
                 </Stack.Navigator>
             </MemoryProvider>
         </RoomProvider>

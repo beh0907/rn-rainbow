@@ -86,9 +86,9 @@
       "eas": {
         "projectId": "7f9b9ad1-2f72-4ad1-8754-e09c05b5ee22"
       },
-      "BASE_URL_API": "http://43.200.169.250/rainbow",
-      "BASE_URL_FILE": "https://rainbowbridge.s3.ap-northeast-2.amazonaws.com/",
-      "BASE_URL_BOARD": "http://43.200.169.250/front/board/free.do"
+      "BASE_URL_API": "http://inhyeop.iptime.org:82/rainbow",
+      "BASE_URL_FILE": "http://inhyeop.iptime.org:82/rainbowFiles/",
+      "BASE_URL_BOARD": "http://inhyeop.iptime.org:82/front/board/free.do/front/board/free.do"
     }
   }
 }

@@ -112,6 +112,7 @@ const MemoryScreen = () => {
             });
 
             if (result.assets) {
+                console.log(result)
                 navigation.navigate(RoomRoutes.MEMORY_REGISTER, {
                     uri: result.assets[0].uri,
                     room

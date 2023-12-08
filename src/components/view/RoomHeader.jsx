@@ -23,6 +23,7 @@ const RoomHeader = ({ room }) => {
                 </Pressable>
                 <Text variant={'headlineSmall'} style={styles.petName}>{room.name}</Text>
 
+                {/*3D화면 이동*/}
                 <IconButton icon={'video-3d'} iconColor={PRIMARY.DEFAULT}
                             mode='outlined' onPress={() => navigation.navigate(RoomRoutes.THREE_DIMENSION)} />
             </View>

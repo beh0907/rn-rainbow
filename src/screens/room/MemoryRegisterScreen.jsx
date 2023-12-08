@@ -1,20 +1,19 @@
 import React, { useCallback, useLayoutEffect, useRef, useState } from 'react';
-import { useNavigation, useNavigationState, useRoute } from '@react-navigation/native';
-import { TextInput } from 'react-native-paper';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import { GRAY, PRIMARY } from '../../Colors';
-import { StyleSheet, useWindowDimensions, View } from 'react-native';
+import { StyleSheet, TextInput, useWindowDimensions, View } from 'react-native';
 import { ResizeMode, Video } from 'expo-av';
-import { ReturnKeyTypes } from '../../components/view/Input';
 import * as VideoThumbnails from 'expo-video-thumbnails';
 import HeaderRight from '../../components/view/HeaderRight';
 import * as Memory from '../../api/Memory';
 import { DIALOG_MODE } from '../../components/message/CustomDialog';
 import { useDialogState } from '../../contexts/DialogContext';
-import { MainRoutes, RoomRoutes } from '../../navigations/Routes';
 import { useMemoryState } from '../../contexts/MemoryContext';
+import { ReturnKeyTypes } from '../../components/view/Input';
+import { IconButton, Text } from 'react-native-paper';
 
 
-const MemoryRegisterScreen = ({ route }) => {
+const MemoryRegisterScreen = () => {
     const { params } = useRoute();
     const { uri, room } = params;
 
@@ -26,7 +25,7 @@ const MemoryRegisterScreen = ({ route }) => {
     const [comment, setComment] = useState('');
     const [, setDialog] = useDialogState();
 
-    const [,setMemory] = useMemoryState()
+    const [, setMemory] = useMemoryState();
 
 
     useLayoutEffect(() => {
@@ -34,7 +33,6 @@ const MemoryRegisterScreen = ({ route }) => {
             headerRight: () => <HeaderRight disabled={!(comment.length > 0)} onPress={registerMemory} name={'check'}
                                             color={comment.length > 0 ? PRIMARY.DEFAULT : GRAY.DEFAULT} />
         });
-        console.log(comment)
     }, [navigation, comment]);
 
 
@@ -51,8 +49,6 @@ const MemoryRegisterScreen = ({ route }) => {
             }
         );
 
-        console.log("등록 comment : ", comment)
-
         const memory = {
             id: room.id,
             roomNum: room.roomNum,
@@ -60,7 +56,7 @@ const MemoryRegisterScreen = ({ route }) => {
             type: 2
         };
 
-        console.log("memory 1 : ", memory)
+        console.log('memory 1 : ', memory);
 
         await Memory.registerVideo(memory, uri, imageUri);
 
@@ -68,8 +64,8 @@ const MemoryRegisterScreen = ({ route }) => {
             visible: false
         });
 
-        setMemory(memory)
-        console.log("memory 2 : ", memory)
+        setMemory(memory);
+        console.log('memory 2 : ', memory);
 
         // navigation.goBack({memory:memory })
         navigation.goBack();
@@ -77,6 +73,34 @@ const MemoryRegisterScreen = ({ route }) => {
 
     return (
         <View style={styles.container}>
+            <View style={{ width: width, height: 0.5, backgroundColor: GRAY.LIGHT }} />
+
+            <TextInput style={{ width: '100%', padding: 16, flex: 1, textAlignVertical: 'top' }}
+                       placeholder='추억의 말을 입력해주세요.'
+                       multiline={true}
+                       onSubmitEditing={registerMemory}
+                       returnKeyType={ReturnKeyTypes.DONE}
+                       onChangeText={setComment}
+                       value={comment}
+                       cursorColor={PRIMARY.DEFAULT}
+                       selectionColor={PRIMARY.DEFAULT}
+            />
+
+            <View style={{
+                width: width,
+                height: 36,
+                backgroundColor: GRAY.SOFT,
+                borderWidth: 0.5,
+                borderColor: GRAY.LIGHT,
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                flexDirection: 'row'
+            }}>
+                <IconButton icon={'cancel'} size={20} iconColor={PRIMARY.DEFAULT} onPress={() => setComment('')} disabled={comment.length === 0}/>
+
+                <Text variant='bodyMedium' style={{ marginEnd: 10 }}>{comment.length} / 300</Text>
+
+            </View>
 
             <Video
                 ref={video}
@@ -86,32 +110,6 @@ const MemoryRegisterScreen = ({ route }) => {
                 resizeMode={ResizeMode.CONTAIN}
                 isLooping
             />
-
-            {/*<Video*/}
-            {/*    ref={video}*/}
-            {/*    style={styles.video}*/}
-            {/*    source={{*/}
-            {/*        uri*/}
-            {/*    }}*/}
-            {/*    useNativeControls*/}
-            {/*    resizeMode={ResizeMode.CONTAIN}*/}
-            {/*/>*/}
-
-            <View style={{ width: '100%', padding: 16, flex: 1 }}>
-                <TextInput
-                    mode={'outlined'}
-                    outlineStyle={{ borderWidth: 1 }}
-                    outlineColor='#0000001F'
-                    label='추억의 말'
-                    value={comment}
-                    multiline={true}
-                    numberOfLines={30}
-                    style={{ width: '100%', flex: 1 }}
-                    onSubmitEditing={registerMemory}
-                    returnKeyType={ReturnKeyTypes.DONE}
-                    onChangeText={setComment}
-                />
-            </View>
         </View>
     );
 };

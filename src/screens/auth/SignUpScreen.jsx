@@ -59,7 +59,7 @@ const SignUpScreen = () => {
 
                 //스낵바 출력 셋팅
                 setSnackbar({
-                    snackMessage: (user.id === null ? '회원가입에 실패하였습니다.' : '회원가입을 성공하였습니다.'),
+                    snackMessage: (!!user.id ? '회원가입에 성공하였습니다.' : '회원가입에 실패하였습니다.'),
                     visible: true
                 });
 
